@@ -1,6 +1,6 @@
 <!-- This readme is for library. For readme for the docs, see README_DOCS.md -->
 
-#Advanced layer system for Leaflet
+# Advanced Layer System for Leaflet
 
 Have you ever needed something more than a simple layer switcher? Probably, custom layer types? Multiple interactive layers? Ability to save and load projects like in big apps? Just cool menu? This library (let's call it ALS for short) got you covered!
 
