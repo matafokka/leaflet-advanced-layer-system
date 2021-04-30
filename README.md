@@ -14,7 +14,7 @@ ALS is:
 1. An extras library: we've got wizards, settings, exporting, localization and, probably, more.
 1. A cool menu for your app.
 
-Sounds cool? Well, this library is almost ready for the public release, docs, tutorials and examples are on the way. However, you can start using it now and get docs in your IDE.
+Sounds cool? See ["Getting started"](#getting-started) or jump straight to the [docs](https://matafokka.github.io/leaflet-advanced-layer-system/)!
 
 #[Demo](https://matafokka.github.io/SynthFlight)
 
@@ -67,7 +67,7 @@ layerSystem.addBaseLayer(baseLayer, "My Base Layer"); // Add your base layers to
 layerSystem.addLayerType(L.MyLayer); // Add your layer types
 ```
 
-Then jump to the docs and start coding!
+Then jump to the [docs](https://matafokka.github.io/leaflet-advanced-layer-system/) and start coding!
 
 # Browser support
 
