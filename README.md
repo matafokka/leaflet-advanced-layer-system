@@ -88,9 +88,7 @@ Known issues with old browsers (~7 years or older) that can't be fixed due to te
 * IE 9 only: users might be asked to change their settings when they'll try to open a project or import settings. The pop-up window will provide all necessary instructions.
 * Users can't save settings.
 
-You can solve these problems either by removing functionality based on the browser (see `L.ALS.System` options) or by providing your own hacks.
-
-For instance, old browsers can't download generated files. You need to send generated data to the server, server should generate the file and send it back to the client. Then, client will normally save it.
+You can solve these problems either by removing functionality based on the browser or by providing a backend which will receive the data and send it back to the client, so it will "simulate" a download. ALS provides the callbacks where you can make your requests. See `SystemOptions` docs for both options.
 
 # FAQ
 
