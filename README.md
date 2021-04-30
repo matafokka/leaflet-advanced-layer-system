@@ -16,7 +16,7 @@ ALS is:
 
 Sounds cool? See ["Getting started"](#getting-started) or jump straight to the [docs](https://matafokka.github.io/leaflet-advanced-layer-system/)!
 
-#[Demo](https://matafokka.github.io/SynthFlight)
+# [Demo](https://matafokka.github.io/SynthFlight)
 
 [SynthFlight](https://matafokka.github.io/SynthFlight) is aerial photography planning software which uses ALS. Well, initially, ALS has been developed for [SynthFlight](https://matafokka.github.io/SynthFlight) :D
 
