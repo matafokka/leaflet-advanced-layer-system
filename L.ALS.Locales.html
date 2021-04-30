@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>ALS Namespace: Locales</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cerulean.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">ALS</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="L.ALS.html">L.ALS</a></li><li><a href="L.ALS.Helpers.html">L.ALS.Helpers</a></li><li><a href="L.ALS.LeafletLayers.html">L.ALS.LeafletLayers</a></li><li><a href="L.ALS.Locales.html">L.ALS.Locales</a></li><li><a href="L.ALS.Widgets.html">L.ALS.Widgets</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="L.ALS.ControlZoom.html">L.ALS.ControlZoom</a></li><li><a href="L.ALS.Layer.html">L.ALS.Layer</a></li><li><a href="L.ALS.LeafletLayers.CanvasLayer.html">L.ALS.LeafletLayers.CanvasLayer</a></li><li><a href="L.ALS.LeafletLayers.LabelLayer.html">L.ALS.LeafletLayers.LabelLayer</a></li><li><a href="L.ALS.LeafletLayers.WidgetLayer.html">L.ALS.LeafletLayers.WidgetLayer</a></li><li><a href="L.ALS.Serializable.html">L.ALS.Serializable</a></li><li><a href="L.ALS.Settings.html">L.ALS.Settings</a></li><li><a href="L.ALS.System.html">L.ALS.System</a></li><li><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></li><li><a href="L.ALS.WidgetableWindow.html">L.ALS.WidgetableWindow</a></li><li><a href="L.ALS.Widgets.BaseItemsWidget.html">L.ALS.Widgets.BaseItemsWidget</a></li><li><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></li><li><a href="L.ALS.Widgets.Button.html">L.ALS.Widgets.Button</a></li><li><a href="L.ALS.Widgets.ButtonsGroup.html">L.ALS.Widgets.ButtonsGroup</a></li><li><a href="L.ALS.Widgets.Checkbox.html">L.ALS.Widgets.Checkbox</a></li><li><a href="L.ALS.Widgets.Color.html">L.ALS.Widgets.Color</a></li><li><a href="L.ALS.Widgets.Divider.html">L.ALS.Widgets.Divider</a></li><li><a href="L.ALS.Widgets.DropDownList.html">L.ALS.Widgets.DropDownList</a></li><li><a href="L.ALS.Widgets.Email.html">L.ALS.Widgets.Email</a></li><li><a href="L.ALS.Widgets.File.html">L.ALS.Widgets.File</a></li><li><a href="L.ALS.Widgets.Number.html">L.ALS.Widgets.Number</a></li><li><a href="L.ALS.Widgets.Password.html">L.ALS.Widgets.Password</a></li><li><a href="L.ALS.Widgets.RadioButtonsGroup.html">L.ALS.Widgets.RadioButtonsGroup</a></li><li><a href="L.ALS.Widgets.SimpleLabel.html">L.ALS.Widgets.SimpleLabel</a></li><li><a href="L.ALS.Widgets.Text.html">L.ALS.Widgets.Text</a></li><li><a href="L.ALS.Widgets.TextArea.html">L.ALS.Widgets.TextArea</a></li><li><a href="L.ALS.Widgets.Time.html">L.ALS.Widgets.Time</a></li><li><a href="L.ALS.Widgets.ValueLabel.html">L.ALS.Widgets.ValueLabel</a></li><li><a href="L.ALS.Wizard.html">L.ALS.Wizard</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="global.html">Global</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="external-L.html">L</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Namespace: Locales</h1>
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="L.ALS.html">.ALS</a>.</span>
+        
+        Locales
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Contains locales. You can extend locales by using {L.ALS.Locales.addLocaleProperties} method.</p>
+<p>Structure is following:</p>
+<pre class="prettyprint source"><code>{
+    &quot;locale name that will be presented to the user, i.e. 'English'&quot;: {
+        key1: &quot;Value 1&quot;, // These keys will be used in app itself. We'll call those &quot;locale properties&quot; for the rest of the documentation.
+        key2: &quot;Value 2&quot;,
+        ...
+    },
+
+    &quot;Русский&quot;: {
+        &quot;key1&quot;: &quot;Значение 1&quot;,
+        &quot;key2&quot;: &quot;Значение 2&quot;,
+        ...
+    },
+    ...
+}
+</code></pre>
+<p>To localize elements created by strings or JSX, put these attributes to localizable elements:</p>
+<pre class="prettyprint source"><code>data-als-locale-property=&quot;property in L.ALS.locale&quot; -- Value points to property in L.ALS.Locale.
+
+data-als-locale-property-to-localize=&quot;text&quot; -- Value says which element's property to localize. This attribute is optional.
+</code></pre>
+<p>You can also use these properties to additionally alter element's value, for example, add a value to a label.</p>
+<p>Usage note: You must put all your custom locale's properties to <code>L.ALS.English</code>. If you don't care about English localization, just copy all your properties to it.</p></div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+            <h3>Example</h3>
+            
+    <pre class="sunlight-highlight-javascript">Create two localized labels for a couple of widgets and localized about section// Prepare locales// Require System and add additional locales except English before doing anything.require(&quot;./path/to/ALS/System.js&quot;);L.ALS.Locales.AdditionalLocales.Russian(); // Add additional Russian locale to ALS. Add additional locales BEFORE defining your custom properties!// Define custom locale properties for English. You can do this in external script and require it instead of doing everything at your entry point.L.ALS.Locales.addLocaleProperties(&quot;English&quot;, {    labelForNumberWidget: &quot;Enter number&quot;, // Label for number widget    labelForColorWidget: &quot;Choose color&quot;, // Label for color widget    aboutText: &quot;This is my program!&quot;, // Text displayed at &quot;About&quot; settings section}// Define custom locale properties for RussianL.ALS.Locales.addLocaleProperties(&quot;Русский&quot;, {    labelForNumberWidget: &quot;Введите число&quot;,    labelForColorWidget: &quot;Выберите цвет&quot;,    aboutText: &quot;Это моя программа!&quot;,}L.ALS.System.initializeSystem(); // Initialize system after all locales has been set uplet map = ... // Create map// Create systemlet layerSystem = new L.ALS.System(map, {     aboutHtml: require(&quot;./about.js) // Add custom &quot;About&quot; section});// Do your other stuff...// Localise widgets// Imagine code below being at some custom L.ALS.Widgetable where we add our widgets// Pass our new locale properties names as labels to widgets&#x27; constructors.// You can pass those names to everything that can be localised.this.addWidgets(    new L.ALS.Widgets.Number(&quot;myNumberId&quot;, &quot;labelForNumberWidget&quot;),    new L.ALS.Widgets.Color(&quot;myColorId&quot;, &quot;labelForColorWidget&quot;));// Localize about section// Code below is at &quot;./about.js&quot; scriptmodule.exports = &#x60;&lt;h1&gt;MyProgram&lt;/h1&gt; &lt;!-- Program&#x27;s name --&gt;&lt;div data-als-locale-property=&quot;aboutText&quot;&gt;&lt;/div&gt; &lt;!-- Program&#x27;s description localized by &quot;data-als-locale-property&quot; attribute --&gt;&#x60;;</pre>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id=".%22English%22">
+    <h4 id=".%22English%22"><span class="type-signature">&lt;static> </span>"English"<span class="type-signature"> :Object</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>English locale</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Object</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".AdditionalLocales">
+    <h4 id=".AdditionalLocales"><span class="type-signature">&lt;static> </span>AdditionalLocales<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Contains additional locales. Here all locales are functions. Call one of them to add it to ALS.
+You must add additional locales BEFORE adding your own locale properties!</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".addLocaleProperties"><span class="type-signature">&lt;static> </span>addLocaleProperties(name, locale)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Adds new locale properties to given locale.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of the locale to add properties to. For example, if you wan't to update English locale</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>locale</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Object in format <code>{key: &quot;value&quot;}</code></p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".changeLocale"><span class="type-signature">&lt;static> </span>changeLocale(localeName)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Changes current locale</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>localeName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Locale name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".getLocalePropertyOrValue"><span class="type-signature">&lt;static> </span>getLocalePropertyOrValue(element)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Returns either locale property bound to given element (if set) or property's value</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Element to find property of</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Found locale property or element's value</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".localizeElement"><span class="type-signature">&lt;static> </span>localizeElement(element, localeProperty, elementPropertyToLocalize)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Localizes HTML element</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Element to localize</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>localeProperty</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Property name of L.ALS.locale. For example, there's L.ALS.locale.myProperty property which contains your text. You need to pass &quot;myProperty&quot; string here.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>elementPropertyToLocalize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Element's property to output localized text to. If not supplied, will use either textContent, innerText or innerHTML</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".localizeOrSetValue"><span class="type-signature">&lt;static> </span>localizeOrSetValue(element, localeProperty, elementPropertyToLocalize)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Either localizes element by calling localizeElement() or sets localeProperty as element's value if it doesn't exist in L.ALS.locale</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>element</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Element to localize</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>localeProperty</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Property name of L.ALS.locale. For example, there's L.ALS.locale.myProperty property which contains your text. You need to pass &quot;myProperty&quot; string here.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>elementPropertyToLocalize</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Element's property to output localized text to. If not supplied, will use either textContent, innerText or innerHTML</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+	<div style='width: 100%; text-align: center;'><a href='https://github.com/matafokka'>(c) matafokka</a></div>
+
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
+	
+		on 2021-04-30T20:28:17+03:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
