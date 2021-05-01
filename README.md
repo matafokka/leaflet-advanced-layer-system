@@ -26,11 +26,7 @@ Of course, you can create more simple apps by changing `L.ALS.System` options an
 
 ## Adding a dependency
 
-Add following dependency to your `package.json`:
-
-`"leaflet-advanced-layer-system": "github:matafokka/leaflet-advanced-layer-system"`
-
-And run `npm install`.
+Run `npm i leaflet-advanced-layer-system`.
 
 ## Importing ALS
 
