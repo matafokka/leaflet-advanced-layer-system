@@ -1,6 +1,6 @@
 {
   "name": "leaflet-advanced-layer-system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An advanced layer system (and more) for Leaflet",
   "main": "dist/System.js",
   "browserslist": [
@@ -40,7 +40,7 @@
   "scripts": {
     "test": "node tests/runTests.js",
     "generateDocs": "jsdoc ./ -c jsdoc.conf.json",
-    "prepublishOnly": "node build.js && npm run-script generateDocs"
+    "prepublishOnly": "node build.js"
   },
   "keywords": [
     "leaflet",

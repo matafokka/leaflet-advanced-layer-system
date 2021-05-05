@@ -68,7 +68,7 @@ L.ALS.LeafletLayers.LabelLayer = L.ALS.LeafletLayers.CanvasLayer.extend( /** @le
 	},
 
 	/**
-	 * Sets whether this layer should automatically redraw it's content when any of it's methods called or not.
+	 * Sets whether this layer should automatically redraw its content when any of its methods called or not.
 	 * @param automaticallyRedraw {boolean} If set to true, this canvas will automatically redraw itself.
 	 */
 	setAutomaticallyRedraw: function (automaticallyRedraw) {
@@ -76,7 +76,7 @@ L.ALS.LeafletLayers.LabelLayer = L.ALS.LeafletLayers.CanvasLayer.extend( /** @le
 	},
 
 	/**
-	 * @return {boolean} True, if this layer automatically redraws it's content. False otherwise.
+	 * @return {boolean} True, if this layer automatically redraws its content. False otherwise.
 	 */
 	getAutomaticallyRedraw: function () {
 		return this._automaticallyRedraw;

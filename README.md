@@ -75,7 +75,7 @@ ALS supports following browsers:
 * Any other modern desktop or mobile browser.
 
 Known issues with old browsers (~7 years or older) that can't be fixed due to technical reasons:
-* Outdated Chromium-based browsers have a "feature" that prevents FileReader from reading local files. To solve it, you should either:
+* Outdated Chromium-based browsers have a "feature" that prevents `FileReader` from reading local files. To solve it, you should either:
     * Host your app on a web server.
     * Somehow make your users add `--allow-file-access-from-files` flag when running browser.
 * Users can't save files, they need to manually copy JSON from the browser to their files.

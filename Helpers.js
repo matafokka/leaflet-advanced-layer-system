@@ -289,7 +289,7 @@ L.ALS.Helpers = {
 		container.classList.add("als-icon-button-container");
 		let children = container.querySelectorAll("*[data-mobile-class]");
 		for (let el of children) {
-			el.classList.add(el.getAttribute("data-mobile-class"));
+			el.className += " " + el.getAttribute("data-mobile-class"); // This can contain multiple classes, but classList.add() can't work with that.
 			el[L.ALS.Locales._getElementPropertyToSet(el)] = "";
 			el.removeAttribute("data-als-locale-property");
 		}

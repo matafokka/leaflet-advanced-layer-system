@@ -395,7 +395,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	},
 
 	/**
-	 * Removes added Leaflet layers with it's event handlers.
+	 * Removes added Leaflet layers with its event handlers.
 	 * @param layers {L.Layer} Layers to remove. If layer extends LayerGroup, will also remove Leaflet layers contained in it.
 	 */
 	removeLayers: function(...layers) {
@@ -549,7 +549,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	statics: {
 
 		/**
-		 * Wizard instance which gives a layer it's initial properties
+		 * Wizard instance which gives a layer its initial properties
 		 * @type {L.ALS.Wizard}
 		 * @memberOf L.ALS.Layer
 		 */

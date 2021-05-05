@@ -5,6 +5,7 @@
  * 1. Widgets can be added only to {@link L.ALS.Widgetable} using {@link L.ALS.Widgetable#addWidget}.
  * 1. Widgets are using rather strange callback system due to limits related to the serialization.
  * 1. All widgets' public methods returns this, i.e. they can be chained.
+ * 1. Settings will add a revert button to the widgets. You can control this behavior by changing {@link L.ALS.Widgets.BaseWidget#undoable} and {@link L.ALS.Widgets.BaseWidget#containerForRevertButton} properties.
  *
  * Please, take a look at example below which explains all these thing.
  *
@@ -18,7 +19,7 @@
  *              // Take a look at last two arguments. Third argument is an object which contains our callback. Fourth argument is a callback name.
  *              // As a result, when widget's value will change, L.ALS.MyLayer#someCallback0 method will be called.
  *              (new L.ALS.Widgets.Number("myNumber0", "Number 0", this, "someCallback0")).
- *              setMin(0).setMax(100).setStep(2).setValue(50), // We can instantiate a widget and set it's properties at the same time by chaining all of that. Each setter returns the same widget.
+ *              setMin(0).setMax(100).setStep(2).setValue(50), // We can instantiate a widget and set its properties at the same time by chaining all of that. Each setter returns the same widget.
  *
  *              // L.ALS.Widgetable#addWidgets() accepts numerous widgets. So let's add some more.
  *              (new L.ALS.Widgets.Number("myNumber1", "Number 1", this, "someCallback1")).setMin(0).setMax(1).setStep(0.1).setValue(0),

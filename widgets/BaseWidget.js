@@ -21,7 +21,6 @@
  * @param callbackObject {Object|L.ALS.Serializable} Object which contains callback. Just pass "this". If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.
  * @param callback {string} Name of the method of callbackObject that will be called when widget's value changes
  * @param events {string[]} Array of event's names to bind to the provided callback
- * @param attributes {Object} Attributes of an input, such as min, max, etc in format `{attributeName1: attributeValue1, attributeName2: attributeValue2, ...}`
  *
  * @class
  * @extends L.ALS.Serializable
@@ -43,7 +42,7 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 	customWrapperClassName: "",
 
 	/**
-	 * Indicates whether this widget can revert back to it's default value. If this widget is undoable, an undo button will be appended to it at settings window.
+	 * Indicates whether this widget can revert back to its default value. If this widget is undoable, an undo button will be appended to it at settings window.
 	 * @readonly
 	 */
 	undoable: true,

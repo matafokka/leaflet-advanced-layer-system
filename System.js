@@ -11,7 +11,7 @@ require("keyboardevent-key-polyfill").polyfill();
 /**
  * Root object containing all Layer System stuff.
  *
- * Layer System contains these important subsystems:
+ * Layer System contains these important "subsystems":
  * 1. System itself. See {@link L.ALS.System} docs for examples of general usage.
  * 1. Layers. See {@link L.ALS.System} example on how to create a basic layer:
  *      1. Layers themselves. Those are not Leaflet layers but wrappers around theme. System works with these layers, not with Leaflet layers. See {@link L.ALS.Layer} docs for examples on how to create custom layers.
@@ -183,7 +183,7 @@ require("./LeafletLayers/LeafletLayers.js");
  *         );
  *         this.applyNewSettings(settings); // Apply the settings
  *
- *         // Let's also add polygon to the layer. It's fill color will be controlled by the color widget
+ *         // Let's also add polygon to the layer. Its fill color will be controlled by the color widget
  *         this._polygon = L.polygon([[20, 20], [30, 30], [15, 15]]);
  *         this._polyon.setStyle({
  *             fillColor: "red",
@@ -467,7 +467,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	addBaseLayer: function (layer, name) {
 		let item = document.createElement("option"); // Create an option element
-		item.text = name; // Set it's text to the passed layer's name
+		item.text = name; // Set its text to the passed layer's name
 		this._baseLayers[name] = layer; // Add layer to the base layers' object
 		this._baseLayerMenu.appendChild(item); // Add option to the "select" element
 
@@ -655,7 +655,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		let oldEvent = event.originalEvent;
 		let newEvent = new oldEvent.constructor(oldEvent.type, oldEvent); // Clone old event
 		oldEvent.target.dispatchEvent(newEvent); // The target will be a canvas, not a Leaflet object. So let's dispatch cloned event to it
-		this._reorderLayers(); // Bring selected layer back to it's place simply by reloading layers
+		this._reorderLayers(); // Bring selected layer back to its place simply by reloading layers
 	},
 
 	// Project-related stuff

@@ -28,7 +28,7 @@
  *
  * Every {@link L.ALS.Serializable} instance has public {@link L.ALS.Serializable#serializationIgnoreList} property which contains properties' names to ignore while serializing. You may want to use it if you want to stick to default serialization mechanisms. Just append your properties' and methods' names to `serializationIgnoreList`.
  *
- * Both {@link L.ALS.Serializable#serialize} and {@link L.ALS.Serializable.deserialize} methods accepts two additional arguments: `seenObjects` and `seenObjectsForCleanUp`. Those are used internally by serialization mechanism. If you're making layer, just don't pass anything to the default mechanism. If your class serializes some other {@link L.ALS.Serializable} that uses default mechanism, please, pass those parameters to it's `serialize()` and `deserialize()` methods.
+ * Both {@link L.ALS.Serializable#serialize} and {@link L.ALS.Serializable.deserialize} methods accepts two additional arguments: `seenObjects` and `seenObjectsForCleanUp`. Those are used internally by serialization mechanism. If you're making layer, just don't pass anything to the default mechanism. If your class serializes some other {@link L.ALS.Serializable} that uses default mechanism, please, pass those parameters to its `serialize()` and `deserialize()` methods.
  *
  * You can prevent constructor arguments from being serialized or deserialized by creating custom `skipSerialization` and `skipDeserialization` properties respectively and setting them to `true`. If you choose to prevent serialization, you'll need to set skipped arguments at deserialization yourself. For this, see the next tip.
  *
@@ -368,7 +368,6 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 					else
 						continue;
 
-					//console.log(json);
 					json.propertiesOrder.push(propName);
 					let getter = isGetter ? prop : L.ALS.Serializable.findGetter(prop, object);
 					let property = (getter === undefined) ? object[prop] : object[getter]();
@@ -386,7 +385,7 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 							property.serializationID = L.ALS.Helpers.generateID();
 						seenObjects[property.serializationID] = property; // Add object to seen objects
 
-						// Serialize arrays by copying all it's items to an object and serializing that object instead.
+						// Serialize arrays by copying all its items to an object and serializing that object instead.
 						// This is also needed because JSON.stringify() removes custom array properties.
 						if (property instanceof Array) {
 							let newProperty = {

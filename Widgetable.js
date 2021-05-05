@@ -1,7 +1,7 @@
 /**
  * Base class for all classes that can have widgets.
  *
- * Has property `container` which is container for the widgets. Add it to the page.
+ * Has property {@link L.ALS.Widgetable#container} which is container for the widgets. This container should be added to the page.
  *
  * See {@link L.ALS.Widgets} docs for the example on working with Widgetables and Widgets.
  *
@@ -18,7 +18,7 @@ L.ALS.Widgetable = L.ALS.Serializable.extend( /** @lends L.ALS.Widgetable.protot
 		this.setConstructorArguments(arguments);
 
 		/**
-		 * Container to add widgets to
+		 * Container to add widgets to. This element must be added to the page.
 		 * @type {HTMLDivElement}
 		 */
 		this.container = document.createElement("div");

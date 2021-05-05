@@ -25,7 +25,7 @@ L.DomUtil.setTransform = L.DomUtil.setTransform || function (el, offset, scale) 
 /**
  * A canvas layer for Leaflet. This class is based on L.CanvasLayer (https://github.com/Sumbera/gLayers.Leaflet), but heavily modified, so stick to this class' docs.
  *
- * Canvas is always the size of the screen, it's size, position and everything is being recalculated when map is being moved or resized. When it happens, `draw()` method is being called.
+ * Canvas is always the size of the screen, its size, position and everything is being recalculated when map is being moved or resized. When it happens, `draw()` method is being called.
  *
  * Override {@link L.ALS.LeafletLayers.CanvasLayer#draw} method and implement your stuff here.
  *

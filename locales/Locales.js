@@ -149,10 +149,8 @@ L.ALS.Locales = {
 		if (!this[localeName])
 			throw new Error(`Locale "${localeName}" does not exist. Did you forget to add it to L.ALS.Locales?`);
 
-		// If locale isn't English, merge it with English
-		L.ALS.locale = this[localeName];
-		if (localeName !== "English")
-			L.ALS.locale = L.ALS.Helpers.mergeOptions(this.English, L.ALS.locale);
+		// If locale isn't English, merge it with English, so missing properties will be replaced with English.
+		L.ALS.locale = (localeName === "English") ? this.English : L.ALS.Helpers.mergeOptions(this.English, this[localeName]);
 
 		let elements = document.body.querySelectorAll("*[data-als-locale-property]");
 		for (let el of elements) {
