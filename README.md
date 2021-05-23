@@ -16,11 +16,14 @@ ALS is:
 
 Sounds cool? See ["Getting started"](#getting-started) or jump straight to the [docs](https://matafokka.github.io/leaflet-advanced-layer-system/)!
 
-# [Demo](https://matafokka.github.io/SynthFlight)
+# Demo
 
-[SynthFlight](https://matafokka.github.io/SynthFlight) is aerial photography planning software which uses ALS. Well, initially, ALS has been developed for [SynthFlight](https://matafokka.github.io/SynthFlight) :D
+[SynthFlight](https://matafokka.github.io/SynthFlight) is aerial photography planning software which uses ALS. Well, initially, ALS has been developed for SynthFlight :D
 
 Of course, you can create more simple apps by changing `L.ALS.System` options and not using advanced features.
+
+# [Docs](https://matafokka.github.io/leaflet-advanced-layer-system/)
+
 
 # Getting started
 
@@ -86,6 +89,10 @@ Known issues with old browsers (~7 years or older) that can't be fixed due to te
 
 You can solve these problems either by removing functionality based on the browser or by providing a backend which will receive the data and send it back to the client, so it will "simulate" a download. ALS provides the callbacks where you can make your requests. See `SystemOptions` docs for both options.
 
+# Tests
+
+[See the docs' home page.](https://matafokka.github.io/leaflet-advanced-layer-system/)
+
 # FAQ
 
 ## What about learning curve?
@@ -98,9 +105,15 @@ Technically, yes, but you'll have to pass `L.ALS.Widgetable`'s containers to you
 
 If you need to just add more widgets, you can do so by extending `L.ALS.Widgets.BaseWidget`. Otherwise, you're probably better off not using ALS.
 
+## What is project file format?
+
+[See the docs' home page.](https://matafokka.github.io/leaflet-advanced-layer-system/)
+
 ## Are any API changes planned?
 
 No, unless they will fix bugs. It also includes some parts returning text instead of locale properties. All such API changes will be documented in release notes.
+
+However, internal (package-scoped and private-scoped) members might be changed in the future, so please, avoid using it. File a bug report or feature request instead.
 
 ## How can I contribute to the project?
 
@@ -112,6 +125,7 @@ Oh, there's much to add to the project, you can contribute by:
     1. Improve browser support.
     1. Provide additional layer types which others can use.
     1. Create examples and tutorials for the docs.
+    1. Provide unit tests.
     1. Everything else that comes to your mind.
 1. Localizing ALS.
 1. Improving docs. *Note: docs are being generated from the JSDoc comments. Either edit the comments or create an issue and describe what and where needs to be changed.*

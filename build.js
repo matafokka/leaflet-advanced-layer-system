@@ -1,48 +1,57 @@
-const browserify = require("browserify");
-const babelify = require("babelify");
 const fs = require("fs");
 const fse = require("fs-extra");
 const postcss = require("postcss");
 const postcssPresetEnv = require("postcss-preset-env");
 const cssnano = require("cssnano");
 const postcssCssVariables = require("postcss-css-variables");
-const { generateCSSPatch } = require("css-patch");
+const {generateCSSPatch} = require("css-patch");
+const {Worker} = require('worker_threads');
+
+let oldStamp = Date.now();
+process.on("exit", () => {
+	console.log("Finished in: " + ((Date.now() - oldStamp) * 0.001).toFixed(3) + "s");
+});
 
 let debug = false;
 
 for (let arg of process.argv) {
 	if (arg === "-h" || arg === "--help") {
 		console.log("Run build.js with following arguments to tweak build process:\n" +
-		"\t-h or --help - Show help and quit.\n" +
-		"\t-d or --debug - Source maps will be generated."
+			"\t-h or --help - Show help and quit.\n" +
+			"\t-d or --debug - Source maps will be generated."
 		);
 		process.exit(-1);
-	}
-	else if (arg === "-d" || arg === "--debug")
+	} else if (arg === "-d" || arg === "--debug")
 		debug = true;
 }
 
-console.log("\nBuilding leaflet-advanced-layer-system...\n" +
+console.log(`\n${new Date().toTimeString()} - Building leaflet-advanced-layer-system...\n` +
 	"Type -h or --help to view help on build arguments.\n");
 
 fse.emptyDirSync("dist");
 
 // Create build directory
 let dir = "dist/";
-fs.mkdirSync(dir + "css", { recursive: true });
+fs.mkdirSync(dir + "css", {recursive: true});
+
+// Create worker
+new Worker("./buildProjectWorker.js", {
+	workerData: {
+		debug: debug, dir: dir,
+	}
+});
 
 // Build CSS
+let remixIconDir = "node_modules/remixicon/fonts/"; // Path to all RemixIcon stuff
 let plugins = [
 	postcssCssVariables(),
 
 	postcssPresetEnv({
-		autoprefixer: { flexbox: "no-2009" }
+		autoprefixer: {flexbox: "no-2009"}
 	}),
 ];
 if (!debug)
 	plugins.push(cssnano());
-
-let remixIconDir = "node_modules/remixicon/fonts/"; // Path to all RemixIcon stuff
 
 let cssFilename = "css/base.css";
 // Prepend RemixIcon styles to our styles so we'll end up with only one directory containing our CSS. We'll copy fonts later.
@@ -92,37 +101,4 @@ fs.readdir(remixIconDir, {}, (err, files) => {
 					console.log(err);
 			});
 	}
-})
-
-// Build project
-let files = ["polyfills", "System"]; // Files to build
-for (let file of files) {
-	let notPolyfills = file !== "polyfills";
-	let generateSourceMaps = debug && notPolyfills;
-
-	let build = browserify([file + ".js"], { debug: generateSourceMaps });
-	if (notPolyfills) { // Transform everything except polyfills from CoreJS
-		build = build.transform("babelify", {
-			presets: ["@babel/preset-env"],
-			global: true, // ShpJS is built without polyfills and uses async functions. So we have to build node_modules too. Maybe other libraries are built this way too.
-			minified: !debug,
-		});
-	}
-
-	build.plugin("common-shakeify")
-		.transform("uglifyify", {
-			global: true,
-			ie8: true,
-			sourceMap: generateSourceMaps
-		})
-		.bundle().pipe(fs.createWriteStream(dir + file + ".js"));
-}
-
-// TODO: Remove it if layer system won't support IE8
-/*let toCopy = [
-	//"node_modules/ie8/build/ie8.js",
-	//"node_modules/object-defineproperty-ie/src/object-defineproperty-ie.js",
-];
-
-for (let stuff of toCopy)
-	fse.copy(stuff, dir + stuff);*/
+});

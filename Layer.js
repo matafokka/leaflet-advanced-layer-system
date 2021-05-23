@@ -261,11 +261,21 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			if (!this.isShown) // Events won't be fired if this layer is hidden
 				return;
 
-			if (this.isSelected) { // Events will be only fired when this layer is selected
+			if (this.isSelected) { // Events will only be fired when this layer is selected
 				callHandler(event);
 				return;
 			}
-			this._layerSystem._passEvent(event); // Otherwise event will pass to the underlying layer
+
+			// Forward event to the underlying layer
+			this._layerSystem._selectedLayer._leafletLayers.bringToFront(); // Bring selected layer to the front
+			let oldEvent = event.originalEvent;
+			if (oldEvent.dispatchedByALS) // Uncaught events will lead to infinite recursion
+				return;
+
+			let newEvent = new oldEvent.constructor(oldEvent.type, oldEvent); // Clone old event
+			newEvent.dispatchedByALS = true; // If event won't be caught, it will call the handler again and again. So let's mark it, so we can just don't fire it again.
+			oldEvent.target.dispatchEvent(newEvent); // The target will be a canvas, not a Leaflet object. So let's dispatch cloned event to it
+			this._layerSystem._reorderLayers(); // Bring selected layer back to its place simply by reordering layers
 		}
 
 		let handlerObject = {
@@ -436,7 +446,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	},
 
 	/**
-	 * Being called upon deletion. There you can clean up everything you've done which can't be undone by the system (i.e., added layers directly to the map or created elements on the page)
+	 * Being called upon deletion. There you can clean up everything you've done which can't be undone by the system (i.e., layers added directly to the map or created elements on the page)
 	 */
 	onDelete: function () {},
 

@@ -54,7 +54,7 @@ L.ALS = {
 const Sortable = require("sortablejs");
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
-require("./ALSControlZoom.js");
+require("./ControlZoom.js");
 require("./locales/Locales.js");
 require("./InteractiveLayerPatch.js");
 require("./Helpers.js");
@@ -218,7 +218,7 @@ require("./LeafletLayers/LeafletLayers.js");
  *
  * // File "main.js"
  *
- * require("./path/to/System.js"); // Require this plugin or add it to your .html page via "script" tag
+ * require("leaflet-advanced-layer-system"); // Require this plugin or add it to your html page via "script" tag
  * require("./MyLayer.js"); // Require layer
  *
  * L.ALS.System.initializeSystem(); // Initialize system. This method MUST be called after all Leaflet and ALS imports.
@@ -592,13 +592,14 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		this._selectedLayer._leafletLayers.remove();
 		this._selectedLayer._removeAllMapEventListeners();
 
+		let layerID = this._selectedLayer.id; // Save it before removing properties
 		// Remove every property, so there will be no references and event handlers
 		for (let property in this._selectedLayer)
 			// noinspection JSUnfilteredForInLoop
 			delete this._selectedLayer[property]; // It doesn't miss hasOwnProperty() check. We're destroying the whole object.
 
 		// Delete reference from layers object
-		delete this._layers[this._selectedLayer.id];
+		delete this._layers[layerID];
 
 		// Select first added layers or make selected layer undefined. That will remove the last reference to it.
 		let firstChild = this._layerContainer.firstElementChild;
@@ -632,30 +633,6 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 				continue;
 			callback(this._layers[child.id]);
 		}
-	},
-
-	/**
-	 *
-	 * Implements event forwarding. When event is being fired, the topmost will receive it even if it's hidden or something.
-	 *
-	 * So we need to bring the layer to the front, pass event to it and put it back.
-	 *
-	 * This method does exactly that.
-	 *
-	 * @param event Event to be passed
-	 * @package
-	 * @ignore
-	 */
-	_passEvent: function (event) {
-
-		this._selectedLayer._leafletLayers.bringToFront(); // Bring selected layer to the front
-
-		// Refire DOM event.
-		// Recursively passing an event to the group's children is costly and hard.
-		let oldEvent = event.originalEvent;
-		let newEvent = new oldEvent.constructor(oldEvent.type, oldEvent); // Clone old event
-		oldEvent.target.dispatchEvent(newEvent); // The target will be a canvas, not a Leaflet object. So let's dispatch cloned event to it
-		this._reorderLayers(); // Bring selected layer back to its place simply by reloading layers
 	},
 
 	// Project-related stuff
@@ -753,7 +730,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @private
 	 */
 	_loadProjectWorker: function (json) {
-		let serializedJson = JSON.parse(json); // Do it here so layers won't be removed if user have chosen wrong file
+		let serializedJson = JSON.parse(json); // Do it here, so layers won't be removed if user have chosen wrong file
 
 		// Remove all current layers
 		for (let id in this._layers)

@@ -175,20 +175,18 @@ L.ALS.Helpers = {
 		if (L.ALS.Helpers.isIElte9) {
 			let fso;
 			try {
-				if (fileInput.value.includes(":\\fakepath"))
+				if (fileInput.value.includes(":\\fakepath")) // This one won't throw error, so we gotta do it ourselves
 					// noinspection ExceptionCaughtLocallyJS
 					throw new Error();
-				fso = new ActiveXObject("Scripting.FileSystemObject");
+				fso = new ActiveXObject("Scripting.FileSystemObject"); // This one will throw error
 			} catch (e) {
 				this._ieProjectErrorWindow.clickButton();
 				fileInput.value = "";
 				return;
 			}
-			console.log(fileInput.value);
 			let file = fso.openTextFile(fileInput.value, 1, false, true); // It doesn't follow MS specs but works for some reason. I have no idea how it works, but it doesn't work when used the right way.
 			let content = file.readAll();
 			file.close();
-			console.log(content);
 			callback(content);
 			fileInput.value = "";
 			return;
