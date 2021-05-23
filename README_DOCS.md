@@ -106,10 +106,11 @@ To use SynthFlight:
             * ...
 1. `cd` to the `leaflet-advanced-layer-system` directory.
 1. Run `npm install`.
+1. Run `npm link`.
 1. `cd` to the SynthFlight directory.
 1. Run `npm install`.
 
-Last four steps should be completed exactly in specified order because postinstall scripts creates a link to ALS.
+Last five steps should be completed exactly in specified order.
 
 Then write your code and run `npm run-script build` or `node build.js` to build ALS. All your changes will be reflected in SynthFlight because ALS has been `npm link`ed to SynthFlight.
 

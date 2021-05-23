@@ -41,7 +41,6 @@
     "test": "node tests/runTests.js",
     "build": "node build.js",
     "generateDocs": "jsdoc ./ -c jsdoc.conf.json",
-    "postinstall": "npm link",
     "prepublishOnly": "node build.js"
   },
   "keywords": [
