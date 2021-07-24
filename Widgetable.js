@@ -39,7 +39,7 @@ L.ALS.Widgetable = L.ALS.Serializable.extend( /** @lends L.ALS.Widgetable.protot
 	 * @return {L.ALS.Widgetable} This
 	 */
 	addWidget: function (widget) {
-		this.container.appendChild(widget._getContainer());
+		this.container.appendChild(widget.container);
 		this._widgets[widget.id] = widget;
 		widget._isAdded = true;
 		return this;
@@ -62,10 +62,12 @@ L.ALS.Widgetable = L.ALS.Serializable.extend( /** @lends L.ALS.Widgetable.protot
 	 * @return {L.ALS.Widgetable} This
 	 */
 	removeWidget: function (id) {
-		let container = this._widgets[id]._getContainer();
+		if (!this._widgets[id])
+			return this;
+		let container = this._widgets[id].container;
 		container.parentNode.removeChild(container);
-		delete this._widgets[id];
 		this._widgets[id]._isAdded = false;
+		delete this._widgets[id];
 		return this;
 	},
 

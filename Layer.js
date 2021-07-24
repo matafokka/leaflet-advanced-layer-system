@@ -35,7 +35,7 @@
 L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
 	/**
-	 * Name to be assigned to this layer by default. You can use locale property to localize it.
+	 * Name to be assigned to this layer by default. Set it to locale property to localize it.
 	 * @type {string}
 	 * @readonly
 	 */

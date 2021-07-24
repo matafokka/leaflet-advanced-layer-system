@@ -1,6 +1,6 @@
 {
   "name": "leaflet-advanced-layer-system",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "An advanced layer system (and more) for Leaflet",
   "main": "dist/System.js",
   "browserslist": [
@@ -92,7 +92,6 @@
     "postcss-preset-env": "^6.7.0",
     "regenerator-runtime": "^0.13.7",
     "remixicon": "^2.5.0",
-    "shpjs": "^3.6.2",
     "sortablejs": "~1.10.2",
     "time-input-polyfill": "^1.0.9",
     "uglifyify": "^5.0.2",

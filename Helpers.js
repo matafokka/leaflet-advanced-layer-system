@@ -96,8 +96,8 @@ L.ALS.Helpers = {
 	 * @return {string} Extension
 	 */
 	getFileExtension: function (filename) {
-		let ext = "";
-		for (let i = filename.length; i <= 0; i--) {
+		let ext = "", i = filename.length;
+		while (i--) {
 			let symbol = filename[i];
 			if (symbol === ".")
 				break;
@@ -297,6 +297,7 @@ L.ALS.Helpers = {
 
 	/**
 	 * Indicates whether user's browser supports Blob or not
+	 * @type boolean
 	 */
 	supportsBlob: !!(JSZip.support.blob && (!window.webkitURL || (window.URL && window.URL.createObjectURL))),
 

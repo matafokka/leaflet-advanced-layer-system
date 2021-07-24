@@ -39,7 +39,7 @@ L.ALS.Widgets = {
 	 * A simple text input widget
 	 *
 	 * @param id {string} ID of this input. You can select this object using this ID.
-	 * @param label {string} Label for this input. You can also pass locale property to localize the label.
+	 * @param label {string} Label for this input. Pass locale property to localize the label.
 	 * @param callbackObject {Object|L.ALS.Serializable} Object which contains callback. Just pass "this". If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.
 	 * @param callback {string} Name of the method of callbackObject that will be called when widget's value changes.
 	 *
@@ -52,7 +52,7 @@ L.ALS.Widgets = {
 	 * Default email input
 	 *
 	 * @param id {string} ID of this input. You can select this object using this ID.
-	 * @param label {string} Label for this input. You can also pass locale property to localize the label.
+	 * @param label {string} Label for this input. Pass locale property to localize the label.
 	 * @param callbackObject {Object|L.ALS.Serializable} Object which contains callback. Just pass "this". If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.
 	 * @param callback {string} Name of the method of callbackObject that will be called when widget's value changes.
 	 *
@@ -65,7 +65,7 @@ L.ALS.Widgets = {
 	 * Password input widget
 	 *
 	 * @param id {string} ID of this input. You can select this object using this ID.
-	 * @param label {string} Label for this input. You can also pass locale property to localize the label.
+	 * @param label {string} Label for this input. Pass locale property to localize the label.
 	 * @param callbackObject {Object|L.ALS.Serializable} Object which contains callback. Just pass "this". If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.
 	 * @param callback {string} Name of the method of callbackObject that will be called when widget's value changes.
 	 *

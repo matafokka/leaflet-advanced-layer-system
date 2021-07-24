@@ -45,6 +45,7 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 	generalSettingsLightTheme: "Светлая",
 	generalSettingsDarkTheme: "Темная",
 	generalSettingsSystemTheme: "Системная",
+	generalSettingsNotify: "Уведомлять о завершении длительных операций (снятие выделения с этой галочки убирает надоедливое окно, говорящее: \"Все операции завершены\")",
 
 
 	// System
@@ -64,6 +65,9 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 	systemIEAdjustSettings7: "Найдите \"Включать путь к локальному каталогу при отправке файлов на сервер\" и установите \"Включить\".",
 	systemIEAdjustSettings8: "Нажмите \"ОК\" в обоих окнах и перезагрузите страницу.",
 	systemIEAdjustSettingsOkButton: "ОК",
+
+	// Notification when all long-running operations are complete
+	systemOperationsComplete: "Все операции завершены",
 
 	// Layer
 

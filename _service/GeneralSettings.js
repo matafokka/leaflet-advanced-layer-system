@@ -35,7 +35,8 @@ L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._servic
 
 		// Find dark theme stylesheet
 		for (let sheet of document.styleSheets) {
-			if (!sheet.href.endsWith("/dark.css"))
+			// For some reason, for some sheets href property might be null
+			if (!sheet.href || !sheet.href.endsWith("/dark.css"))
 				continue;
 			this._darkThemeSheet = sheet;
 			break;
@@ -73,6 +74,7 @@ L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._servic
 			defaultValue = this._systemTheme;
 		}
 		this.addWidget(themeWidget, defaultValue);
+		this.addWidget(new L.ALS.Widgets.Checkbox("notify", "generalSettingsNotify", this, "_changeNotifications"), true);
 	},
 
 	/**
@@ -107,4 +109,8 @@ L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._servic
 			this._darkThemeSheet.disabled = true;
 		}
 	},
+
+	_changeNotifications: function (widget) {
+		L.ALS._notifyWhenLongRunningOperationComplete = widget.getValue();
+	}
 })

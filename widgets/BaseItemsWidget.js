@@ -7,7 +7,7 @@ L.ALS.Widgets.BaseItemsWidget = L.ALS.Widgets.BaseWidget.extend( /** @lends L.AL
 
 	/**
 	 * Adds item to this widget
-	 * @param item {string} Text content of the item. Can be a locale property. Use this string to access added item later.
+	 * @param item {string} Text content of the item. Pass locale property to localize it. Use this string to access added item later.
 	 * @return {L.ALS.Widgets.BaseItemsWidget} This
 	 * @abstract
 	 */

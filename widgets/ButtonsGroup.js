@@ -30,7 +30,7 @@ L.ALS.Widgets.ButtonsGroup = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.W
 	 * @return {L.ALS.Widgets.ButtonsGroup} This
 	 */
 	addButton: function (button) {
-		this.container.appendChild(button._getContainer());
+		this.container.appendChild(button.container);
 		this._items[button.id] = button;
 	},
 

@@ -199,6 +199,7 @@ input[type="file"] {
 .als-file-area {
 	display: block;
 	height: auto;
+	min-height: 0;
 	text-align: left;
 	padding-left: 0.2rem;
 	padding-right: 0.2rem;
@@ -587,6 +588,11 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	user-select: none;
 }
 
+.als-label.wrap-label { /* Will be added to the label if text length is too big */
+	width: 100%;
+	flex: none;
+}
+
 .als-input {
 	width: 7rem; /* Hack for older browsers */
 	flex: 9999 1 5rem;
@@ -894,6 +900,34 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	padding: 0.5rem;
 	box-sizing: border-box;
 }
+
+/* Loading animation */
+.als-loading-container {
+	width: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+	border-top: var(--border);
+	background: var(--fixed-element-bg);
+}
+
+.als-loading {
+	width: 100%;
+	height: 0.7rem;
+	background: var(--fixed-element-selected-bg);
+	animation: als-loading 2.5s ease-in-out infinite;
+}
+
+@keyframes als-loading {
+	0% { transform: translateX(-100%); }
+	50% { transform: translateX(100%); }
+	100% { transform: translateX(-100%); }
+}
+
+/*@keyframes als-loading {
+	0% { left: -6rem; }
+	50% { left: 105%; }
+	100% { left: -6rem; }
+}*/
 
 /* IE11 hacks */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {

@@ -10,7 +10,7 @@
  * `Wall width (m): 10` - When unitsPosition set to "description"
  *
  * @param id {string} ID of this label
- * @param description {string} Value description. You can use locale property to localize it.
+ * @param description {string} Value description. Pass locale property to localize it.
  * @param units {string} Units for this label. If set to empty string, unitsPosition won't take an effect.
  * @param unitsPosition {"description"|"value"} Units position. If set to "description", units will be displayed after description. Otherwise, units will be displayed after the value.
  * @param formatNumbers {boolean} If set to true, value will be formatted using {@link L.ALS.Helpers.formatNumber}
@@ -37,7 +37,7 @@ L.ALS.Widgets.ValueLabel = L.ALS.Widgets.SimpleLabel.extend( /** @lends L.ALS.Wi
 
 	/**
 	 * Sets description of this label
-	 * @param description {string} Value description. You can use locale property to localize it.
+	 * @param description {string} Value description. Pass locale property to localize it.
 	 * @return {L.ALS.Widgets.ValueLabel} This
 	 */
 	setDescription: function (description) {

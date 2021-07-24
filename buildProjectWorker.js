@@ -11,13 +11,12 @@ for (let file of files) {
 	let build = persistify({
 		entries: [file + ".js"],
 		debug: generateSourceMaps
-	});
-	build.require(require.resolve("buffer/"), {expose: "buffer"});
+	}).require(require.resolve("buffer/"), {expose: "buffer"});
 
 	if (notPolyfills) { // Transform everything except polyfills from CoreJS
 		build = build.transform("babelify", {
 			presets: ["@babel/preset-env"],
-			global: true, // ShpJS is built without polyfills and uses async functions. So we have to build node_modules too. Maybe other libraries are built this way too.
+			global: true, // Some dependencies might not support everything we aim to support
 			minified: !workerData.debug,
 		});
 	}

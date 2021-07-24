@@ -2,7 +2,7 @@
  * File input widget
  *
  * @param id {string} ID of this input. You can select this object using this ID.
- * @param label {string} Label for this input. You can also pass locale property to localize the label.
+ * @param label {string} Label for this input. Pass locale property to localize the label.
  * @param callbackObject {Object|L.ALS.Serializable} Object which contains callback. Just pass "this". If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.
  * @param callback {string} Name of the method of callbackObject that will be called when widget's value changes
  *
@@ -51,11 +51,22 @@ L.ALS.Widgets.File = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets.F
 			return;
 		}
 
-		let value = "Selected files: ";
+		let value = L.ALS.locale.fileSelectedFile + " ";
 		for (let file of files)
 			value += file.name + "; ";
 		value = value.slice(0, value.length - 2) + ".";
 		this._fileArea.innerHTML = value;
+	},
+
+	/**
+	 * Clears file area
+	 * @return {L.ALS.Widgets.File} This
+	 */
+	clearFileArea: function () {
+		this.input.type = "";
+		this.input.type = "file";
+		this._updateFileArea();
+		return this;
 	},
 
 	/**

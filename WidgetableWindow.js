@@ -7,14 +7,14 @@
  * 1. {@link L.ALS.WidgetableWindow#window} -- actual window. It contains only one child: {@link L.ALS.Widgetable}'s container ({@link L.ALS.Widgetable#container} property). You can add custom elements to the window at {@link L.ALS.WidgetableWindow#initialize}.
  * 1. {@link L.ALS.WidgetableWindow#container} -- Widgetable's container.
  *
- * @param button {Element} Button which will activate this window
+ * @param button {Element|undefined} Button which will activate this window. Don't pass anything if you plan to open and close this window manually.
  *
  * @class
  * @extends L.ALS.Widgetable
  */
 L.ALS.WidgetableWindow = L.ALS.Widgetable.extend( /** @lends L.ALS.WidgetableWindow.prototype */ {
 
-	initialize: function (button) {
+	initialize: function (button = undefined) {
 		L.ALS.Widgetable.prototype.initialize.call(this, "als-window-content");
 		this.setConstructorArguments(arguments);
 
@@ -35,6 +35,7 @@ L.ALS.WidgetableWindow = L.ALS.Widgetable.extend( /** @lends L.ALS.WidgetableWin
 		this.window.appendChild(this.container);
 		this.windowContainer.appendChild(this.window);
 
-		L.ALS.Helpers.makeHideable(button, this.windowContainer, undefined, undefined, false);
+		if (button)
+			L.ALS.Helpers.makeHideable(button, this.windowContainer, undefined, undefined, false);
 	},
 });

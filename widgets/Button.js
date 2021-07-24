@@ -5,7 +5,7 @@
  * @extends L.ALS.Widgets.BaseWidget
  *
  * @param id {string} ID of this input. You can select this object using this ID.
- * @param text {string} Text for the button. You can also pass locale property to localize the text.
+ * @param text {string} Text for the button. Pass locale property to localize the text.
  * @param callbackObject {Object|L.ALS.Serializable} Just pass "this". If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.
  * @param callback {string} Name of a method of callbackObject that will be called when button will be pressed.
  */
@@ -34,7 +34,7 @@ L.ALS.Widgets.Button = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets
 
 	/**
 	 * Sets button text
-	 * @param text {string} text to set. Can be a locale property.
+	 * @param text {string} text to set. Pass locale property to localize it.
 	 * @return {L.ALS.Widgets.Button} This
 	 */
 	setButtonText: function (text) {

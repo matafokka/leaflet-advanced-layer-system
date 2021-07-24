@@ -80,7 +80,7 @@ for (let style of styles) {
 
 		fs.writeFile(dir + filename, newCss, {}, (err) => {
 			if (err)
-				console.log(err);
+				console.error(err);
 			else if (filename === cssFilename)
 				transformedBaseCss = newCss;
 		});
@@ -90,7 +90,7 @@ for (let style of styles) {
 // Copy RemixIcon fonts to dist
 fs.readdir(remixIconDir, {}, (err, files) => {
 	if (err !== null) {
-		console.log(err);
+		console.error(err);
 		return;
 	}
 
@@ -98,7 +98,7 @@ fs.readdir(remixIconDir, {}, (err, files) => {
 		if (!file.endsWith("css"))
 			fs.writeFile(dir + "css/" + file, fs.readFileSync(remixIconDir + file), (err) => {
 				if (err !== null)
-					console.log(err);
+					console.error(err);
 			});
 	}
 });

@@ -17,7 +17,7 @@
 L.ALS.Wizard = L.ALS.Widgetable.extend( /** @lends L.ALS.Wizard.prototype */ {
 
 	/**
-	 * Name of the layer type that will be displayed in the wizard window. You can use locale property to localize it.
+	 * Name of the layer type that will be displayed in the wizard window. Set it to locale property to localize it.
 	 * @type {string}
 	 * @readonly
 	 */

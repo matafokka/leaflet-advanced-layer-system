@@ -37,23 +37,25 @@ L.ALS.Widgets.SimpleLabel = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Wi
 
 	/**
 	 * Sets value of this label.
-	 * @param value {string} Value to set. You can also pass locale property to localize the label.
+	 * @param value {string} Value to set. Pass locale property to localize the label. Pass an empty string to hide the label.
 	 * @return {L.ALS.Widgets.SimpleLabel}
 	 */
 	setValue: function (value) {
 		L.ALS.Locales.localizeOrSetValue(this.input, value);
 
-		if (this.container === undefined)
+		if (!this.container)
 			return this;
+
 		let display = "";
 		if (value === "")
 			display = "none";
 		this.container.style.display = display;
+
 		return this;
 	},
 
 	/**
-	 * @return {string} Text of this label or locale property if set
+	 * @return {string} Text of this label or locale property (if set)
 	 */
 	getValue: function () {
 		return L.ALS.Locales.getLocalePropertyOrValue(this.input);

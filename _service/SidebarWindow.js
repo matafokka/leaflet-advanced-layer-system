@@ -4,9 +4,9 @@ const debounce = require("debounce");
  * A sidebar window with ability to add items to it
  *
  * @param button {Element} Button which will activate this window
- * @param sidebarTitle {string} Title of the sidebar. You can pass locale property to localize it.
- * @param contentTitle {string} Title of the content. You can pass locale property to localize it.
- * @param closeButtonTitle {string} Title of the close button. You can pass locale property to localize it.
+ * @param sidebarTitle {string} Title of the sidebar. Pass locale property to localize it.
+ * @param contentTitle {string} Title of the content. Pass locale property to localize it.
+ * @param closeButtonTitle {string} Title of the close button. Pass locale property to localize it.
  * @param onCloseCallback {Function} Function that will be called when user will close the window.
  *
  * @class

@@ -70,7 +70,15 @@ require("./_service/SidebarWindow.js");
 require("./_service/WizardWindow.js");
 require("./_service/SettingsWindow.js");
 require("./_service/IEErrorWindow.js");
+require("./OperationsWindow.js");
 require("./LeafletLayers/LeafletLayers.js");
+
+/**
+ * A loading window for your long-running operations
+ * @type {L.ALS.OperationsWindow}
+ */
+L.ALS.operationsWindow = new L.ALS.OperationsWindow();
+document.body.appendChild(L.ALS.operationsWindow.windowContainer);
 
 /**
  * @callback onJsonSave
@@ -687,7 +695,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			else
 				L.ALS.Helpers.createDataURL(filename, "application/zip", "base64", data);
 		}).catch((reason) => {
-			console.log(reason);
+			console.error(reason);
 		});
 	},
 
@@ -720,7 +728,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		try { this._loadProjectWorker(json); }
 		catch (e) {
 			window.alert(L.ALS.locale.systemNotProject);
-			console.log(e);
+			console.error(e);
 		}
 	},
 

@@ -45,6 +45,7 @@ L.ALS.Locales["English"] = {
 	generalSettingsLightTheme: "Light",
 	generalSettingsDarkTheme: "Dark",
 	generalSettingsSystemTheme: "System",
+	generalSettingsNotify: "Notify when all long-running operations are complete (unchecking it removes annoying window that says: \"All operations complete\")",
 
 	// System
 
@@ -63,6 +64,9 @@ L.ALS.Locales["English"] = {
 	systemIEAdjustSettings7: "Find \"Include local directory path when uploading files to a server\" and set it to \"Enable\".",
 	systemIEAdjustSettings8: "Click \"Ok\" in both windows and reload this page.",
 	systemIEAdjustSettingsOkButton: "Ok",
+
+	// Notification when all long-running operations are complete
+	systemOperationsComplete: "All operations complete",
 
 	// Layer
 
