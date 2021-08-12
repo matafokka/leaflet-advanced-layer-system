@@ -1,7 +1,7 @@
 {
   "name": "leaflet-advanced-layer-system",
-  "version": "1.1.0",
-  "description": "An advanced layer system (and more) for Leaflet",
+  "version": "1.2.0",
+  "description": "An advanced layer system and more for Leaflet",
   "main": "dist/System.js",
   "browserslist": [
     "chrome >= 7",
@@ -40,7 +40,7 @@
   "scripts": {
     "test": "node tests/runTests.js",
     "build": "node build.js",
-    "generateDocs": "jsdoc ./ -c jsdoc.conf.json",
+    "docs": "jsdoc ./ -c jsdoc.conf.json",
     "prepublishOnly": "node build.js"
   },
   "keywords": [
@@ -66,6 +66,7 @@
     "@babel/preset-env": "^7.12.1",
     "@babel/runtime-corejs3": "^7.12.5",
     "babelify": "^10.0.0",
+    "browser-fs-access": "^0.20.1",
     "browserify": "^16.1.1",
     "buffer": "^4.9.2",
     "chalk": "^2.4.2",

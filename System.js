@@ -9,6 +9,12 @@ require("keyboardevent-key-polyfill").polyfill();
  */
 
 /**
+ * JSZip instance
+ * @external JSZip
+ * @see https://stuk.github.io/jszip/
+ */
+
+/**
  * Root object containing all Layer System stuff.
  *
  * Layer System contains these important "subsystems":
@@ -103,10 +109,13 @@ document.body.appendChild(L.ALS.operationsWindow.windowContainer);
  * @property {string} [aboutHTML=undefined] HTML that will be displayed in "About" section in settings. Defaults to undefined.
  * @property {string} [defaultLocale="English"] Locale to use by default. Defaults to "English".
  * @property {string} [filePrefix=""] Prefix that will be added to the saved files, i.e. if equals to "MyApp", saved project file will be called "MyAppProject.json" instead of "Project.json". Defaults to empty string.
- * @property {boolean} [enableSettings=true] If set to true, user will be able to set up your application using built-in settings system. Otherwise, settings button will be removed. Setting this option to `false` is not recommended because you'll need to implement theme and locale switching yourself. System doesn't provide any API for that, so disabling this option is not recommended. Defaults to true.
- * @property {boolean} [enableProjects=true] If set to true, user will be able to save and load projects using built-in serialization system. Otherwise, save and load buttons will be removed. Defaults to true.
- * @property {boolean} [enableExport=true] If set to true, user will be able to export project to JSON. Otherwise, export button will be removed. Defaults to true.
- * @property {boolean} [enableBaseLayerSwitching=true] If set to true, user will be able to switch Leaflet base layers (i.e. map providers). Otherwise, maps select menu will be removed. Defaults to true.
+ * @property {"project-and-title"|"project"|"title"} [tabTitle="project-and-title"] For Chrome with FileSystem API support only. Defines what to put in tab title, uses existing `<title>` tag. Possible values: `project-and-title` - will prepend project name to the existing title, so it'll look like "ProjectFileNameWithoutExtension - Existing Title"; `"project-name"` - will replace existing title with project name; `"title"` - will not change title. **Note:** to enable this feature in Electron, add `app.commandLine.appendSwitch("enable-experimental-web-platform-features");` to your main script. Defaults to "project-and-title".
+ * @property {boolean} [enableNotificationOnExit=true] If true, on exit, will show a notification that says: "Your project might have unsaved changes. Do you wan't to stay and save it?". It uses a well known hack that prevents tab on closing. However, this hack might interfere with frameworks such as Electron or NW.js. If you're experiencing issues with it, set it to `false`. For Electron, use {@link ElectronIntegration.integrate} in your Electron entry point. For other frameworks, show a dialog box and pass `L.ALS.locale.systemBeforeExit` property to it. Doesn't take effect in Electron. Defaults to `true`.
+ * @property {boolean} [enableKeyboardShortcuts=true] If true, enables `Ctrl+S` (works only in browsers that supports Blob) and `Ctrl+O` shortcuts for project saving and loading respectively.
+ * @property {boolean} [enableSettings=true] If true, user will be able to set up your application using built-in settings system. Otherwise, settings button will be removed. Setting this option to `false` is not recommended because you'll need to implement theme and locale switching yourself. System doesn't provide any API for that, so disabling this option is not recommended. Defaults to true.
+ * @property {boolean} [enableProjects=true] If true, user will be able to save and load projects using built-in serialization system. Otherwise, save and load buttons will be removed. Defaults to true.
+ * @property {boolean} [enableExport=true] If true, user will be able to export project to JSON. Otherwise, export button will be removed. Defaults to true.
+ * @property {boolean} [enableBaseLayerSwitching=true] If true, user will be able to switch Leaflet base layers (i.e. map providers). Otherwise, maps select menu will be removed. Defaults to true.
  * @property {"topleft"|"topright"|"bottomleft"|"bottomright"} [position="topright"] Position of the menu button. If set to topleft or bottom left, menu itself will be on the left side. Defaults to "topright".
  * @property {Function} [useOnlyThisLayer=undefined] If you need to display only one layer and disable ability to add other layers, pass your layer's class (class, not an instance, i.e. `L.ALS.Layer`, not `new L.ALS.Layer()`) here. So you'll end up with pretty much static menu. Defaults to undefined.
  * @property {onJsonSave} [onJsonSave=undefined] A function to call when project is being saved. Replaces default saving routine. Will be used ONLY if user's browser doesn't support Blob. Here you must provide a routine to save a string to a file. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks, fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to undefined.
@@ -262,6 +271,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	_useOnlyOneLayer: false,
 
+	/**
+	 * @see SystemOptions.tabTitle
+	 * @type {"project-and-title"|"project"|"title"}
+	 * @private
+	 */
+	_tabTitle: "",
+
 	initialize: function (map, options) {
 		L.Control.prototype.initialize.call(this);
 
@@ -276,6 +292,9 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			position: "topright",
 			useOnlyThisLayer: undefined,
 			filePrefix: "",
+			tabTitle: "project-and-title",
+			enableKeyboardShortcuts: true,
+			enableNotificationOnExit: true,
 		}
 
 		let callbacks = ["onJsonSave", "onJsonLoad", "onProjectExport"];
@@ -289,6 +308,11 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			L.ALS._service[callback] = newOptions[callback];
 
 		L.ALS._service.filePrefix = newOptions.filePrefix;
+
+		this._tabTitle = (L.ALS.Helpers._chromeFSSupported) ? newOptions.tabTitle : "title";
+		if (!L.ALS._service.tabTitle) // In case multiple ALS instances used
+			L.ALS._service.tabTitle = document.title;
+		this._setTabTitle(L.ALS.locale.systemNewFileTabTitle);
 
 		/**
 		 * Contains base layers. Layers will be added in format: "Name": layer object. addBaseLayer() will update this object.
@@ -373,17 +397,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		 */
 		this._loadButton = document.getElementById("als-load-input");
 		this._loadButton.addEventListener("change", () => {
-
-			if (!L.ALS.Helpers.isObjectEmpty(this._layers) && !window.confirm(L.ALS.locale.systemProjectAlreadyOpen)) {
-				this._loadButton.value = "";
-				return;
-			}
-
-			if (L.ALS._service.onProjectLoad === undefined)
-				L.ALS.Helpers.readTextFile(this._loadButton, L.ALS.locale.systemProjectLoadingNotSupported, (text) => { this._loadProject(text); });
-			else
-				L.ALS._service.onProjectLoad(this._loadButton, (text) => { this._loadProject(text); });
-
+			this._loadProject();
 		});
 
 		this._exportButton = mapContainer.getElementsByClassName("als-export-button")[0];
@@ -392,7 +406,9 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		});
 
 		this._settingsButton = mapContainer.getElementsByClassName("als-settings-button")[0];
-		this._settingsWindow = new L.ALS._service.SettingsWindow(this._settingsButton, () => { this._applyNewSettings(); }, newOptions.aboutHTML);
+		this._settingsWindow = new L.ALS._service.SettingsWindow(this._settingsButton, () => {
+			this._applyNewSettings();
+		}, newOptions.aboutHTML);
 		this._settingsWindow.addItem("settingsGeneralSettings", new L.ALS._service.GeneralSettings(newOptions.defaultLocale));
 
 		// IE and old browsers (which are unsupported by ALS) either doesn't implement LocalStorage or doesn't support it when app runs locally
@@ -429,6 +445,42 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			 */
 			L.ALS.Helpers._ieProjectErrorWindow = new L.ALS._service.IEErrorWindow();
 			document.body.appendChild(L.ALS.Helpers._ieProjectErrorWindow.windowContainer);
+		}
+
+		// Keyboard shortcuts
+		document.addEventListener("keydown", (e) => {
+			if (!newOptions.enableKeyboardShortcuts || !e.ctrlKey)
+				return;
+
+			let preventDefault = true;
+
+			let symbol = (e.code) ? e.code[2] : "";
+			let code = e.keyCode || e.which;
+
+			if ((symbol === "S" || code === 83) && L.ALS.Helpers.supportsBlob) // Without blob, it's a headache to save files
+				this._saveProject();
+			else if (symbol === "O" || code === 79)
+				this._loadProject();
+			else
+				preventDefault = false;
+			if (preventDefault)
+				e.preventDefault();
+		});
+
+		// Add notification that says "Successfuly saved"
+		if (L.ALS.Helpers._chromeFSSupported) {
+			this._saveLabel = new L.ALS.Widgets.SimpleLabel("als-saved-notification", "systemProjectSaved", "center", "success").container;
+			this._saveLabel.classList.add("als-saved-notification");
+			mapContainer.appendChild(this._saveLabel);
+		}
+
+		// Add notification on tab closing
+		if (!L.ALS._closeEventAdded && newOptions.enableNotificationOnExit && !L.ALS.Helpers.isElectron) {
+			L.ALS._closeEventAdded = true;
+			window.addEventListener("beforeunload", (e) => {
+				e.returnValue = L.ALS.locale.systemBeforeExit;
+				return L.ALS.locale.systemBeforeExit;
+			});
 		}
 
 		// Remove unused items from the menu. Doing this after adding all the stuff is way easier and cleaner than writing ifs above :D
@@ -704,7 +756,12 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @private
 	 */
 	_saveProject: function () {
-		let json = { layerOrder: [] };
+		let center = this.map.getCenter();
+		let json = {
+			layerOrder: [],
+			center: [center.lat, center.lng],
+			zoom: this.map.getZoom(),
+		};
 
 		this._forEachLayer((layer) => {
 			json.layerOrder.push(layer.id);
@@ -716,7 +773,20 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			json[layer.id] = layer.serialize(seenObjects);
 		}
 		L.ALS.Serializable.cleanUp(seenObjects);
-		L.ALS.Helpers.saveAsText(JSON.stringify(json), L.ALS._service.filePrefix + "Project.json");
+		let promise = L.ALS.Helpers._saveAsTextWorker(JSON.stringify(json), L.ALS._service.filePrefix + "Project.json", true);
+
+		if (promise) {
+			promise.then(() => {
+				if (L.ALS.Helpers._chromeHandle)
+					this._setTabTitle(L.ALS.Helpers._chromeHandle.name);
+			});
+
+			// Show "Project Saved" notification
+			this._saveLabel.classList.add("shown");
+			setTimeout(() => {
+				this._saveLabel.classList.remove("shown");
+			}, 1500);
+		}
 	},
 
 	/**
@@ -724,12 +794,30 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @param json {string} JSON from read file
 	 * @private
 	 */
-	_loadProject: function (json) {
-		try { this._loadProjectWorker(json); }
-		catch (e) {
-			window.alert(L.ALS.locale.systemNotProject);
-			console.error(e);
+	_loadProject: function () {
+		if (!L.ALS.Helpers.isObjectEmpty(this._layers) && !window.confirm(L.ALS.locale.systemProjectAlreadyOpen)) {
+			this._loadButton.value = "";
+			return;
 		}
+
+		if (L.ALS.Helpers.supportsFileNameProperty)
+			this._setTabTitle(this._loadButton.files[0].name);
+
+		let cb = (text) => {
+			try {
+				this._loadProjectWorker(text);
+			} catch (e) {
+				window.alert(L.ALS.locale.systemNotProject);
+				console.error(e);
+			}
+		}
+
+		if (!L.ALS._service.onProjectLoad)
+			L.ALS.Helpers.readTextFile(this._loadButton, L.ALS.locale.systemProjectLoadingNotSupported, cb);
+		else
+			L.ALS._service.onProjectLoad(this._loadButton, cb);
+
+
 	},
 
 	/**
@@ -745,6 +833,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			this._layers[id].deleteLayer();
 		this._layers = {};
 
+		// Restore layers
 		let selectedLayerID;
 		let seenObjects = {};
 		for (let id of serializedJson.layerOrder) {
@@ -763,6 +852,10 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		}
 		if (selectedLayerID !== undefined)
 			this._selectLayer(selectedLayerID);
+
+		// Restore center position. Condition is needed for compatibility with older ALS versions.
+		if (serializedJson.center)
+			this.map.setView(serializedJson.center, serializedJson.zoom);
 
 		L.ALS.Serializable.cleanUp(seenObjects);
 	},
@@ -806,10 +899,23 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		}
 	},
 
+	/**
+	 * Sets tab title
+	 * @param title {string} New title
+	 * @private
+	 */
+	_setTabTitle: function (title) {
+		if (this._tabTitle === "title")
+			return;
+		if (this._tabTitle === "project-and-title")
+			title += " - " + L.ALS._service.tabTitle;
+		document.title = title;
+	},
+
 	statics: {
 
 		/**
-		 * Performs some important operations. Must be called after all Leaflet and ALS imports.
+		 * Performs important operations. Must be called after all Leaflet and ALS imports.
 		 * @param scaleUIForPhoneUsers {boolean} If set to true, UI for phone users will be scaled automatically. Otherwise UI size will stay the same. Scaling is done by increasing root font size to 36pt.
 		 * @memberOf L.ALS.System
 		 */
@@ -844,6 +950,40 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 				}
 			}
 			addClassName(L, "L");
+
+			// Set preferred locale
+			if (L.ALS.Helpers.localStorage.getItem("settingsGeneralSettings|lang"))
+				return;
+
+			let locales = navigator.languages ||
+				[navigator.language || navigator.browserLanguage || navigator.userLanguage || navigator.systemLanguage || "en-us"];
+			let matchingLocale;
+			for (let userLocale of locales) {
+				let lowercase = userLocale.toLowerCase();
+				let userLang = lowercase.substring(0, 2);
+				let userRegion = lowercase.substring(3, 5);
+
+				if (!userLang)
+					continue;
+
+				let foundLocale = false;
+				for (let localeName in L.ALS.Locales) {
+					let locale = L.ALS.Locales[localeName];
+					if (locale.language !== userLang)
+						continue;
+
+					foundLocale = true;
+					matchingLocale = localeName;
+					if (userRegion && locale.region === userRegion)
+						break;
+				}
+				if (matchingLocale)
+					break;
+			}
+
+			// Set locale to local storage because SettingsWindow will try to read it from there and reset it back to English
+			if (matchingLocale)
+				L.ALS.Helpers.localStorage.setItem("settingsGeneralSettings|lang", matchingLocale);
 		}
 	}
 

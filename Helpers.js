@@ -1,11 +1,21 @@
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
 
+// For some reason, in Chrome 7 this throws: Uncaught ReferenceError: Promise is not defined
+// Despite that there's window.Promise, and everything's polyfilled correctly
+let chromeFS;
+try {
+	chromeFS = require("browser-fs-access");
+} catch (e) {
+	chromeFS = {supported: false};
+}
+
 /**
  * Contains helper methods and properties
  * @namespace
  */
 L.ALS.Helpers = {
+
 	/**
 	 * Dispatches event of given type to given object.
 	 * @param object {Object} Object to dispatch event to
@@ -210,17 +220,17 @@ L.ALS.Helpers = {
 
 		let firstLine;
 		if (L.ALS.Helpers.isIElte9) {
-			firstLine = "Please, download all the files"
+			firstLine = L.ALS.locale.systemDownloadNotSupportedIE; // Please, download all the files
 			if (extension !== "")
-				firstLine += " and manually set their extensions to \"" + extension + "\"";
+				firstLine += ` ${L.ALS.locale.systemDownloadNotSupportedExtensionIE} "${extension}"`; // and manually set their extensions to
 		} else {
-			firstLine = "Please, manually save text form all tabs that will open ";
+			firstLine = L.ALS.locale.systemDownloadNotSupported + " "; // Please, manually save text from all tabs that will open
 			if (extension === "")
-				firstLine += "after you'll close this window";
+				firstLine += L.ALS.locale.systemDownloadNotSupportedNoExtension; // after you'll close this window
 			else
-				firstLine += "to \"" + extension + "\" files.";
+				firstLine += `${L.ALS.locale.systemDownloadNotSupportedExtension1} "${extension}" ${L.ALS.locale.systemDownloadNotSupportedExtension2}.` // to "extension" files
 		}
-		window.alert(firstLine + "\n" + L.ALS.Helpers._inconvenienceText);
+		window.alert(firstLine + "\n" + L.ALS.locale.systemDownloadNotSupportedCommon); // Sorry for the inconvenience, bla-bla-bla
 	},
 
 	/**
@@ -236,7 +246,7 @@ L.ALS.Helpers = {
 		if (!link.download && notifyIfCantKeepExtension) {
 			let ext = L.ALS.Helpers.getFileExtension(filename);
 			if (ext.length !== 0)
-				window.alert("Please, manually change extension of the downloaded file to \"" + ext + "\".\n" + L.ALS.Helpers._inconvenienceText);
+				window.alert(`${L.ALS.locale.systemDownloadNotSupportedChangeExtensionManually} "${ext}".\n${L.ALS.locale.systemDownloadNotSupportedCommon}`);
 		}
 		link.download = filename;
 		link.href = "data:" + mediatype + ";" + encoding + "," + data;
@@ -249,14 +259,45 @@ L.ALS.Helpers = {
 	 * @param filename {string} Name of the file to save
 	 */
 	saveAsText: function (string, filename) {
+		this._saveAsTextWorker(string, filename);
+	},
+
+	/**
+	 * Saves string as text
+	 * @param string {string} String to save
+	 * @param filename {string} Name of the file to save
+	 * @param override {boolean} If true, when called second or later time, will override previously saved file. Utilises FileSystem API in Chrome and fs in Node. Use it only to save projects.
+	 * @return {Promise<void>|undefined} Promise which updates {@link L.ALS.Helpers._chromeHandle} when resolved, or undefined, if FileSytem API is not supported
+	 * @package
+	 * @ignore
+	 */
+	_saveAsTextWorker: function (string, filename, override = false) {
 		if (L.ALS.Helpers.supportsBlob) {
-			saveAs(new Blob([string], {type: 'text/plain'}), filename);
+			let blob = new Blob([string], {type: 'text/plain'});
+
+			if (override && chromeFS.supported) {
+				let ext = (this.isElectron) ? "json" : ".json"; // Electron appends dot automatically
+				return (async () => {
+					this._chromeHandle = await chromeFS.fileSave(blob, {
+						fileName: filename,
+						extensions: [ext],
+						mimeTypes: ["text/json"],
+					}, this._chromeHandle).catch((e) => {
+						if (e.name !== "AbortError")
+							saveAs(blob, filename);
+					});
+				})();
+			}
+
+			saveAs(blob, filename);
 			return;
 		}
+
 		if (L.ALS._service.onJsonSave) {
 			L.ALS._service.onJsonSave(string, filename);
 			return;
 		}
+
 		if (L.ALS.Helpers.supportsDataURL) {
 			this.createDataURL(filename, "text/plain", "base64",
 				// Taken from https://attacomsian.com/blog/javascript-base64-encode-decode
@@ -293,13 +334,19 @@ L.ALS.Helpers = {
 		}
 	},
 
-	_inconvenienceText: "Sorry for the inconvenience. Please, update your browser, so this and many other things on the web won't happen.\n\nYour download will start after you'll close this window.",
+	/**
+	 * Current FileSystem API handler
+	 * @private
+	 */
+	_chromeHandle: null,
 
 	/**
 	 * Indicates whether user's browser supports Blob or not
 	 * @type boolean
 	 */
 	supportsBlob: !!(JSZip.support.blob && (!window.webkitURL || (window.URL && window.URL.createObjectURL))),
+
+	_chromeFSSupported: chromeFS.supported, // So we don't need to write try-catch again
 
 	/**
 	 * Contains user's device type. This detection has been performed using only user agent. If you want to implement something that relies on actual device type, consider performing feature detection by yourself. Otherwise, use this property to maintain consistent look and feel.
@@ -314,34 +361,50 @@ L.ALS.Helpers = {
 	isMobile: true,
 
 	/**
-	 * If user's browser is IE (any version), will be true. Will be false otherwise.
+	 * Indicates whether user's browser is IE (any version).
 	 * @type {boolean}
 	 */
 	isIE: "ActiveXObject" in window,
 
 	/**
-	 * If user's browser is IE9 or less, will be true. Will be false otherwise.
+	 * Indicates whether user's browser is IE9 or older.
 	 * @type {boolean}
 	 */
 	isIElte9: window.ActiveXObject && !window.navigator.msSaveOrOpenBlob,
 
 	/**
-	 * If user's browser is IE11, will be true. Will be false otherwise.
+	 * Indicates whether user's browser is IE11.
 	 * @type {boolean}
 	 */
 	isIE11: !(window.ActiveXObject) && "ActiveXObject" in window,
 
 	/**
-	 * If user's browser supports flexbox, will be set to true. Will be false otherwise.
+	 * Indicates whether user's browser supports flexbox.
 	 * @type {boolean}
 	 */
 	supportsFlexbox: true,
 
 	/**
-	 * If user's browser is Chrome, will be set to true. Will be false otherwise.
+	 * Indicates whether user's browser is Chrome.
 	 * @type {boolean}
 	 */
 	isChrome: !!window.chrome,
+
+	/**
+	 * Indicates whether this library is running inside Electron.
+	 *
+	 * This is based on user agent: `navigator.userAgent.indexOf('Electron') !== -1`
+	 *
+	 * If you've modified user agent, feel free to change this field too.
+	 */
+	isElectron: (navigator.userAgent.indexOf('Electron') !== -1),
+
+	/**
+	 * Indicates whether user's browser supports File API and `File.prototype.name` property.
+	 * @type {boolean}
+	 * @private
+	 */
+	supportsFileNameProperty: (window.File && "name" in window.File.prototype),
 
 }
 

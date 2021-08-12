@@ -89,10 +89,6 @@ Known issues with old browsers (~7 years or older) that can't be fixed due to te
 
 You can solve these problems either by removing functionality based on the browser or by providing a backend which will receive the data and send it back to the client, so it will "simulate" a download. ALS provides the callbacks where you can make your requests. See `SystemOptions` docs for both options.
 
-# Tests
-
-[See the docs' home page.](https://matafokka.github.io/leaflet-advanced-layer-system/)
-
 # FAQ
 
 ## What about learning curve?

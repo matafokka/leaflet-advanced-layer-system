@@ -3,6 +3,8 @@
  * @type {Object}
  */
 L.ALS.Locales["English"] = {
+	language: "en",
+	region: "us",
 
 	// Menu buttons tooltips
 
@@ -49,10 +51,33 @@ L.ALS.Locales["English"] = {
 
 	// System
 
+	systemNewFileTabTitle: "New Project",
 	systemProjectAlreadyOpen: "You already have an opened project. If you'll open another project, your changes won't be saved. Are you sure you wan't to load another one?",
 	systemProjectLoadingNotSupported: "Sorry, your browser doesn't support project loading. However, you still can create a new project, save it and open it later in a newer browser.",
 	systemConfirmDeletion: "Are you sure you want to delete this layer?",
 	systemNotProject: "File that you're trying to load is not a valid project.",
+	systemProjectSaved: "Project saved",
+	systemBeforeExit: "Your project might have unsaved changes. Do you wan't to stay and save it?",
+	systemBeforeExitStay: "Stay",
+	systemBeforeExitExit: "Exit Without Saving",
+
+	// Warnings displayed when file download is not supported
+
+	// For IE9
+	systemDownloadNotSupportedIE: "Please, download all the files",
+	systemDownloadNotSupportedExtensionIE: "and manually set their extensions to",
+
+	// For other browsers
+	systemDownloadNotSupported: "Please, manually save text from all tabs that will open",
+	systemDownloadNotSupportedNoExtension: "after you'll close this window",
+	systemDownloadNotSupportedExtension1: "to", // ".extension"
+	systemDownloadNotSupportedExtension2: "files",
+
+	// If needed to change extension manually
+	systemDownloadNotSupportedChangeExtensionManually: "Please, manually change extension of the downloaded file to",
+
+	// Common line
+	systemDownloadNotSupportedCommon: "Sorry for the inconvenience. Please, update your browser, so this won't happen.\n\nYour download will start after you'll close this window.",
 
 	// Window that will be displayed in IE when user will try to load project.
 	systemIEAdjustSettings1: "Sorry, to open projects, you'll need to either switch to a normal browser or adjust your settings. To adjust your settings:",

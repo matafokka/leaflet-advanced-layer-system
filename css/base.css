@@ -929,6 +929,25 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	100% { left: -6rem; }
 }*/
 
+/* "Project Saved notification. Appears only in Chrome." */
+
+.als-saved-notification {
+	position: fixed;
+	width: auto;
+	left: 50%;
+	transform: translate(-50%);
+	padding: 0;
+	margin-top: -3rem;
+	box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 10, 0.9);;
+	user-select: none;
+	transition: margin-top 0.5s;
+}
+
+.als-saved-notification.shown {
+	margin-top: 1rem;
+	transition: margin-top 0.5s;
+}
+
 /* IE11 hacks */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
 	body {

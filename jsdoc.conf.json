@@ -14,12 +14,20 @@
 	}
   },
   "source": {
-	"exclude": ["./tests/", "./_service/", "./dist/", "./build.js", "./polyfills.js", "./node_modules/"]
+	"exclude": [
+	  "./tests/",
+	  "./_service/",
+	  "./dist/",
+	  "./build.js",
+	  "./polyfills.js",
+	  "./node_modules/"
+	]
   },
   "opts": {
 	"recurse": true,
 	"destination": "./docs/",
 	"template": "./node_modules/ink-docstrap/template",
-	"readme": "./README_DOCS.md"
+	"readme": "./README_DOCS.md",
+	"tutorials": "./jsdoc-tutorials"
   }
 }
