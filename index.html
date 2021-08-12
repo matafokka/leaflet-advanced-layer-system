@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
 				<ul class="dropdown-menu inline">
-					<li><a href="L.ALS.html">L.ALS</a></li><li><a href="L.ALS.Helpers.html">L.ALS.Helpers</a></li><li><a href="L.ALS.LeafletLayers.html">L.ALS.LeafletLayers</a></li><li><a href="L.ALS.Locales.html">L.ALS.Locales</a></li><li><a href="L.ALS.Widgets.html">L.ALS.Widgets</a></li>
+					<li><a href="ElectronIntegration.html">ElectronIntegration</a></li><li><a href="L.ALS.html">L.ALS</a></li><li><a href="L.ALS.Helpers.html">L.ALS.Helpers</a></li><li><a href="L.ALS.LeafletLayers.html">L.ALS.LeafletLayers</a></li><li><a href="L.ALS.Locales.html">L.ALS.Locales</a></li><li><a href="L.ALS.Widgets.html">L.ALS.Widgets</a></li>
 				</ul>
 			</li>
 			
@@ -41,6 +41,13 @@
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu inline">
 					<li><a href="L.ALS.ControlZoom.html">L.ALS.ControlZoom</a></li><li><a href="L.ALS.Layer.html">L.ALS.Layer</a></li><li><a href="L.ALS.LeafletLayers.CanvasLayer.html">L.ALS.LeafletLayers.CanvasLayer</a></li><li><a href="L.ALS.LeafletLayers.LabelLayer.html">L.ALS.LeafletLayers.LabelLayer</a></li><li><a href="L.ALS.LeafletLayers.WidgetLayer.html">L.ALS.LeafletLayers.WidgetLayer</a></li><li><a href="L.ALS.OperationsWindow.html">L.ALS.OperationsWindow</a></li><li><a href="L.ALS.Serializable.html">L.ALS.Serializable</a></li><li><a href="L.ALS.Settings.html">L.ALS.Settings</a></li><li><a href="L.ALS.System.html">L.ALS.System</a></li><li><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></li><li><a href="L.ALS.WidgetableWindow.html">L.ALS.WidgetableWindow</a></li><li><a href="L.ALS.Widgets.BaseItemsWidget.html">L.ALS.Widgets.BaseItemsWidget</a></li><li><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></li><li><a href="L.ALS.Widgets.Button.html">L.ALS.Widgets.Button</a></li><li><a href="L.ALS.Widgets.ButtonsGroup.html">L.ALS.Widgets.ButtonsGroup</a></li><li><a href="L.ALS.Widgets.Checkbox.html">L.ALS.Widgets.Checkbox</a></li><li><a href="L.ALS.Widgets.Color.html">L.ALS.Widgets.Color</a></li><li><a href="L.ALS.Widgets.Divider.html">L.ALS.Widgets.Divider</a></li><li><a href="L.ALS.Widgets.DropDownList.html">L.ALS.Widgets.DropDownList</a></li><li><a href="L.ALS.Widgets.Email.html">L.ALS.Widgets.Email</a></li><li><a href="L.ALS.Widgets.File.html">L.ALS.Widgets.File</a></li><li><a href="L.ALS.Widgets.Number.html">L.ALS.Widgets.Number</a></li><li><a href="L.ALS.Widgets.Password.html">L.ALS.Widgets.Password</a></li><li><a href="L.ALS.Widgets.RadioButtonsGroup.html">L.ALS.Widgets.RadioButtonsGroup</a></li><li><a href="L.ALS.Widgets.SimpleLabel.html">L.ALS.Widgets.SimpleLabel</a></li><li><a href="L.ALS.Widgets.Text.html">L.ALS.Widgets.Text</a></li><li><a href="L.ALS.Widgets.TextArea.html">L.ALS.Widgets.TextArea</a></li><li><a href="L.ALS.Widgets.Time.html">L.ALS.Widgets.Time</a></li><li><a href="L.ALS.Widgets.ValueLabel.html">L.ALS.Widgets.ValueLabel</a></li><li><a href="L.ALS.Wizard.html">L.ALS.Wizard</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
+				<ul class="dropdown-menu inline">
+					<li><a href="tutorial-electron.html">Using ALS with Electron</a></li><li><a href="tutorial-testing.html">For developers: testing ALS</a></li>
 				</ul>
 			</li>
 			
@@ -54,7 +61,7 @@
 			<li class="dropdown">
 				<a href="externals.list.html" class="dropdown-toggle" data-toggle="dropdown">Externals<b class="caret"></b></a>
 				<ul class="dropdown-menu inline">
-					<li><a href="external-L.html">L</a></li>
+					<li><a href="external-JSZip.html">JSZip</a></li><li><a href="external-L.html">L</a></li>
 				</ul>
 			</li>
 			
@@ -146,7 +153,7 @@
 <p>Projects are made by serializing everything on the map to JSON: layers, menus, widgets, etc. It's done this way so people will be able to make their applications as dynamic as they want.</p>
 <p>Both bless and curse of this is that changes in application introduces changes in project format. Yes, you won't need to change anything related to the file format, system will do everything for you. But you need to either provide a way to convert old projects to a new format or test everything carefully before the release.</p>
 <h1>Coding guidelines</h1>
-<p>Coding style:</p>
+<p>These guidelines are used in ALS, required for ALS modules (if you want to create one) and recommended for applications using ALS:</p>
 <ul>
 <li>Use one file per class. Such files should be named exactly the same as classes.</li>
 <li>Other files' names (such as build scripts) should use <code>camelCaseWithSmallFirstLetter</code>.</li>
@@ -163,62 +170,6 @@
 <li>Leaflet layers <strong>that uses ALS</strong> goes to both <code>L</code> and <a href="L.ALS.LeafletLayers.html"><code>L.ALS.LeafletLayers</code></a>. Other Leaflet layers still goes to <code>L</code>.</li>
 <li>Locales goes to <a href="L.ALS.Locales.html"><code>L.ALS.Locales</code></a>.</li>
 </ul>
-<h1>Testing ALS and custom modules (widgets, layers, etc)</h1>
-<p>This entry is mainly for ALS contributors.</p>
-<h2>Unit tests</h2>
-<p>ALS uses custom testing &quot;library&quot; which only runs tests and prettily prints results. It runs only scripts inside <code>tests</code> directory. There's only serialization test for now. To run tests, run <code>npm test</code>.</p>
-<p>If you plan to use this testing &quot;library&quot;, see <a href="https://github.com/matafokka/leaflet-advanced-layer-system/blob/master/tests/SerializationTest.js">SerializationTest</a> for the example on how to write tests.</p>
-<p>Otherwise, set up your own workflow.</p>
-<h2>Testing in application</h2>
-<p>First, you'll need either to:</p>
-<ul>
-<li>Set up a custom project - if you want to develop a module. In this case, you don't need the rest of the instructions.</li>
-<li>Use <a href="https://matafokka.github.io/SynthFlight">SynthFlight</a> - if you want to change ALS itself. SynthFlight is a testing polygon for ALS. Complexity of SynthFlight often shows edge cases, demonstrates performance, etc. So it's recommended to use SynthFlight, however, it's not prohibited to use a custom project.</li>
-</ul>
-<p>To use SynthFlight:</p>
-<ol>
-<li>Clone SynthFlight repo or just download source code from GitHub.</li>
-<li>Put SynthFlight and ALS directories to the same directory. Then rename both directories ash shown below. Final directory structure should be following:
-<ul>
-<li>Directory with the projects
-<ul>
-<li><strong>leaflet-advanced-layer-system</strong> - Contains ALS source code.
-<ul>
-<li>LeafletLayers</li>
-<li>node_modules</li>
-<li>...</li>
-<li>System.js</li>
-<li>package.json</li>
-<li>...</li>
-</ul>
-</li>
-<li><strong>SynthFlight</strong> - Contains SynthFlight source code. You may name this one whatever you want.
-<ul>
-<li>node_modules</li>
-<li>...</li>
-<li>main.js</li>
-<li>package.json</li>
-<li>...</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><code>cd</code> to the <code>leaflet-advanced-layer-system</code> directory.</li>
-<li>Run <code>npm install</code>.</li>
-<li>Run <code>npm link</code>.</li>
-<li><code>cd</code> to the SynthFlight directory.</li>
-<li>Run <code>npm install</code>.</li>
-</ol>
-<p>Last five steps should be completed exactly in specified order.</p>
-<p>Then write your code and run <code>npm run-script build</code> or <code>node build.js</code> to build ALS. All your changes will be reflected in SynthFlight because ALS has been <code>npm link</code>ed to SynthFlight.</p>
-<p>You can run SynthFlight different ways:</p>
-<ol>
-<li>In Electron using <code>npm start</code>. Use it only to quickly test your changes.</li>
-<li>On HTTP-server using <code>npm run-script runOnServer</code>. There're two more scripts to build and run in one command: <code>buildAndRun</code> and <code>buildAndRunDebug</code>.</li>
-<li>In a browser. Use <code>node build.js -b</code> to build SynthFlight. This script can be configured using flags, run <code>node build.js -h</code> to get help on them. After building, open <code>dist/SynthFlight-browser</code> directory and open <code>index.html</code> in a browser.</li>
-</ol>
 <h1>Docs are wrong / incomplete / hard to read / etc?</h1>
 <p>Huge apologies for that.</p>
 <p>Please, report all issues with the docs to <a href="https://github.com/matafokka/leaflet-advanced-layer-system">the ALS repo</a>.</p></article>
@@ -269,7 +220,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a>
 	
-		on 2021-07-24T15:35:38+03:00
+		on 2021-08-12T21:20:54+03:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ALS Namespace: Widgets</title>
+	<title>ALS Tutorial: Using ALS with Electron</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -88,182 +88,78 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
-			
-
-	<h1 class="page-title">Namespace: Widgets</h1>
-<section>
+			<section class="tutorial-section">
 
 <header>
     
-        <h2>
-            <span class="ancestors"><a href="L.ALS.html">.ALS</a>.</span>
-        
-        Widgets
-        </h2>
-        
-    
+
+    <h2>Using ALS with Electron</h2>
 </header>
 
-
 <article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>Contains widgets to add to <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a>s.</p>
-<p>Important notes:</p>
-<ol>
-<li>Widgets can be added only to <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a> using <a href="L.ALS.Widgetable.html#addWidget"><code>L.ALS.Widgetable#addWidget</code></a>.</li>
-<li>Widgets are using rather strange callback system due to limits related to the serialization.</li>
-<li>All widgets' public methods returns this, i.e. they can be chained.</li>
-<li>Settings will add a revert button to the widgets. You can control this behavior by changing <a href="L.ALS.Widgets.BaseWidget.html#undoable"><code>L.ALS.Widgets.BaseWidget#undoable</code></a> and <a href="L.ALS.Widgets.BaseWidget.html#containerForRevertButton"><code>L.ALS.Widgets.BaseWidget#containerForRevertButton</code></a> properties.</li>
-</ol>
-<p>Please, take a look at example below which explains all these thing.</p></div>
-        
+    <h1>Using ALS with Electron</h1>
+<p>This tutorial will help you to set up ALS with Electron.</p>
+<p>All the code should be in your Electron entry point.</p>
+<h1>Make window title show project name</h1>
+<p>Before creating a window, execute following line: <code>app.commandLine.appendSwitch(&quot;enable-experimental-web-platform-features&quot;);</code>.</p>
+<h1>Make app quit properly</h1>
+<p>Use <a href="ElectronIntegration.html"><code>ElectronIntegration</code></a>:</p>
+<pre class="prettyprint source"><code>const { app, BrowserWindow } = require(&quot;electron&quot;); // Import Electron stuff
+const integrate = require(&quot;leaflet-advenced-layer-system/ElectronIntegration&quot;); // Import integration function
 
-        
-<dl class="details">
-    
+function createWindow () {
+     const mainWindow = new BrowserWindow({ /* Window options... */ }); // Create window instance
+     integrate(mainWindow); // Integrate ALS with Electron
+     // Do your other stuff...
+}
+</code></pre>
+<h1>Example entry point</h1>
+<p>Let's put all of that together:</p>
+<pre class="prettyprint source"><code>const { app, BrowserWindow } = require(&quot;electron&quot;);
+const integrate = require(&quot;leaflet-advanced-layer-system/ElectronIntegration&quot;);
 
-	
+function createWindow () {
+     const mainWindow = new BrowserWindow({ /* Window options... */ });
+     integrate(mainWindow);
+     // Do your other stuff...
+}
 
-	
+app.commandLine.appendSwitch(&quot;enable-experimental-web-platform-features&quot;);
 
-	
+// Boilerplate code provided when you set up Electron App:
 
-    
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(() => {
+	createWindow();
 
-    
+	app.on(&quot;activate&quot;, function () {
+		// On macOS it's common to re-create a window in the app when the
+		// dock icon is clicked and there are no other windows open.
+		if (BrowserWindow.getAllWindows().length === 0) createWindow();
+	});
+});
 
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-            <h3>Example</h3>
-            
-    <pre class="sunlight-highlight-javascript">Create and add some widgets to the Layer&#x27;s menuL.ALS.MyLayer = L.ALS.Layer.extend({     init: function (wizardResults, settings) {         // Add widgets to the layer         this.addWidgets(             // Take a look at last two arguments. Third argument is an object which contains our callback. Fourth argument is a callback name.             // As a result, when widget&#x27;s value will change, L.ALS.MyLayer#someCallback0 method will be called.             (new L.ALS.Widgets.Number(&quot;myNumber0&quot;, &quot;Number 0&quot;, this, &quot;someCallback0&quot;)).             setMin(0).setMax(100).setStep(2).setValue(50), // We can instantiate a widget and set its properties at the same time by chaining all of that. Each setter returns the same widget.             // L.ALS.Widgetable#addWidgets() accepts numerous widgets. So let&#x27;s add some more.             (new L.ALS.Widgets.Number(&quot;myNumber1&quot;, &quot;Number 1&quot;, this, &quot;someCallback1&quot;)).setMin(0).setMax(1).setStep(0.1).setValue(0),             (new L.ALS.Widgets.Color(&quot;myColor&quot;, &quot;Color&quot;, this, &quot;someCallback2&quot;)).setValue(&quot;red&quot;),         );     },     // Add callbacks which will just console.log() widgets&#x27; values     someCallback0: function (widget) { console.log(widget.getValue()); }, // For &quot;myNumber0&quot; widget     someCallback1: function (widget) { console.log(widget.getValue()); }, // For &quot;myNumber1&quot; widget     someCallback2: function (widget) { console.log(widget.getValue()); }, // For &quot;myColor&quot; widget}</pre>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="L.ALS.Widgets.BaseItemsWidget.html">BaseItemsWidget</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.BaseWidget.html">BaseWidget</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Button.html">Button</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.ButtonsGroup.html">ButtonsGroup</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Checkbox.html">Checkbox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Color.html">Color</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Divider.html">Divider</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.DropDownList.html">DropDownList</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Email.html">Email</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.File.html">File</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Number.html">Number</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Password.html">Password</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.RadioButtonsGroup.html">RadioButtonsGroup</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.SimpleLabel.html">SimpleLabel</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Text.html">Text</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.TextArea.html">TextArea</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Time.html">Time</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.ValueLabel.html">ValueLabel</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', function () {
+	if (process.platform !== &quot;darwin&quot;) app.quit();
+});
+</code></pre>
 </article>
 
 </section>
-
-
-
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ALS Namespace: Widgets</title>
+	<title>ALS Tutorial: For developers: testing ALS</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -88,182 +88,83 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
-			
-
-	<h1 class="page-title">Namespace: Widgets</h1>
-<section>
+			<section class="tutorial-section">
 
 <header>
     
-        <h2>
-            <span class="ancestors"><a href="L.ALS.html">.ALS</a>.</span>
-        
-        Widgets
-        </h2>
-        
-    
+
+    <h2>For developers: testing ALS</h2>
 </header>
 
-
 <article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>Contains widgets to add to <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a>s.</p>
-<p>Important notes:</p>
+    <h1>Testing ALS and custom modules (widgets, layers, etc)</h1>
+<p>This tutorial is mainly for ALS contributors.</p>
+<h2>Unit tests</h2>
+<p>ALS uses custom testing &quot;library&quot; which only runs tests and prettily prints results. It runs only scripts inside <code>tests</code> directory. There's only serialization test for now. To run tests, run <code>npm test</code>.</p>
+<p>If you plan to use this testing &quot;library&quot;, see <a href="https://github.com/matafokka/leaflet-advanced-layer-system/blob/master/tests/SerializationTest.js">SerializationTest</a> for the example on how to write tests.</p>
+<p>Otherwise, set up your own workflow.</p>
+<h2>Testing in application</h2>
+<p>First, you'll need either to:</p>
+<ul>
+<li>Set up a custom project - if you want to develop a module. In this case, you don't need the rest of the instructions.</li>
+<li>Use <a href="https://matafokka.github.io/SynthFlight">SynthFlight</a> - if you want to change ALS itself. SynthFlight is a testing polygon for ALS. Complexity of SynthFlight often shows edge cases, demonstrates performance, etc. So it's recommended to use SynthFlight, however, it's not prohibited to use a custom project.</li>
+</ul>
+<p>To use SynthFlight:</p>
 <ol>
-<li>Widgets can be added only to <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a> using <a href="L.ALS.Widgetable.html#addWidget"><code>L.ALS.Widgetable#addWidget</code></a>.</li>
-<li>Widgets are using rather strange callback system due to limits related to the serialization.</li>
-<li>All widgets' public methods returns this, i.e. they can be chained.</li>
-<li>Settings will add a revert button to the widgets. You can control this behavior by changing <a href="L.ALS.Widgets.BaseWidget.html#undoable"><code>L.ALS.Widgets.BaseWidget#undoable</code></a> and <a href="L.ALS.Widgets.BaseWidget.html#containerForRevertButton"><code>L.ALS.Widgets.BaseWidget#containerForRevertButton</code></a> properties.</li>
+<li>Clone SynthFlight repo or just download source code from GitHub.</li>
+<li>Put SynthFlight and ALS directories to the same directory. Then rename both directories ash shown below. Final directory structure should be following:
+<ul>
+<li>Directory with the projects
+<ul>
+<li><strong>leaflet-advanced-layer-system</strong> - Contains ALS source code.
+<ul>
+<li>LeafletLayers</li>
+<li>node_modules</li>
+<li>...</li>
+<li>System.js</li>
+<li>package.json</li>
+<li>...</li>
+</ul>
+</li>
+<li><strong>SynthFlight</strong> - Contains SynthFlight source code. You may name this one whatever you want.
+<ul>
+<li>node_modules</li>
+<li>...</li>
+<li>main.js</li>
+<li>package.json</li>
+<li>...</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><code>cd</code> to the <code>leaflet-advanced-layer-system</code> directory.</li>
+<li>Run <code>npm install</code>.</li>
+<li>Run <code>npm link</code>.</li>
+<li><code>cd</code> to the SynthFlight directory.</li>
+<li>Run <code>npm install</code>.</li>
 </ol>
-<p>Please, take a look at example below which explains all these thing.</p></div>
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-            <h3>Example</h3>
-            
-    <pre class="sunlight-highlight-javascript">Create and add some widgets to the Layer&#x27;s menuL.ALS.MyLayer = L.ALS.Layer.extend({     init: function (wizardResults, settings) {         // Add widgets to the layer         this.addWidgets(             // Take a look at last two arguments. Third argument is an object which contains our callback. Fourth argument is a callback name.             // As a result, when widget&#x27;s value will change, L.ALS.MyLayer#someCallback0 method will be called.             (new L.ALS.Widgets.Number(&quot;myNumber0&quot;, &quot;Number 0&quot;, this, &quot;someCallback0&quot;)).             setMin(0).setMax(100).setStep(2).setValue(50), // We can instantiate a widget and set its properties at the same time by chaining all of that. Each setter returns the same widget.             // L.ALS.Widgetable#addWidgets() accepts numerous widgets. So let&#x27;s add some more.             (new L.ALS.Widgets.Number(&quot;myNumber1&quot;, &quot;Number 1&quot;, this, &quot;someCallback1&quot;)).setMin(0).setMax(1).setStep(0.1).setValue(0),             (new L.ALS.Widgets.Color(&quot;myColor&quot;, &quot;Color&quot;, this, &quot;someCallback2&quot;)).setValue(&quot;red&quot;),         );     },     // Add callbacks which will just console.log() widgets&#x27; values     someCallback0: function (widget) { console.log(widget.getValue()); }, // For &quot;myNumber0&quot; widget     someCallback1: function (widget) { console.log(widget.getValue()); }, // For &quot;myNumber1&quot; widget     someCallback2: function (widget) { console.log(widget.getValue()); }, // For &quot;myColor&quot; widget}</pre>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="L.ALS.Widgets.BaseItemsWidget.html">BaseItemsWidget</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.BaseWidget.html">BaseWidget</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Button.html">Button</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.ButtonsGroup.html">ButtonsGroup</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Checkbox.html">Checkbox</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Color.html">Color</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Divider.html">Divider</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.DropDownList.html">DropDownList</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Email.html">Email</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.File.html">File</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Number.html">Number</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Password.html">Password</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.RadioButtonsGroup.html">RadioButtonsGroup</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.SimpleLabel.html">SimpleLabel</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Text.html">Text</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.TextArea.html">TextArea</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.Time.html">Time</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgets.ValueLabel.html">ValueLabel</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+<p>Last five steps should be completed exactly in specified order.</p>
+<p>Then write your code and run <code>npm run-script build</code> or <code>node build.js</code> to build ALS. All your changes will be reflected in SynthFlight because ALS has been <code>npm link</code>ed to SynthFlight.</p>
+<p>You can run SynthFlight different ways:</p>
+<ol>
+<li>In Electron using <code>npm start</code>. Use it only to quickly test your changes.</li>
+<li>On HTTP-server using <code>npm run-script serve</code>. There're two more scripts to build and run in one command: <code>build-and-serve</code> and <code>build-and-serve-debug</code>.</li>
+<li>In a browser. Use <code>node build.js -b</code> to build SynthFlight. This script can be configured using flags, run <code>node build.js -h</code> to get help on them. After building, open <code>dist/SynthFlight-browser</code> directory and open <code>index.html</code> in a browser.</li>
+</ol>
 </article>
 
 </section>
-
-
-
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
