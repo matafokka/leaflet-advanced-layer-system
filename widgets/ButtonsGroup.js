@@ -7,6 +7,8 @@
  */
 L.ALS.Widgets.ButtonsGroup = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets.ButtonsGroup.prototype */ {
 
+	customContainerClassName: "als-buttons-group-wrapper",
+
 	initialize: function (id) {
 		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "", id, "");
 
@@ -20,7 +22,6 @@ L.ALS.Widgets.ButtonsGroup = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.W
 
 	toHtmlElement: function () {
 		let container = this.createContainer();
-		container.classList.add("als-buttons-group-wrapper");
 		return container;
 	},
 
@@ -32,6 +33,19 @@ L.ALS.Widgets.ButtonsGroup = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.W
 	addButton: function (button) {
 		this.container.appendChild(button.container);
 		this._items[button.id] = button;
+		button._isAdded = true;
+		return this;
+	},
+
+	/**
+	 * Adds buttons to this group
+	 * @param buttons {L.ALS.Widgets.Button} Buttons to add
+	 * @return this;
+	 */
+	addButtons: function (...buttons) {
+		for (let button of buttons)
+			this.addButton(button);
+		return this;
 	},
 
 	/**

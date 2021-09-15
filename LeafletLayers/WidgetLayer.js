@@ -28,7 +28,7 @@ L.ALS.LeafletLayers.WidgetLayer =  L.ALS.Widgetable.extend( /** @lends L.ALS.Lea
 		L.Marker.prototype.initialize.call(this, latLng);
 
 		this.setConstructorArguments(arguments);
-		this.serializationIgnoreList.push("dragging", "_icon", "_latlng", "_shadow", "_zIndex", "_zoomAnimated");
+		this.serializationIgnoreList.push("_events", "_eventParents", "getPane", "dragging", "_zIndex", "_zoomAnimated", "_latlng", "container", "options", "_icon", "_shadow", "getIcon", "getElement", "getAttribution", "getPopup", "getTooltip");
 
 		let divIcon = L.divIcon({
 			iconSize: null,

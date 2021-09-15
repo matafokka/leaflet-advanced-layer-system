@@ -11,6 +11,8 @@
  */
 L.ALS.Widgets.RadioButtonsGroup = L.ALS.Widgets.BaseItemsWidget.extend( /** @lends L.ALS.Widgets.RadioButtonsGroup.prototype */ {
 
+	customContainerClassName: "als-radio-group-wrapper",
+
 	initialize: function (id, label, callbackObject = undefined, callback = "") {
 		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "", id, label, callbackObject, callback, ["change"]);
 		this.radioNames = L.ALS.Helpers.generateID();
@@ -20,7 +22,6 @@ L.ALS.Widgets.RadioButtonsGroup = L.ALS.Widgets.BaseItemsWidget.extend( /** @len
 
 	toHtmlElement: function () {
 		let container = this.createContainer();
-		container.classList.add("als-radio-group-wrapper");
 		let labelWrapper = document.createElement("div");
 		labelWrapper.className = "als-radio-label-wrapper";
 		labelWrapper.appendChild(this.createLabel());

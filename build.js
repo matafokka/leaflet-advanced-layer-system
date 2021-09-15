@@ -2,9 +2,9 @@ const fs = require("fs");
 const fse = require("fs-extra");
 const postcss = require("postcss");
 const postcssPresetEnv = require("postcss-preset-env");
-const cssnano = require("cssnano");
 const postcssCssVariables = require("postcss-css-variables");
-const {generateCSSPatch} = require("css-patch");
+const prefixSelector = require("postcss-prefix-selector");
+const csso = require("csso");
 const {Worker} = require('worker_threads');
 
 let oldStamp = Date.now();
@@ -45,47 +45,43 @@ new Worker("./buildProjectWorker.js", {
 let remixIconDir = "node_modules/remixicon/fonts/"; // Path to all RemixIcon stuff
 let plugins = [
 	postcssCssVariables(),
-
 	postcssPresetEnv({
 		autoprefixer: {flexbox: "no-2009"}
 	}),
 ];
-if (!debug)
-	plugins.push(cssnano());
 
 let cssFilename = "css/base.css";
-// Prepend RemixIcon styles to our styles so we'll end up with only one directory containing our CSS. We'll copy fonts later.
-let css = fs.readFileSync(remixIconDir + "remixicon.css").toString() + fs.readFileSync(cssFilename).toString();
+let css = fs.readFileSync(cssFilename).toString();
+let darkCss = css + fs.readFileSync("css/dark.css").toString();
 
-// Build dark theme css by appending new variables to the base CSS, processing it and extracting differences
-let darkCssFilename = "css/dark.css";
-let darkCss = css + fs.readFileSync(darkCssFilename).toString();
+(async function() {
+	let options = {from: undefined};
+	let transformedBaseCss = (await postcss(plugins).process(css, options)).css;
+	let transformedDarkCss = (await postcss(plugins).process(darkCss, options)).css;
 
-let styles = [
-	[cssFilename, css],
-	[darkCssFilename, darkCss]
-];
+	let combineSelectors = [".mobile", ".not-mobile", ".als-fullscreen-map", ".als-electron-toolbar-as-frame", ".ie-lte-9", ".als-no-scroll"];
 
-let transformedBaseCss = undefined;
-for (let style of styles) {
-	let filename = style[0];
-	postcss(plugins).process(style[1], {from: undefined}).then(async (result) => {
+	transformedBaseCss += (await postcss([prefixSelector({
+		prefix: ".als-dark",
+		exclude: [/.als-dark/, /:root/],
+		transform: (prefix, selector, prefixedSelector) => {
+			if (selector === "body")
+				return selector + prefix;
 
-		let newCss = result.css;
-		if (filename === darkCssFilename) {
-			while (!transformedBaseCss)
-				await new Promise(resolve => setTimeout(resolve, 0));
-			newCss = generateCSSPatch(transformedBaseCss, newCss);
+			for (let s of combineSelectors) {
+				if (selector.startsWith(s))
+					return prefix + selector;
+			}
+			return prefixedSelector;
 		}
+	})]).process(transformedDarkCss, options)).css;
 
-		fs.writeFile(dir + filename, newCss, {}, (err) => {
-			if (err)
-				console.error(err);
-			else if (filename === cssFilename)
-				transformedBaseCss = newCss;
-		});
-	});
-}
+	let finalCSS = fs.readFileSync(remixIconDir + "remixicon.css").toString() + transformedBaseCss;
+	if (!debug)
+		finalCSS = csso.minify(finalCSS, {restructure: false}).css;
+
+	fs.writeFileSync(dir + cssFilename, finalCSS);
+})();
 
 // Copy RemixIcon fonts to dist
 fs.readdir(remixIconDir, {}, (err, files) => {

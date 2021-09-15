@@ -92,7 +92,10 @@ L.ALS.Widgetable = L.ALS.Serializable.extend( /** @lends L.ALS.Widgetable.protot
 	},
 
 	/**
-	 * Serializes widgets. Use this if you want to serialize only widgets in your own Widgetable.
+	 * Serializes widgets.
+	 *
+	 * If you're serializing {@link L.ALS.Layer}, you don't need to call this method, {@link L.ALS.Layer#getObjectToSerializeTo} already does that.
+	 *
 	 * @param seenObjects {Object} Already seen objects' ids. Intended only for internal use.
 	 * @return {Object} Object where keys are widget's ids and values are serialized widgets themselves
 	 */
@@ -116,23 +119,26 @@ L.ALS.Widgetable = L.ALS.Serializable.extend( /** @lends L.ALS.Widgetable.protot
 			let widgetJson = serializedWidgets[prop];
 			if (!widgetJson.serializableClassName)
 				continue;
-			let widget = L.ALS.Serializable.deserialize({w: widgetJson}, seenObjects).w;
-			this.addWidget(widget);
+			this.addWidget(L.ALS.Serializable.deserialize(widgetJson, seenObjects));
 		}
 	},
 
-	statics: {
+	_removeWidgetsContainers: function () {
+		while (this.container.hasChildNodes())
+			this.container.removeChild(this.container.firstChild);
+	},
 
-		/**
-		 * @see L.ALS.Serializable.deserialize
-		 * @override
-		 * @inheritDoc
-		 * @memberOf L.ALS.Widgetable
-		 */
+	statics: {
 		deserialize: function (serialized, seenObjects) {
-			let obj = this.getObjectFromSerialized(serialized, seenObjects);
-			obj.deserializeWidgets(serialized._widgets, seenObjects);
-			return obj;
+			let deserialized = L.ALS.Serializable.deserialize(serialized, seenObjects);
+			deserialized._removeWidgetsContainers();
+			for (let i in deserialized._widgets) {
+				let widget = deserialized._widgets[i];
+				if (widget instanceof L.ALS.Widgets.BaseWidget)
+					deserialized.addWidget(widget);
+			}
+			//deseriazlied.deserializeWidgets(serialized._widgets, seenObjects);
+			return deserialized;
 		},
 	}
 

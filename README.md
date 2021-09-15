@@ -1,26 +1,26 @@
 <!-- This readme is for library. For readme for the docs, see README_DOCS.md -->
 
-# Advanced Layer System for Leaflet
+# Advanced Layer System (ALS) for Leaflet
 
-Have you ever needed something more than a simple layer switcher? Probably, custom layer types? Multiple interactive layers? Ability to save and load projects like in big apps? Just cool menu? This library (let's call it ALS for short) got you covered!
+Have you ever needed something more than a simple layer switcher? Probably, custom layer types? Multiple interactive layers? Full-blown projects like in big apps? Just a cool menu? ALS got you covered!
 
 Layer system handles hard stuff like managing layers, hacking Leaflet, struggling with UI and everything else. You're left to focus only on your app's functionality.
 
-ALS is:
+Features:
 
 1. A layer system which allows you to create custom layer types and allows users to add those layers to the map. Users can add, delete, move, hide and tweak layers.
+1. Project management done by serialization. Projects can be exported as GeoJSON files. Yup, like in GIS.
+1. A simple menu which uses single layer type and doesn't feature all the advanced stuff.
 1. A widget library. Moreover, you can add widgets to the map!
-1. A serialization library which enables users to create projects in your app. Yup, like in GIS.
-1. An extras library: we've got wizards, settings, exporting, localization and, probably, more.
-1. A cool menu for your app.
+1. Extras: wizards, settings, localization, Electron integration and more!
 
 Sounds cool? See ["Getting started"](#getting-started) or jump straight to the [docs](https://matafokka.github.io/leaflet-advanced-layer-system/)!
 
-# Demo
+# Demos
 
-[SynthFlight](https://matafokka.github.io/SynthFlight) is aerial photography planning software which uses ALS. Well, initially, ALS has been developed for SynthFlight :D
+[ALS demos](https://matafokka.github.io/als-demos) - demonstrates all important ALS capabilities and provides the source code for all demos.
 
-Of course, you can create more simple apps by changing `L.ALS.System` options and not using advanced features.
+[SynthFlight](https://matafokka.github.io/SynthFlight) - aerial photography planning software which uses ALS. Well, initially, ALS has been developed for SynthFlight :D
 
 # [Docs](https://matafokka.github.io/leaflet-advanced-layer-system/)
 
@@ -36,21 +36,19 @@ Run `npm i leaflet-advanced-layer-system`.
 In your `index.html` add following stuff to the `<head>` after Leaflet's scripts and CSS:
 
 ```html
-
 <!-- ALS CSS. Must go before scripts. -->
 <link rel="stylesheet" href="css/base.css" />
-<link rel="stylesheet" href="css/dark.css" id="als-dark-theme-link" /> <!-- ID is required -->
 
-<!-- ALS scripts -->
-<script src="node_modules/leaflet-advanced-layer-system/dist/polyfills.js"></script> <!-- Polyfills, must go before ALS -->
-<script src="node_modules/leaflet-advanced-layer-system/dist/System.js"></script> <!-- ALS entry point. Alternatively, you can require it in your main script -->
+<!-- ALS scripts. Put in exact same order. -->
+<script src="node_modules/leaflet-advanced-layer-system/dist/polyfills.js"></script> <!-- Polyfills -->
+<script src="node_modules/leaflet-advanced-layer-system/dist/System.js"></script> <!-- ALS entry point. Alternatively, you can import it in your main script -->
 ```
 
 **Warning**: Polyfills should NEVER be transformed by anything! You still can `require()` them, but it's better to leave them in your HTML and ignore in your build script.
 
 ## Setting up a project
 
-In your entry point add following code:
+Add following code to your entry point:
 ```JavaScript
 require("leaflet-advanced-layer-system"); // Require this plugin or add it to your .html page via "script" tag as has been shown above
 require("./MyLayer.js"); // Require your layer types and other stuff
@@ -63,7 +61,7 @@ let map = L.map("map", { // Create a map
 let layerSystem = new L.ALS.System(map, { /* Options */ }); // Create an instance of this class
 let baseLayer = L.tileLayer(/* ... */); // Create some base layers
 layerSystem.addBaseLayer(baseLayer, "My Base Layer"); // Add your base layers to the system
-layerSystem.addLayerType(L.MyLayer); // Add your layer types
+layerSystem.addLayerType(L.ALS.MyLayer); // Add your layer types
 ```
 
 Then jump to the [docs](https://matafokka.github.io/leaflet-advanced-layer-system/) and start coding!
@@ -72,7 +70,7 @@ Then jump to the [docs](https://matafokka.github.io/leaflet-advanced-layer-syste
 
 ALS supports following browsers:
 
-* Chrome 7 or later.
+* Chrome 8 or later.
 * Firefox 22 or later.
 * Internet Explorer 9 or later.
 * Any other modern desktop or mobile browser.
@@ -94,6 +92,13 @@ You can solve these problems either by removing functionality based on the brows
 ## What about learning curve?
 
 Learning curve is a bit steep, but ALS solves much more problems than it adds.
+
+## ALS widgets vs modern frameworks with plugins
+
+1. ALS uses traditional and non-reactive widgets similar to Qt and GTK. Frameworks uses reactive components.
+1. ALS is faster since it uses straightforward DOM manipulation when needed instead of heavy stuff like Virtual DOM. ALS also doesn't need to sync components since it's not reactive.
+1. ALS provides way better browser support than most modern frameworks.
+1. ALS provides a huge set of features that you'll need to implement yourself otherwise.
 
 ## Can I use my favourite framework instead of built-in widget system?
 

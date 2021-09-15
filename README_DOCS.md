@@ -4,7 +4,7 @@
 
 And thank you for considering using this library!
 
-Don't know what ALS is? Check out its [GitHub page](https://github.com/matafokka/leaflet-advanced-layer-system) and [this project](https://matafokka.github.io/SynthFlight/) to see what it can do.
+Don't know what ALS is? Check out its [GitHub page](https://github.com/matafokka/leaflet-advanced-layer-system), [demos](https://matafokka.github.io/als-demos/) and [this project](https://matafokka.github.io/SynthFlight/) to see what it can do.
 
 # Docs overview
 
@@ -42,9 +42,11 @@ ALS includes following polyfills:
 
 Please, test your application before adding any other polyfills (even CoreJS and Babel Runtime!) because it might work just fine as it is.
 
+Do **NOT** mangle object properties unless it uses hashing! It'll break everything that depends on serialization: projects, settings and undo/redo.
+
 # Project file format
 
-Projects are made by serializing everything on the map to JSON: layers, menus, widgets, etc. It's done this way so people will be able to make their applications as dynamic as they want.
+Projects are made by serializing everything to JSON: layers, menus, widgets, etc. It's done this way so people will be able to make their applications as dynamic as they want.
 
 Both bless and curse of this is that changes in application introduces changes in project format. Yes, you won't need to change anything related to the file format, system will do everything for you. But you need to either provide a way to convert old projects to a new format or test everything carefully before the release.
 
@@ -56,7 +58,7 @@ These guidelines are used in ALS, required for ALS modules (if you want to creat
 * Other files' names (such as build scripts) should use `camelCaseWithSmallFirstLetter`.
 * Namespaces, classes and static fields should use `CamelCase`.
 * Instance fields, methods, variables and functions should use `camelCaseWithSmallFirstLetter`.
-* Private members' names should start with an underscore (`_`).
+* Private and package-only members should start with an underscore (`_`).
 * Use of JSDoc is highly encouraged. Look at ALS source code to find out how to use it correctly.
 * As for code formatting, you may use any style and linter you want.
 
@@ -67,8 +69,6 @@ In which namespace your modules should be:
 * Leaflet layers **that uses ALS** goes to both {@link L} and {@link L.ALS.LeafletLayers}. Other Leaflet layers still goes to {@link L}.
 * Locales goes to {@link L.ALS.Locales}.
 
-# Docs are wrong / incomplete / hard to read / etc?
+# Where to report issues with the docs?
 
-Huge apologies for that.
-
-Please, report all issues with the docs to [the ALS repo](https://github.com/matafokka/leaflet-advanced-layer-system).
+[To the ALS repo](https://github.com/matafokka/leaflet-advanced-layer-system).

@@ -10,6 +10,8 @@ L.ALS.Widgets.Divider = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widget
 
 	undoable: false,
 
+	customContainerClassName: "als-divider",
+
 	initialize: function (id) {
 		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "", id, "");
 		this.setConstructorArguments(id);
@@ -17,7 +19,6 @@ L.ALS.Widgets.Divider = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widget
 
 	toHtmlElement: function () {
 		let container = this.createContainer();
-		container.classList.add("als-divider");
 		return container;
 	}
 });

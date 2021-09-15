@@ -89,16 +89,7 @@ L.ALS.Helpers = {
 	 * @param newOptions {Object} Options passed by the user
 	 * @return {Object} Object containing merged properties of two given objects
 	 */
-	mergeOptions: function (defaultOptions, newOptions) {
-		let resultingOptions = {};
-		for (let obj of [defaultOptions, newOptions]) {
-			for (let prop in obj) {
-				if (obj.hasOwnProperty(prop) && defaultOptions.hasOwnProperty(prop))
-					resultingOptions[prop] = obj[prop];
-			}
-		}
-		return resultingOptions;
-	},
+	mergeOptions: require("./_service/mergeOptions.js"),
 
 	/**
 	 * Finds extension of the given filename, i.e. part after last dot.
@@ -122,11 +113,11 @@ L.ALS.Helpers = {
 	 * @param element {Element} Element that will be controlled
 	 * @param onHideCallback {function} Function to call on hiding
 	 * @param onShowCallback {function} Function to call on showing
-	 * @param clickAfter {boolean} If set to true, button will be clicked after all the things will be applied. You may want to set it to false if your callbacks affects unfinished stuff.
+	 * @param clickAfter {boolean} If true, button will be clicked after all the things will be applied. You may want to set it to false if your callbacks affects unfinished stuff.
 	 */
 	makeHideable: function (button, element = undefined, onHideCallback = undefined, onShowCallback = undefined, clickAfter = true) {
 		let dataHidden = "data-hidden";
-		let e = element === undefined ? button : element;
+		let e = !element ? button : element;
 
 		if (!e.hasAttribute(dataHidden))
 			e.setAttribute(dataHidden, "1");
@@ -150,6 +141,57 @@ L.ALS.Helpers = {
 	},
 
 	/**
+	 * Makes an element collapsible with an animation.
+	 * @param button {HTMLElement} Button that will show or collapse an element
+	 * @param element {HTMLElement} Element to make collapsible
+	 * @param clickAfter {boolean} If true, button will be clicked when everything's applied.
+	 */
+	makeCollapsible: function (button, element, clickAfter = true) {
+		let hideFn, showFn, callMakeHideable = () => {
+			L.ALS.Helpers.makeHideable(button, element, hideFn, showFn, clickAfter);
+		};
+
+		element.style.overflow = "hidden";
+		element.style.transition = "height 0.3s";
+
+		// Old chrome can't deal with animations, in this case we'll just change display property.
+		if (!this.supportsFlexbox && this.isChrome) {
+			hideFn = () => {
+				element.style.display = "none";
+			};
+			showFn = () => {
+				element.style.display = "";
+			};
+			callMakeHideable();
+			return;
+		}
+
+		hideFn = () => {
+			element.style.height = element.scrollHeight + "px";
+			setTimeout(() => {
+				if (element.getAttribute("data-hidden") === "1") // Seems like it prevents bugs when user clicks button continuously
+					element.style.height = "0";
+			}, 10); // Wait for height to apply
+
+			// Hide borders
+			setTimeout(() => {
+				element.style.border = "none";
+			}, 300);
+		};
+
+		showFn = () => {
+			element.style.border = "";
+			element.style.height = element.scrollHeight + "px";
+			setTimeout(() => {
+				if (element.getAttribute("data-hidden") === "0") // Same as above
+					element.style.height = "auto";
+			}, 300); // Wait for animation
+		}
+
+		callMakeHideable();
+	},
+
+	/**
 	 * Parses given HTML and appends it to given element as a child
 	 * @param html {string} HTML to parse
 	 * @param appendTo {Element} Element to append parsed HTML to
@@ -170,7 +212,7 @@ L.ALS.Helpers = {
 	 * @param callback {function(string)} Callback to pass text to
 	 */
 	readTextFile: function (fileInput, notSupportedNotification, callback) {
-		if (!window.FileReader && !L.ALS.Helpers.isIElte9 && !L.ALS._service.onJsonLoad) { // "!FileReader" throws exception in IE9
+		if (!window.FileReader && !L.ALS.Helpers.isIElte9 && !L.ALS._service.onJsonLoad) {
 			window.alert(notSupportedNotification);
 			fileInput.value = "";
 			return;
@@ -190,7 +232,7 @@ L.ALS.Helpers = {
 					throw new Error();
 				fso = new ActiveXObject("Scripting.FileSystemObject"); // This one will throw error
 			} catch (e) {
-				this._ieProjectErrorWindow.clickButton();
+				this._ieProjectErrorWindow.button.callCallback();
 				fileInput.value = "";
 				return;
 			}
@@ -267,16 +309,21 @@ L.ALS.Helpers = {
 	 * @param string {string} String to save
 	 * @param filename {string} Name of the file to save
 	 * @param override {boolean} If true, when called second or later time, will override previously saved file. Utilises FileSystem API in Chrome and fs in Node. Use it only to save projects.
+	 * @param doSaveAs {boolean} If true, and Chrome FileSystem API is supported, will perform "Save As" action
+	 *
 	 * @return {Promise<void>|undefined} Promise which updates {@link L.ALS.Helpers._chromeHandle} when resolved, or undefined, if FileSytem API is not supported
 	 * @package
 	 * @ignore
 	 */
-	_saveAsTextWorker: function (string, filename, override = false) {
+	_saveAsTextWorker: function (string, filename, override = false, doSaveAs = false) {
 		if (L.ALS.Helpers.supportsBlob) {
 			let blob = new Blob([string], {type: 'text/plain'});
 
-			if (override && chromeFS.supported) {
+			if (override && this._chromeFSSupported) {
 				let ext = (this.isElectron) ? "json" : ".json"; // Electron appends dot automatically
+				if (doSaveAs)
+					this._chromeHandle = null;
+
 				return (async () => {
 					this._chromeHandle = await chromeFS.fileSave(blob, {
 						fileName: filename,
@@ -443,6 +490,10 @@ let meta = document.createElement("meta");
 meta.name = "viewport";
 meta.content = "width=device-width, initial-scale=1.0";
 document.head.appendChild(meta);
+
+// Add IE9 class to the body
+if (L.ALS.Helpers.isIElte9)
+	document.body.classList.add("ie-lte-9");
 
 /**
  * By default, points to window.localStorage. If user's browser doesn't support LocalStorage, will use temporary "polyfill" which acts like LocalStorage but doesn't actually save anything.

@@ -13,9 +13,6 @@
 	/* Divider */
 	--divider-color: #696969;
 
-	/* Red delete icon */
-	--delete-color: #ff5858;
-
 	/* Error label and invalid inputs */
 	--error-bg: #8d4444;
 	--error-border: #ffbebe;
@@ -29,4 +26,17 @@
 
 	--warning-bg: #635c3e;
 	--warning-border: #fff4c3; /* Also applied to revert button */
+}
+
+/* Leaflet.Draw fix */
+.als-dark .leaflet-draw a {
+	filter: invert(90%);
+}
+
+.als-dark .leaflet-draw a:hover {
+	filter: invert(77%);
+}
+
+.als-dark .leaflet-draw .leaflet-disabled:hover {
+	filter: invert(90%);
 }

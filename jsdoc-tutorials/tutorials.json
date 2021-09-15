@@ -1,4 +1,10 @@
 {
+  "styling": {
+	"title": "Styling ALS"
+  },
+  "history": {
+	"title": "History"
+  },
   "electron": {
 	"title": "Using ALS with Electron"
   },

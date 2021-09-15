@@ -15,9 +15,6 @@
 	/* Divider */
 	--divider-color: grey;
 
-	/* Red delete icon */
-	--delete-color: darkred;
-
 	/* Error label and invalid inputs */
 	--error-bg: #ffbebe;
 	--error-border: darkred;
@@ -66,11 +63,15 @@ body {
 	padding: 0;
 	margin: 0;
 	font-family: arial, sans-serif;
+	background: var(--background);
+	color: var(--text-color);
+}
+
+body.als-no-scroll {
 	overflow: hidden;
 }
 
 * {
-	color: var(--text-color);
 	outline: none;
 }
 
@@ -79,6 +80,8 @@ body {
 }
 
 .leaflet-container {
+	width: 100%;
+	height: 100%;
 	font: inherit;
 	background: var(--background);
 }
@@ -87,7 +90,7 @@ body {
 .leaflet-right .leaflet-control,
 .als-button-base, select, .ri {
 	margin: 0;
-	border-radius: 0 !important;
+	border-radius: 0;
 	color: var(--text-color);
 	background: var(--background);
 	border: var(--border);
@@ -96,7 +99,7 @@ body {
 }
 
 .als-zoom {
-	border: none !important;
+	border: none;
 }
 
 .als-zoom *:first-child {
@@ -111,6 +114,13 @@ body {
 	background: var(--background);
 }
 
+/* Map container. To properly display menu, we'll need to set some styles to it */
+.als-map-container {
+	position: relative;
+	display: inline-block;
+	overflow: hidden;
+}
+
 .als-button-base {
 	min-height: 2rem;
 }
@@ -119,8 +129,8 @@ body {
 	display: inline-block;
 	vertical-align: middle;
 	box-sizing: border-box;
-	padding: 0.2rem !important;
-	overflow-wrap: break-word !important;
+	padding: 0.2rem;
+	overflow-wrap: break-word;
 	width: 2rem;
 	justify-content: center;
 	align-items: center;
@@ -137,7 +147,7 @@ body {
 
 /* Setting background to select:active will cause bugs in older browsers, so we don't use it */
 .als-button-base:active, .ri:active, .jscolor-btn-close:active {
-	background: var(--fixed-element-selected-bg) !important;
+	background: var(--fixed-element-selected-bg);
 	transition: background 0.2s;
 }
 
@@ -155,12 +165,12 @@ body {
 	font-size: 0.7rem;
 	line-height: 1rem;
 	margin-left: 0.2rem;
-	color: var(--warning-border) !important;
+	color: var(--warning-border);
 }
 
 input, select {
 	font-size: 1rem;
-	padding: 0 !important;
+	padding: 0;
 	background: var(--background);
 	color: var(--text-color);
 	border: var(--border);
@@ -185,7 +195,7 @@ input[type="color"] {
 }
 
 /* Hack to make hidden file input work in old browsers */
-input[type="file"] {
+.als-file-hidden {
 	position: absolute;
 	width: 1px;
 	height: 1px;
@@ -194,6 +204,16 @@ input[type="file"] {
 	overflow: hidden;
 	clip: rect(0,0,0,0);
 	border: 0;
+}
+
+/* File area */
+.als-file-area-container {
+	display: block !important; /* It won't work in old FF without !important. Appending div selector won't work too. */
+}
+
+.als-file-area-container > div {
+	display: block;
+	width: 100%;
 }
 
 .als-file-area {
@@ -212,20 +232,12 @@ select {
 
 select > * {
 	background: var(--background);
+	color: var(--text-color);
 }
 
 /* JSColor */
 .jscolor-picker-wrap {
 	z-index: 999999 !important;
-}
-
-/* Make map take up whole space */
-#map {
-	position: fixed;
-	top: 0;
-	bottom: 0;
-	width: 100%;
-	height: 100%;
 }
 
 /* Icon button container */
@@ -236,51 +248,39 @@ select > * {
 
 /* Menu */
 .als-menu-button {
-	display: inline-block !important;
-	width: 2rem !important;
-	height: 2rem !important;
-	font-size: 2rem !important;
+	display: inline-block;
+	width: 2rem;
+	height: 2rem;
+	font-size: 2rem;
 	border: none;
-	padding: 0 !important;
-	line-height: 2rem !important;
+	padding: 0;
+	line-height: 2rem;
 }
-
-/*
-Menu.
-
-Note on creating multiple system instances. Add following rules to your CSS:
 
 .als-menu {
-	position: relative;
-	top: -100%;
-	right: -100%;
-	margin-left: 1rem;
-	transition: margin-left ease-in-out 0.2s, left ease-in-out 0.2s;
-}
-
-.als-menu[data-hidden="0"] {
-	right: -100%;
-	margin-left: -22rem;
-	transition: margin-left ease-in-out 0.2s, left ease-in-out 0.2s;
-}
-
-*/
-.als-menu {
-	position: fixed;
+	position: absolute;
 	top: 0;
+	bottom: 0;
 	right: -23rem;
 	z-index: 10000;
 	width: 22rem;
 	max-width: 100%;
-	height: 100%;
-	overflow: hidden;
-	padding-bottom: 2rem;
+	overflow-x: hidden;
+	overflow-y: auto;
 	box-sizing: border-box;
 
 	border-left: var(--border);
 	background: var(--background);
 	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
 	transition: right ease-in-out 0.2s, left ease-in-out 0.2s;
+}
+
+.als-menu.als-toolbar-enabled {
+	top: 2rem;
+}
+
+.als-fullscreen-map .als-menu.als-toolbar-enabled {
+	top: 0;
 }
 
 .als-menu[data-hidden="0"] {
@@ -290,6 +290,9 @@ Note on creating multiple system instances. Add following rules to your CSS:
 
 .als-menu.menu-left {
 	left: -23rem;
+	border-left: none;
+	border-right: var(--border);
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.4);
 }
 
 .als-menu.menu-left[data-hidden="0"] {
@@ -306,30 +309,99 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	right: 0;
 }
 
-.als-top-panel-wrapper {
-	position: relative;
+.mobile .als-menu.menu-left {
+	left: -100%;
+}
+
+.mobile .als-menu[data-hidden="0"].menu-left {
+	left: 0;
+}
+
+
+.als-top-panel-spacer + .als-menu-close {
+	border-right: none;
+	border-left: var(--border);
+}
+
+div.als-top-panel-spacer {
+	display: none;
+	border: none;
+	flex-grow: 999;
+}
+
+.als-top-panel-spacer-text {
+	display: flex;
+	max-width: 0;
+	white-space: nowrap;
+	align-items: center;
+	padding-left: 0.3rem;
+	color: transparent;
+	user-select: none;
+}
+
+div.als-electron-buttons-container {
+	display: none;
+	flex-grow: 0;
+	border: none;
+}
+
+.not-mobile .als-toolbar-enabled div.als-top-panel-spacer,
+.als-electron-toolbar-as-frame div.als-electron-buttons-container {
+	display: inherit;
+}
+
+
+.als-electron-toolbar-as-frame div.als-top-panel-spacer-text {
+	color: var(--text-color);
+}
+
+/* Create fade effect on the title */
+.als-electron-toolbar-as-frame .als-top-panel-spacer + *  {
+	box-shadow: -0.7rem 0 0.5rem var(--fixed-element-bg);
+}
+
+div.als-electron-buttons-container .ri {
+	border-right: none;
+	border-top: none;
+	border-bottom: none;
+}
+
+div.als-top-panel {
+	position: sticky;
+	top: 0;
 	width: 100%;
 	max-width: 22rem;
-	top: 0;
-}
-
-.als-top-panel-wrapper > * > * {
+	max-height: 2rem;
 	background: var(--fixed-element-bg);
+	border-top: none;
+	border-bottom: var(--border);
+	box-sizing: border-box;
+	overflow: hidden;
+	z-index: 99999;
 }
 
-.als-no-layer-switching > .ri {
+.als-top-panel.als-toolbar-enabled {
 	max-width: none;
+	z-index: 99999;
 }
 
-.mobile .als-menu .als-top-panel-wrapper {
+.mobile .als-menu .als-top-panel {
 	max-width: 100%;
 }
 
+.als-top-panel .ri {
+	background: var(--fixed-element-bg);
+	max-width: none;
+	min-width: 2rem; /* Fixes 1px width issue with old Firefox */
+}
+
+.not-mobile .als-toolbar-enabled > .ri {
+	max-width: 2rem;
+}
+
 .als-menu-items {
-	min-height: 100%;
-	max-height: 100%;
-	overflow-y: auto;
-	overflow-x: hidden;
+	position: relative;
+	overflow: hidden;
 }
 
 .als-items-row {
@@ -341,14 +413,15 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	padding: 0;
 	border-top: var(--border);
 	border-bottom: var(--border);
+	max-height: 2rem;
 }
 
 .als-items-row > * {
-	display: table-cell !important;
-	display: flex !important;
-	border: none !important;
+	display: table-cell;
+	display: flex;
+	border: none;
 	word-wrap: break-word;
-	border-right: var(--border) !important;
+	border-right: var(--border);
 	flex: 1;
 }
 
@@ -356,14 +429,58 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	border-right: none;
 }
 
-.als-menu-maps-select {
-	white-space: nowrap;
-	text-overflow: ellipsis;
-	width: 100%; /* Hack for older browsers */
+/* postition relative and position absolute hack doesn't work in really old browsers
+top with position relative doesn't work correctly either.
+So let's just fill everything with select. */
+.als-menu-maps-select-wrapper {
+	display: block;
+	background: transparent;
+	overflow: hidden;
+	line-height: 1.6rem; /* Fixes wrong alignment */
+	max-height: 2rem;
 }
 
-.als-menu-delete {
-	color: var(--delete-color) !important;
+/* Normal or not-so-broken browsers */
+.als-menu-maps-select-wrapper > .als-menu-maps-select {
+	position: relative;
+	display: block; /* Yes, it's duplicate, but IE11 won't work without it */
+	appearance: none;
+	color: transparent;
+	color: rgba(0, 0, 0, 0); /* Fixes grey text in IE11 */
+	background: transparent;
+	border: none;
+	top: -3rem;
+	left: -1rem;
+	width: 13rem; /* Moves handle to the right and covers space when there're only two buttons */
+	height: 4rem;
+}
+
+/* Completely broken browsers */
+.als-menu-maps-select-wrapper-legacy {
+	width: 100%;
+	min-width: 2rem;
+}
+
+.als-toolbar-enabled .als-menu-maps-select-wrapper-legacy {
+	width: 6rem;
+	max-width: 6rem;
+}
+
+.als-menu-maps-select-wrapper-legacy .als-menu-maps-select {
+	width: 100%;
+}
+
+.als-menu-maps-select {
+	display: block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	min-width: 2rem;
+	width: 6rem;
+	height: 2rem;
+}
+
+select.als-menu-maps-select:hover, .als-dark select.als-menu-maps-select:hover {
+	background: none;
 }
 
 /* Wizard */
@@ -372,6 +489,8 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	display: block;
 	position: fixed;
 	z-index: 999999;
+	top: 0;
+	left: 0;
 	width: 100%;
 	height: 100%;
 	opacity: 1;
@@ -390,7 +509,7 @@ Note on creating multiple system instances. Add following rules to your CSS:
 .als-window-window {
 	position: relative;
 	display: block;
-	max-height: 95% !important;
+	max-height: 95%;
 	max-width: 50rem;
 	overflow-y: auto;
 	left: 50%;
@@ -411,13 +530,10 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	transition: top 0.4s;
 }
 
-.als-window-select, .als-menu-maps-select {
-	height: 2rem !important;
-	font-size: 1rem;
-	text-align-last: center
-}
-
 .als-window-select {
+	height: 2rem;
+	font-size: 1rem;
+	text-align-last: center;
 	width: 100%;
 	border: none;
 	border-bottom: var(--border);
@@ -494,12 +610,32 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	user-select: none;
 }
 
-.als-sidebar-window-button-container {
+.als-window-button-container {
+	flex-wrap: nowrap;
 	border-bottom: 0;
 }
 
-.als-sidebar-window-button-container > :last-child {
-	border-right: 0 !important;
+.als-window-button-container > div {
+	padding: 0;
+	width: auto !important; /* Won't work in IE9 without !important */
+	display: table-cell;
+	display: flex;
+}
+
+.als-window-button-container div.als-icon-button-container {
+	flex: 1;
+}
+
+.als-window-button-container > :last-child {
+	border-right: 0;
+}
+
+.als-window-button-container .ri {
+	max-width: none;
+}
+
+.als-window-button-container .als-button-base {
+	border: none;
 }
 
 /* Layers */
@@ -508,15 +644,16 @@ Note on creating multiple system instances. Add following rules to your CSS:
 }
 
 .als-layer-menu[data-hidden="0"] {
-	border-bottom: var(--border) !important;
+	border-bottom: var(--border);
 }
 
-.als-only-one-layer[data-hidden="0"] { /* Don't add border when there's only one layer */
-	border: none !important;
+div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only one layer */
+	border: none;
 }
 
 .als-layer-container > .als-items-row {
-	border-bottom: var(--border) !important;
+	border: none;
+	border-bottom: var(--border);
 	transition: background 0.3s;
 }
 
@@ -531,16 +668,12 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	transition: background 0.3s;
 }
 
-.als-layer-container > .als-items-row {
-	border: none;
-}
-
 .als-layer-label {
-	display: inline-block;
+	/*display: inline-block;*/
 	vertical-align: middle;
 	display: flex;
 	align-items: center;
-	width: 73%;
+	width: 10.7rem;
 	height: 2rem;
 	margin: 0;
 	white-space: nowrap;
@@ -561,10 +694,6 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	display: block;
 	width: 100%;
 	border: none;
-
-	/* Animation-related */
-	overflow: hidden;
-	transition: height 0.3s;
 }
 
 .als-widget-row {
@@ -582,7 +711,7 @@ Note on creating multiple system instances. Add following rules to your CSS:
 }
 
 .als-widget-row > label {
-	width: 13rem; /* Hack for older browsers */
+	width: 12rem; /* Hack for older browsers */
 	margin-right: 0.3rem;
 	flex: 1 1 13rem;
 	user-select: none;
@@ -616,19 +745,19 @@ Note on creating multiple system instances. Add following rules to your CSS:
 }
 
 .als-checkbox-wrapper > input:checked + .ri {
-	color: var(--text-color) !important;
+	color: var(--text-color);
 	transition: color 0.2s, background 0.2s;
 }
 
 .als-checkbox-wrapper > .ri {
-	display: table-cell !important;
-	min-width: 1rem !important;
-	width: 1rem !important;
-	font-size: 0.9rem !important;
+	display: table-cell;
+	min-width: 1rem;
+	width: 1rem;
+	font-size: 0.9rem;
 	font-weight: 700;
-	margin: 0 !important;
-	padding: 0 !important;
-	color: transparent !important;
+	margin: 0;
+	padding: 0;
+	color: transparent;
 	transition: color 0.2s, background 0.2s;
 }
 
@@ -653,9 +782,9 @@ Note on creating multiple system instances. Add following rules to your CSS:
 }
 
 .als-radio-group-wrapper input + .ri {
-	display: table-cell !important;
+	display: table-cell;
 	vertical-align: middle;
-	border-radius: 100% !important;
+	border-radius: 100%;
 }
 
 .als-radio-label-wrapper > .ri {
@@ -686,7 +815,7 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	font-size: 1rem;
 	font-weight: 700;
 	line-height: 1.2rem;
-	padding: 0 !important;
+	padding: 0;
 }
 
 .als-number > * {
@@ -710,9 +839,6 @@ Note on creating multiple system instances. Add following rules to your CSS:
 
 /* Buttons group */
 .als-buttons-group-wrapper {
-	display: block;
-	display: flex !important;
-	flex-flow: row wrap !important;
 	justify-content: stretch;
 	padding: 0;
 }
@@ -720,14 +846,14 @@ Note on creating multiple system instances. Add following rules to your CSS:
 .als-buttons-group-wrapper .als-widget-row {
 	width: 100%;
 	flex: 1 1 6rem;
-	height: auto !important;
+	height: auto;
 	align-self: stretch;
 }
 
 .als-buttons-group-wrapper .als-input {
 	width: 100%;
-	max-width: 100% !important;
-	height: 100% !important;
+	max-width: 100%;
+	height: 100%;
 	box-sizing: border-box;
 }
 
@@ -779,7 +905,7 @@ Note on creating multiple system instances. Add following rules to your CSS:
 }
 
 .als-divicon input, .als-divicon select {
-	font-size: 0.75rem !important;
+	font-size: 0.75rem;
 }
 
 .als-divicon > .als-widget-row > label {
@@ -828,7 +954,7 @@ Note on creating multiple system instances. Add following rules to your CSS:
 /* SimpleLabel */
 
 .als-simple-label-wrapper {
-	width: 100% !important;
+	width: 100%;
 }
 
 .als-simple-label {
@@ -838,25 +964,25 @@ Note on creating multiple system instances. Add following rules to your CSS:
 .als-simple-label.error {
 	padding: 0.2rem;
 	background: var(--error-bg);
-	border: 1px solid var(--error-border) !important;
+	border: 1px solid var(--error-border);
 }
 
 .als-simple-label.message {
 	padding: 0.2rem;
 	background: var(--message-bg);
-	border: 1px solid var(--message-border) !important;
+	border: 1px solid var(--message-border);
 }
 
 .als-simple-label.success {
 	padding: 0.2rem;
 	background: var(--success-bg);
-	border: 1px solid var(--success-border) !important;
+	border: 1px solid var(--success-border);
 }
 
 .als-simple-label.warning {
 	padding: 0.2rem;
 	background: var(--warning-bg);
-	border: 1px solid var(--warning-border) !important;
+	border: 1px solid var(--warning-border);
 }
 
 /* Text area */
@@ -877,6 +1003,47 @@ Note on creating multiple system instances. Add following rules to your CSS:
 
 .als-textarea-mono {
 	font-family: Consolas, consolas, monospace;
+}
+
+
+/* Spoiler */
+
+/* Old Firefox won't wrap items in a flexbox */
+.als-spoiler-container {
+	display: block;
+}
+
+/* als-widget-row sets display of its children to inline-block which breaks spoiler layout. Gotta reset it. */
+.als-spoiler-container > * {
+	display: block;
+}
+
+.als-spoiler-button {
+	width: 100%;
+	min-height: 0;
+}
+
+.als-spoiler-button > * {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.als-spoiler-button > label {
+	text-align: left;
+	width: 100%;
+}
+
+.als-spoiler-button > div {
+	text-align: right;
+	min-width: 1rem;
+}
+
+.als-spoiler-wrapper {
+	width: 100%;
+	background: var(--fixed-element-bg);
+	box-sizing: border-box;
+	border: var(--border);
+	border-top: none;
 }
 
 /* Error displayed in IE */
@@ -937,15 +1104,57 @@ Note on creating multiple system instances. Add following rules to your CSS:
 	left: 50%;
 	transform: translate(-50%);
 	padding: 0;
-	margin-top: -3rem;
+	top: -5rem;
 	box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 10, 0.9);;
 	user-select: none;
 	transition: margin-top 0.5s;
 }
 
 .als-saved-notification.shown {
-	margin-top: 1rem;
-	transition: margin-top 0.5s;
+	top: 1rem;
+	transition: top 0.5s;
+}
+
+/* Leaflet.Draw fix */
+
+.leaflet-draw {
+	background: none;
+	border: none;
+}
+
+.leaflet-draw-toolbar {
+	background: none;
+	border-radius: 0;
+	border: none;
+}
+
+.leaflet-draw a {
+	filter: invert(93%);
+	width: 2rem;
+	height: 2rem;
+	border: var(--border);
+	transition: background-color, filter 0.2s; /* For filter, see dark.css */
+}
+
+.leaflet-draw a:hover {
+	transition: background-color, filter 0.2s;
+}
+
+/* Fullscreen map */
+
+.als-fullscreen-map .als-top-panel.als-toolbar-enabled {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+}
+
+.als-fullscreen-map .als-map-container {
+	position: absolute;
+	top: 2rem;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
 /* IE11 hacks */
@@ -963,4 +1172,17 @@ Note on creating multiple system instances. Add following rules to your CSS:
 		max-width: 100%;
 		flex: none;
 	}
+
+	.als-top-panel .ri {
+		display: block;
+	}
+
+	/*.als-menu-maps-select-wrapper {
+		line-height: 2rem;
+	}*/
+}
+
+/* IE9 hacks */
+.ie-lte-9 .als-top-panel {
+	display: block;
 }

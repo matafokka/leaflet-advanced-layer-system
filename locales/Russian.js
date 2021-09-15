@@ -9,12 +9,18 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 	// Menu buttons tooltips
 
 	menuCloseButton: "Закрыть меню",
+	menuNewProjectButton: "Новый проект",
 	menuSaveButton: "Сохранить проект",
+	menuSaveAsButton: "Сохранить проект как...",
 	menuLoadButton: "Загрузить проект",
 	menuExportButton: "Экспортировать проект",
+	menuUndoButton: "Отменить",
+	menuRedoButton: "Повторить",
 	menuSettingsButton: "Настройки",
+	menuMapButton: "Сервис карт",
+	menuZoomInButton: "Увеличить масштаб",
+	menuZoomOutButton: "Уменьшить масштаб",
 	menuAddButton: "Добавить новый слой",
-	menuDeleteButton: "Удалить выделенный слой",
 
 	// Sidebar window
 
@@ -22,7 +28,7 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 
 	// Wizard
 
-	wizardSelectTitle: "Тип слоя для добавления",
+	wizardSelectTitle: "Тип нового слоя",
 	wizardContentTitle: "Параметры нового слоя",
 	wizardAddButton: "Добавить",
 
@@ -47,6 +53,9 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 	generalSettingsLightTheme: "Светлая",
 	generalSettingsDarkTheme: "Темная",
 	generalSettingsSystemTheme: "Системная",
+	generalSettingsMenuPosition: "Положение меню:",
+	generalSettingsMenuLeft: "Слева",
+	generalSettingsMenuRight: "Справа",
 	generalSettingsNotify: "Уведомлять о завершении длительных операций (снятие выделения с этой галочки убирает надоедливое окно, говорящее: \"Все операции завершены\")",
 
 	// System
@@ -57,6 +66,7 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 	systemConfirmDeletion: "Вы уверены, что хотите удалить этот слой?",
 	systemNotProject: "Файл, который вы пытаетесь загрузить, не является файлом проекта",
 	systemProjectSaved: "Проект сохранен",
+	systemBeforeNewProject: "Ваш проект может содержать несохраненные изменения. Вы уверены, что хотите создать новый проект?",
 	systemBeforeExit: "Ваш проект может содержать несохраненные изменения. Хотите ли вы остаться и сохранить проект?",
 	systemBeforeExitStay: "Остаться",
 	systemBeforeExitExit: "Выйти Без Сохранения",

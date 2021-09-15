@@ -13,9 +13,12 @@ L.ALS.Widgets.File = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets.F
 
 	undoable: false,
 
+	customContainerClassName: "als-file-area-container",
+
 	initialize: function (id, label, callbackObject= undefined, callback = "") {
 		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "file", id, label, callbackObject, callback, ["input"]);
 		this.setConstructorArguments(arguments);
+		this.input.className = "als-file-hidden";
 		this.input.addEventListener("input", () => { this._updateFileArea(); });
 	},
 

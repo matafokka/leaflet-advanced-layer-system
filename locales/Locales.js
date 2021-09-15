@@ -45,14 +45,14 @@
  *     labelForNumberWidget: "Enter number", // Label for number widget
  *     labelForColorWidget: "Choose color", // Label for color widget
  *     aboutText: "This is my program!", // Text displayed at "About" settings section
- * }
+ * });
  *
  * // Define custom locale properties for Russian
  * L.ALS.Locales.addLocaleProperties("Русский", {
  *     labelForNumberWidget: "Введите число",
  *     labelForColorWidget: "Выберите цвет",
  *     aboutText: "Это моя программа!",
- * }
+ * });
  *
  * L.ALS.System.initializeSystem(); // Initialize system after all locales has been set up
  *
@@ -91,6 +91,13 @@ L.ALS.Locales = {
 	 * You must add additional locales BEFORE adding your own locale properties!
 	 */
 	AdditionalLocales: {},
+
+	/**
+	 * List of properties to ignore when getting locales
+	 * @package
+	 * @ignore
+	 */
+	_ignoreList: ["_ignoreList", "AdditionalLocales", "_currentLocale"],
 
 	/**
 	 * Localizes HTML element
@@ -140,7 +147,6 @@ L.ALS.Locales = {
 		return element[this._getElementPropertyToSet(element)];
 	},
 
-
 	/**
 	 * Changes current locale
 	 * @param localeName {string} Locale name
@@ -161,6 +167,13 @@ L.ALS.Locales = {
 			elemProp = (elemProp) ? elemProp : this._getElementPropertyToSet(el);
 			el[elemProp] = L.ALS.locale[prop];
 		}
+
+		/**
+		 * Current locale name
+		 * @type {string}
+		 * @private
+		 */
+		this._currentLocale = localeName;
 	},
 
 	/**
@@ -179,15 +192,17 @@ L.ALS.Locales = {
 	/**
 	 * Adds new locale properties to given locale.
 	 * @param name {string} Name of the locale to add properties to. For example, if you wan't to update English locale
-	 * @param locale {Object} Object in format `{key: "value"}`
+	 * @param properties {Object} Object in format `{key: "value"}`
 	 */
-	addLocaleProperties: function (name, locale) {
+	addLocaleProperties: function (name, properties) {
 		if (!this[name])
 			this[name] = {};
-		for (let prop in locale) {
-			if (locale.hasOwnProperty(prop) && typeof locale[prop] === "string")
-				this[name][prop] = locale[prop];
+		for (let prop in properties) {
+			if (properties.hasOwnProperty(prop) && typeof properties[prop] === "string")
+				this[name][prop] = properties[prop];
 		}
+		if (name === this._currentLocale)
+			this.changeLocale(this._currentLocale);
 	},
 
 };

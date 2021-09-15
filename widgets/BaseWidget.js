@@ -35,11 +35,18 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 	_defaultSettingsValue: undefined,
 
 	/**
-	 * Custom classname for an input wrapper. Should NOT be modified from outside.
+	 * Custom classname for an input wrapper. Alternative to setting classname at {@link L.ALS.Widgets.BaseWidget#createContainer} manually.
 	 * @protected
 	 * @readonly
 	 */
 	customWrapperClassName: "",
+
+	/**
+	 * Custom classname for a widget container.
+	 * @protected
+	 * @readonly
+	 */
+	customContainerClassName: "",
 
 	/**
 	 * Indicates whether this widget can revert back to its default value. If this widget is undoable, an undo button will be appended to it at settings window.
@@ -155,7 +162,7 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 	 */
 	createContainer: function () {
 		let container = document.createElement("div");
-		container.className = "als-widget-row";
+		container.className = "als-widget-row " + this.customContainerClassName;
 		return container;
 	},
 
@@ -202,14 +209,15 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 		this.input.setAttribute("data-id", this.id);
 
 		// Bind events
+		let eventHandler = (e) => {
+			if (!this.onChange(e))
+				this.input.classList.add("als-invalid-input");
+			else
+				this.input.classList.remove("als-invalid-input");
+			this.callCallback();
+		}
 		for (let event of this._events)
-			this.input.addEventListener(event, (event) => {
-				if (!this.onChange(event))
-					this.input.classList.add("als-invalid-input");
-				else
-					this.input.classList.remove("als-invalid-input");
-				this.callCallback();
-			});
+			this.input.addEventListener(event, eventHandler);
 
 		// Wrap input
 		let wrapper = document.createElement("div");
@@ -240,7 +248,7 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 	callCallback: async function () {
 		while (!this._isAdded)
 			await new Promise(resolve => setTimeout(resolve, 0)); // Infinite loop hangs the script. Timeout prevents it.
-		if (this._callbackObject !== undefined && this._callback !== "")
+		if (this._callbackObject && this._callback !== "")
 			this._callbackObject[this._callback](this);
 	},
 

@@ -7,13 +7,14 @@
 L.ALS._service.IEErrorWindow = L.ALS.WidgetableWindow.extend(/** @lends L.ALS._service.IEErrorWindow.prototype */{
 
 	initialize: function () {
-		this._button = document.createElement("div");
-		this._button.className = "als-button-base";
-		this._button.setAttribute("data-als-locale-property", "systemIEAdjustSettingsOkButton");
+		L.ALS.WidgetableWindow.prototype.initialize.call(this);
 
-		L.ALS.WidgetableWindow.prototype.initialize.call(this, this._button);
+		/**
+		 * Close button
+		 * @type {L.ALS.Widgets.Button}
+		 */
+		this.button = this.addCloseButton("close", "systemIEAdjustSettingsOkButton");
 		L.ALS.Helpers.HTMLToElement(`
-
 <div class="als-ie-project-error">
 	<p data-als-locale-property="systemIEAdjustSettings1"></p>
 	<ol>
@@ -27,18 +28,9 @@ L.ALS._service.IEErrorWindow = L.ALS.WidgetableWindow.extend(/** @lends L.ALS._s
 		</ol>
 		<li data-als-locale-property="systemIEAdjustSettings8"></li>
 	</ol>
-</div>
-
-<div class="als-items-row als-sidebar-window-button-container" data-id="button-container">
-</div>
-
-		`, this.container);
-
-		this.container.querySelector("div[data-id='button-container']").appendChild(this._button);
+</div>`,
+			this.container);
+		this.button.callCallback();
 	},
-
-	clickButton: function () {
-		L.ALS.Helpers.dispatchEvent(this._button, "click");
-	}
 
 });

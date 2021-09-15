@@ -62,10 +62,10 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 * @param settings {Object} Settings to pass to {@link L.ALS.Layer#init}
 	 * @private
 	 */
-	initialize: function(layerSystem, args, settings) {
+	initialize: function (layerSystem, args, settings) {
 		L.ALS.Widgetable.prototype.initialize.call(this, "als-layer-menu");
 		this.setConstructorArguments([args]);
-		this.serializationIgnoreList.push("_layerSystem", "map", "_nameLabel", "_leafletLayers", "_mapEvents", "getBounds", "isSelected");
+		this.serializationIgnoreList.push("_layerSystem", "_nameLabel", "_leafletLayers", "_mapEvents", "getBounds", "isSelected");
 
 		/**
 		 * Contains event listeners bound to various objects. Looks like this:
@@ -153,45 +153,41 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			let target = event.target;
 			target.contentEditable = "false";
 			this.setName(target.innerHTML);
+			this.writeToHistory();
 		});
 
 		// Make it end editing when user presses Enter
 		label.addEventListener("keydown", function (event) {
 			if (event.key === "Enter") {
 				event.preventDefault();
-			// noinspection JSValidateTypes
+				// noinspection JSValidateTypes
 				this.blur();
 			}
-		})
+		});
+
+		// Delete button
+		let deleteButton = document.createElement("i");
+		deleteButton.className = "ri ri-delete-bin-line als-menu-delete";
+		deleteButton.addEventListener("click", () => {
+			this.deleteLayer(true, true);
+		});
+
+		// Duplicate button
+		let duplicateButton;
+		if (this._layerSystem._enableDuplicateButton) {
+			duplicateButton = document.createElement("i");
+			duplicateButton.className = "ri ri-file-copy-line";
+			duplicateButton.addEventListener("click", () => {
+				this._layerSystem._duplicateLayer(this);
+			});
+		}
 
 		// Drop-down menu button
 		let menuButton = document.createElement("i");
 		menuButton.className = "ri ri-settings-3-line";
 
 		// Menu itself
-
-		let hideFn, showFn;
-		// Old chrome can't deal with animations below, so in this case we'll just change display property.
-		if (!L.ALS.Helpers.supportsFlexbox && L.ALS.Helpers.isChrome) {
-			hideFn = () => { this.container.style.display = "none"; };
-			showFn = () => { this.container.style.display = ""; };
-		} else {
-			hideFn = () => {
-				this.container.style.height = this.container.scrollHeight + "px";
-				setTimeout(() => {
-				if (this.container.getAttribute("data-hidden") === "1") // Seems like it prevents bugs when user clicks button continuously
-						this.container.style.height = "0";
-				}, 10); // Wait for height to apply
-			};
-			showFn = () => {
-				this.container.style.height = this.container.scrollHeight + "px";
-				setTimeout(() => {
-					if (this.container.getAttribute("data-hidden") === "0") // Same as above
-						this.container.style.height = "auto";
-				}, 300); // Await animation end
-			}
-		}
-		L.ALS.Helpers.makeHideable(menuButton, this.container, hideFn, showFn);
+		L.ALS.Helpers.makeCollapsible(menuButton, this.container);
 
 		this._hideButton = document.createElement("i");
 		this._hideButton.className = "ri ri-eye-line";
@@ -211,25 +207,39 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
 		let controlsContainer = document.createElement("div");
 		controlsContainer.className = "als-items-row";
-		let elements = [handle, label, menuButton, this._hideButton];
-		for (let e of elements)
-			controlsContainer.appendChild(e);
+
+		let elements = [handle, label, deleteButton, duplicateButton, menuButton, this._hideButton];
+		for (let e of elements) {
+			if (e)
+				controlsContainer.appendChild(e);
+		}
+
 		if (!this._layerSystem._useOnlyOneLayer)
 			layerWidget.appendChild(controlsContainer);
 		else
 			this.container.classList.add("als-only-one-layer");
+
 		layerWidget.appendChild(this.container);
-		layerWidget.addEventListener("click", () => { this._layerSystem._selectLayer(this.id); });
+		layerWidget.addEventListener("click", () => {
+			if (this._layerSystem) // It's still called when delete button has been clicked. Tis condition fixes this issue.
+				this._layerSystem._selectLayer(this.id);
+		});
 
 		this._layerSystem._layerContainer.appendChild(layerWidget);
 		this._layerSystem._layers[this.id] = this;
-		this._layerSystem._selectLayer(this.id); // Select new layer
 		this._nameLabel = label;
+
+		// Select new layer, so system can work. But onSelect() might fail, so we gotta catch that.
+		try {
+			this._layerSystem._selectLayer(this.id);
+		} catch (e) {}
+
 		this.init(args, settings); // Initialize layer and pass all the properties
+		this.onSelect();
 	},
 
 	/**
-	 * Adds event listener (handler) to the object. Use it instead of object.on().
+	 * Adds event listener (handler) to the object. Use it instead of `object.on()`.
 	 *
 	 * Note: we use object's methods as handlers to be able to save and restore them when user saves the project.
 	 *
@@ -269,7 +279,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			// Forward event to the underlying layer
 			this._layerSystem._selectedLayer._leafletLayers.bringToFront(); // Bring selected layer to the front
 			let oldEvent = event.originalEvent;
-			if (oldEvent.dispatchedByALS) // Uncaught events will lead to infinite recursion
+			if (!oldEvent || oldEvent.dispatchedByALS) // Uncaught events will lead to infinite recursion. Also, there might be no originalEvent property. Yup, that's strange, but it happens in Leaflet.Draw, for example.
 				return;
 
 			let newEvent = new oldEvent.constructor(oldEvent.type, oldEvent); // Clone old event
@@ -361,31 +371,36 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	/**
 	 * Being called when layer is being shown
 	 */
-	onShow() {},
+	onShow() {
+	},
 
 	/**
 	 * Being called when layer is being hidden
 	 */
-	onHide() {},
+	onHide() {
+	},
 
 	/**
 	 * Being called when user selects this layer.
 	 *
 	 * If you have additional controls to display, do it here.
 	 */
-	onSelect: function() {},
+	onSelect: function () {
+	},
 
 	/**
 	 * Being called when user deselects this layer.
 	 *
 	 * If you've added additional controls, remove them here.
 	 */
-	onDeselect: function() {},
+	onDeselect: function () {
+	},
 
 	/**
 	 * Being called when user changes this layer's name
 	 */
-	onNameChange: function() {},
+	onNameChange: function () {
+	},
 
 	/**
 	 * Adds Leaflet layers to this layer.
@@ -394,7 +409,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 *
 	 * @param layers {L.Layer} Layers to add
 	 */
-	addLayers: function(...layers) {
+	addLayers: function (...layers) {
 		for (let layer of layers)
 			this._leafletLayers.addLayer(layer);
 
@@ -408,7 +423,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 * Removes added Leaflet layers with its event handlers.
 	 * @param layers {L.Layer} Layers to remove. If layer extends LayerGroup, will also remove Leaflet layers contained in it.
 	 */
-	removeLayers: function(...layers) {
+	removeLayers: function (...layers) {
 		for (let layer of layers) {
 			// Remove layers from the layer group
 			if (layer.getLayers !== undefined) {
@@ -432,23 +447,26 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	/**
 	 * Use this method instead of {@link L.ALS.Layer#initialize}
 	 * @param wizardResults {Object} Results compiled from the wizard. It is an object who's keys are IDs of your controls and values are values of your controls.
-	 * @param settings {Object} Current layer settings.
+	 * @param settings {L.ALS.Settings} Current layer settings.
 	 */
-	init: function(wizardResults, settings) {},
+	init: function (wizardResults, settings) {
+	},
 
 	/**
 	 * Deletes this layer
 	 * @param shouldAskUser {boolean} If set to true, the message asking if user wants to delete selected layer will be displayed. Otherwise, layer will be silently deleted.
+	 * @param writeToHistory {boolean} If true, will write deletion to the history
 	 */
-	deleteLayer: function (shouldAskUser = false) {
+	deleteLayer: function (shouldAskUser = false, writeToHistory = false) {
 		this._layerSystem._selectLayer(this.id);
-		this._layerSystem._deleteLayer(shouldAskUser);
+		this._layerSystem._deleteLayer(shouldAskUser, writeToHistory);
 	},
 
 	/**
 	 * Being called upon deletion. There you can clean up everything you've done which can't be undone by the system (i.e., layers added directly to the map or created elements on the page)
 	 */
-	onDelete: function () {},
+	onDelete: function () {
+	},
 
 	// Wrappers
 
@@ -523,18 +541,44 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
 	/**
 	 * Being called when user updates the settings. Use it to update your layer depending on changed settings.
-	 * @param settings {Object} Same as settings passed to {@link L.ALS.Layer#init}
+	 * @param settings {L.ALS.Settings} Same as settings passed to {@link L.ALS.Layer#init}
 	 */
-	applyNewSettings: function (settings) {},
+	applyNewSettings: function (settings) {
+	},
 
 	/**
 	 * Serializes some important properties. Must be called at {@link L.ALS.Layer#serialize} in any layer!
+	 *
+	 * Deprecated in favor of {@link L.ALS.Layer#getObjectFromSerialized} which uses this function under-the-hood.
+	 *
 	 * @param serialized {Object} Your serialized object
+	 *
+	 * @deprecated
 	 */
 	serializeImportantProperties: function (serialized) {
 		let props = ["_name", "isShown", "isSelected"]
 		for (let prop of props)
 			serialized[prop] = this[prop];
+		serialized._isCollapsed = this.container.getAttribute("data-hidden") === "1";
+	},
+
+
+	/**
+	 * Writes a record to the history. Call it at the end of each action.
+	 *
+	 * This method interferes with serialization and deserialization.
+	 *
+	 * It won't do anything, if called when serialization or deserialization hasn't finished, for example, when restoring from history.
+	 */
+	writeToHistory: function () {
+		this._layerSystem.writeToHistory();
+	},
+
+	getObjectToSerializeTo: function (seenObjects) {
+		let serialized = L.ALS.Serializable.prototype.getObjectToSerializeTo.call(this, seenObjects);
+		serialized._widgets = this.serializeWidgets(seenObjects);
+		this.serializeImportantProperties(serialized);
+		return serialized;
 	},
 
 	/**
@@ -559,11 +603,11 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	statics: {
 
 		/**
-		 * Wizard instance which gives a layer its initial properties
-		 * @type {L.ALS.Wizard}
+		 * Wizard class which gives a layer its initial properties
+		 * @type {function(new:L.ALS.Wizard)}
 		 * @memberOf L.ALS.Layer
 		 */
-		wizard: new L.ALS.Wizard(),
+		wizard: L.ALS.Wizard,
 
 		/**
 		 * Settings instance
@@ -583,6 +627,8 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			let props = ["isShown", "isSelected"];
 			for (let prop of props)
 				instance[prop] = serialized[prop];
+			if (serialized._isCollapsed)
+				instance.container.setAttribute("data-hidden", "1");
 		},
 
 		/**

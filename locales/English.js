@@ -9,12 +9,18 @@ L.ALS.Locales["English"] = {
 	// Menu buttons tooltips
 
 	menuCloseButton: "Close menu",
+	menuNewProjectButton: "New project",
 	menuSaveButton: "Save project",
+	menuSaveAsButton: "Save project as...",
 	menuLoadButton: "Load project",
 	menuExportButton: "Export project",
+	menuUndoButton: "Undo",
+	menuRedoButton: "Redo",
 	menuSettingsButton: "Settings",
+	menuMapButton: "Map service",
+	menuZoomInButton: "Zoom in",
+	menuZoomOutButton: "Zoom out",
 	menuAddButton: "Add new layer",
-	menuDeleteButton: "Delete selected layer",
 
 	// Sidebar window
 
@@ -22,7 +28,7 @@ L.ALS.Locales["English"] = {
 
 	// Wizard
 
-	wizardSelectTitle: "Layer type to add",
+	wizardSelectTitle: "New layer type",
 	wizardContentTitle: "New layer options",
 	wizardAddButton: "Add",
 
@@ -47,6 +53,9 @@ L.ALS.Locales["English"] = {
 	generalSettingsLightTheme: "Light",
 	generalSettingsDarkTheme: "Dark",
 	generalSettingsSystemTheme: "System",
+	generalSettingsMenuPosition: "Menu position:",
+	generalSettingsMenuLeft: "Left",
+	generalSettingsMenuRight: "Right",
 	generalSettingsNotify: "Notify when all long-running operations are complete (unchecking it removes annoying window that says: \"All operations complete\")",
 
 	// System
@@ -57,6 +66,7 @@ L.ALS.Locales["English"] = {
 	systemConfirmDeletion: "Are you sure you want to delete this layer?",
 	systemNotProject: "File that you're trying to load is not a valid project.",
 	systemProjectSaved: "Project saved",
+	systemBeforeNewProject: "Your project might have unsaved changes. Are you sure you want to create a new project?",
 	systemBeforeExit: "Your project might have unsaved changes. Do you wan't to stay and save it?",
 	systemBeforeExitStay: "Stay",
 	systemBeforeExitExit: "Exit Without Saving",

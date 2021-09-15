@@ -25,12 +25,12 @@ L.ALS.Widgets.Color = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets.
 	},
 
 	getValue: function () {
-		return L.ALS.Widgets.BaseWidget.prototype.getValue.call(this).toLowerCase(); // Makes JSColor return value spec-compliant
+		return L.ALS.Widgets.BaseWidget.prototype.getValue.call(this).toLowerCase(); // Makes JSColor return spec-compliant value
 	},
 
 	/**
 	 * Sets value of this widget
-	 * @param value {string} Color in format that CSS can read
+	 * @param value {string} Color in HEX format, for example, for red it'll be `#ff0000`
 	 * @return {L.ALS.Widgets.Color} This
 	 */
 	setValue: function (value) {
@@ -42,7 +42,6 @@ L.ALS.Widgets.Color = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets.
 
 	/**
 	 * Waits until widget will be added and applies JSColor
-	 * @return {VoidFunction}
 	 * @private
 	 */
 	_waitForElementToBeAdded: async function () {

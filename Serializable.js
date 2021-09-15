@@ -22,7 +22,7 @@
  *
  * Static {@link L.ALS.Serializable.deserialize} method accepts your serialized object as an argument and must return a deserialized instance of your class. You can use static {@link L.ALS.Serializable.getObjectFromSerialized} method to do so and perform your deserialization on returned object. You may also find default deserialization mechanism useful for deserializing complex objects such as described above.
  *
- * There are also plenty of helpers methods to accomplish your goal.
+ * There are also plenty of helpers methods to accomplish your goal. {@link L.ALS.Layer} has additional methods to help you.
  *
  * # Hints
  *
@@ -46,11 +46,11 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 	initialize: function () {
 
 		/**
-		 * Contains properties that won't be serialized. Append your properties at constructor.
+		 * Contains properties that won't be serialized. Append your properties at the constructor.
 		 * @type {string[]}
 		 * @protected
 		 */
-		this.serializationIgnoreList = ["serializationIgnoreList", "__proto__", "prototype", "_initHooks", "_initHooksCalled", "setConstructorArguments", "constructorArguments", "includes", "_leaflet_id", "_map", "_mapToAdd", "_events", "_eventParents", "getPane"];
+		this.serializationIgnoreList = ["serializationIgnoreList", "__proto__", "prototype", "_initHooks", "_initHooksCalled", "setConstructorArguments", "constructorArguments", "includes", "_leaflet_id", "_events", "_eventParents", "getPane"];
 
 	},
 
@@ -92,17 +92,40 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 
 	/**
 	 * Serializes constructor arguments. If your constructor is not empty, result of this method MUST be added to json at {@link L.ALS.Serializable#serialize} as "_construtorArgs" property.
+	 *
+	 * Deprecated in favor of {@link L.ALS.Serializable#getObjectFromSerialized} which uses this function under-the-hood.
+	 *
 	 * @return {Array} Serialized constructor arguments
+	 * @deprecated
 	 */
 	serializeConstructorArguments: function (seenObjects) {
 		let constructorArgs = [];
 		if (this.constructorArguments) {
 			for (let arg of this.constructorArguments) {
 				if (!arg.skipSerialization)
-					constructorArgs.push(L.ALS.Serializable.serializeAnyObject({a: arg}, seenObjects).a);
+					constructorArgs.push(L.ALS.Serializable.serializeAnyObject(arg, seenObjects));
 			}
 		}
 		return constructorArgs;
+	},
+
+	/**
+	 * Registers this object for serialization and deserialization. Returns an object to serialize custom properties to.
+	 *
+	 * Call it first, if you implement your own algrorithm, and serialize to the returned object!
+	 *
+	 * @param newObject {Object} Object to where you'll serialize
+	 * @param seenObjects {Object} Already seen objects
+	 *
+	 * @return {Object} Object to serialize to.
+	 */
+	getObjectToSerializeTo: function ( seenObjects) {
+		L.ALS.Serializable._registerObject(this, seenObjects);
+		return {
+			serializationID: this.serializationID,
+			serializableClassName: this.serializableClassName,
+			constructorArguments: this.serializeConstructorArguments(seenObjects)
+		}
 	},
 
 	statics: {
@@ -136,20 +159,33 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		_arrayIgnoreList: ["alsSerializableArray", "serializationID"],
 
 		/**
-		 * Checks if property should be ignored when serializing or deserializing
+		 * Checks if property should be ignored when serializing or deserializing.
+		 *
+		 * If you're deserializing, call it for both serialized object and new instance like this:
+		 *
+		 * ```
+		 * if (this.shouldIgnoreProperty(property, serialized) || this.shouldIgnoreProperty(property, newObject, false, true))
+		 *     // Ignore this property
+		 * ```
+		 *
 		 * @param property {string} Name of the property
-		 * @param objectWithIgnoreLists {L.ALS.Serializable|Object} Object containing ignore lists
+		 * @param object {L.ALS.Serializable|Object} Object containing ignore lists
 		 * @param isGetter {boolean} Indicates whether given property is getter or not
+		 * @param checkOnlyIgnoreList {boolean} If true, will only check if property is in the ignore lists
 		 * @return {boolean} True, if property is in ignore lists. False otherwise.
 		 * @memberOf L.ALS.Serializable
 		 */
-		shouldIgnoreProperty: function (property, objectWithIgnoreLists, isGetter = false) {
-			let obj = objectWithIgnoreLists[property];
-			if (obj === undefined || obj === null || obj instanceof Element || (typeof obj === "function" && !isGetter))
+		shouldIgnoreProperty: function (property, object, isGetter = false, checkOnlyIgnoreList = false) {
+			let obj = object[property];
+
+			if (!checkOnlyIgnoreList && (
+				obj === undefined || obj === null || obj instanceof Element || obj instanceof L.Map
+				|| obj instanceof L.Layer || (typeof obj === "function" && !isGetter)
+			))
 				return true;
 
-			if (objectWithIgnoreLists.serializationIgnoreList)
-				return objectWithIgnoreLists.serializationIgnoreList.indexOf(property) !== -1;
+			if (object.serializationIgnoreList)
+				return object.serializationIgnoreList.indexOf(property) !== -1;
 			return false;
 		},
 
@@ -167,6 +203,18 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		},
 
 		/**
+		 * Registers object for serialization and deserialization
+		 * @param object {Object} object to register
+		 * @param seenObjects {Object}
+		 * @private
+		 */
+		_registerObject: function (object, seenObjects) {
+			if (!object.serializationID)
+				object.serializationID = L.ALS.Helpers.generateID();
+			seenObjects[object.serializationID] = object;
+		},
+
+		/**
 		 * Serializes primitives including types unsupported by JSON
 		 * @param primitive Primitive to serialize
 		 * @return Serialized primitive
@@ -175,12 +223,11 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		serializePrimitive: function (primitive) {
 			let part = "";
 			if (typeof primitive === "bigint")
-				part = L.ALS.Serializable._bigIntPrefix + primitive.toString();
+				part = this._bigIntPrefix + primitive.toString();
 			else if (typeof primitive === "symbol") {
 				let s = primitive.toString();
-				part = L.ALS.Serializable._symbolPrefix + [s.slice(7, s.length - 1)] // Symbol.toString() returns "Symbol(your_string)". So we slice it to get "your_string"
-			}
-			else if (typeof primitive !== "number")
+				part = this._symbolPrefix + [s.slice(7, s.length - 1)] // Symbol.toString() returns "Symbol(your_string)". So we slice it to get "your_string"
+			} else if (typeof primitive !== "number")
 				return primitive;
 			else if (isNaN(primitive))
 				part = "NaN";
@@ -190,7 +237,7 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 				part = "-INF";
 			else
 				return primitive;
-			return L.ALS.Serializable._unsupportedTypesPrefix + part;
+			return this._unsupportedTypesPrefix + part;
 		},
 
 		/**
@@ -200,14 +247,14 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		 * @memberOf L.ALS.Serializable
 		 */
 		deserializePrimitive: function (primitive) {
-			if (typeof primitive !== "string" || !primitive.startsWith(L.ALS.Serializable._unsupportedTypesPrefix))
+			if (typeof primitive !== "string" || !primitive.startsWith(this._unsupportedTypesPrefix))
 				return primitive;
 
-			let val = primitive.slice(L.ALS.Serializable._unsupportedTypesPrefix.length, primitive.length);
+			let val = primitive.slice(this._unsupportedTypesPrefix.length, primitive.length);
 
 			let types = [
-				{prefix: L.ALS.Serializable._bigIntPrefix, type: (window.BigInt) ? BigInt : "number"},
-				{prefix: L.ALS.Serializable._symbolPrefix, type: (window.Symbol) ? Symbol : "symbol"}
+				{prefix: this._bigIntPrefix, type: (window.BigInt) ? BigInt : "number"},
+				{prefix: this._symbolPrefix, type: (window.Symbol) ? Symbol : "symbol"}
 			];
 			for (let type of types) {
 				if (!val.startsWith(type.prefix))
@@ -221,9 +268,15 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 			}
 
 			switch (val) {
-				case "NaN": { return NaN; }
-				case "INF": { return Infinity; }
-				case "-INF": { return -Infinity; }
+				case "NaN": {
+					return NaN;
+				}
+				case "INF": {
+					return Infinity;
+				}
+				case "-INF": {
+					return -Infinity;
+				}
 			}
 		},
 
@@ -249,19 +302,20 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 
 		/**
 		 * Constructs new instance of Serializable and passes serialized arguments to the constructor. Assigns `serializationID` to the object and adds it to `seenObjects`.
+		 *
 		 * @param serialized {Object} Serialized Serializable object
 		 * @param seenObjects Already seen objects' ids. Intended only for internal use.
 		 * @return {L.ALS.Serializable|Object} Instance of given object or `serialized` argument if constructor hasn't been found
 		 * @memberOf L.ALS.Serializable
 		 */
 		getObjectFromSerialized: function (serialized, seenObjects) {
-			let constructor = L.ALS.Serializable.getSerializableConstructor(serialized.serializableClassName);
+			let constructor = this.getSerializableConstructor(serialized.serializableClassName);
 
 			if (!serialized.serializationID)
 				serialized.serializationID = L.ALS.Helpers.generateID();
 
-			if (constructor === undefined) {
-				seenObjects[serialized.serializationID] = serialized;
+			if (!constructor) {
+				this._registerObject(serialized, seenObjects);
 				return serialized;
 			}
 
@@ -273,13 +327,12 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 				if (arg && arg.skipDeserialization)
 					constructorArgs.push(arg);
 				else
-					constructorArgs.push(L.ALS.Serializable.deserialize({a: arg}, seenObjects).a);
+					constructorArgs.push(this.deserialize(arg, seenObjects));
 			}
+
 			let object = new constructor(...constructorArgs);
-
 			object.serializationID = serialized.serializationID;
-			seenObjects[serialized.serializationID] = object;
-
+			this._registerObject(object, seenObjects);
 			return object;
 		},
 
@@ -312,7 +365,7 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		 * @memberOf L.ALS.Serializable
 		 */
 		findGetter: function (property, object) {
-			return L.ALS.Serializable._findGetterOrSetter(true, property, object);
+			return this._findGetterOrSetter(true, property, object);
 		},
 
 		/**
@@ -323,7 +376,7 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		 * @memberOf L.ALS.Serializable
 		 */
 		findSetter: function (property, object) {
-			return L.ALS.Serializable._findGetterOrSetter(false, property, object);
+			return this._findGetterOrSetter(false, property, object);
 		},
 
 		/**
@@ -334,74 +387,70 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		 * @memberOf L.ALS.Serializable
 		 */
 		serializeAnyObject: function (object, seenObjects) {
-			if (!(object instanceof Object))
-				return L.ALS.Serializable.serializePrimitive(object);
 
-			if (!object.serializationID)
-				object.serializationID = L.ALS.Helpers.generateID();
-			seenObjects[object.serializationID] = object;
-			let serialize = function (object) {
-				let json = { propertiesOrder: [] }; // Gotta keep properties' order
-				let seenProps = [];
-				for (let prop in object) {
-					// Check if property is getter
-					let isGetter = (typeof object[prop] === "function" && prop.startsWith("get") && prop[3] === prop[3].toUpperCase());
+			if (object instanceof Element) // Skip HTML elements
+				return undefined;
 
-					if (seenProps.includes(prop) || (!object.hasOwnProperty(prop) && !isGetter) || L.ALS.Serializable.shouldIgnoreProperty(prop, object, isGetter))
-						continue;
+			if (!(object instanceof Object)) // Serialize primitives
+				return this.serializePrimitive(object);
 
-					let propName = prop; // Property name to write into JSON
-					if (isGetter && object[prop].length === 0) {
-						let name1 = prop[3].toLowerCase() + prop.slice(4, prop.length);
-						let name2 = "_" + name1;
-						for (let name of [prop, name1, name2]) {
-							if (object[name])
-								propName = name;
-						}
+			if (object.skipSerialization)
+				return undefined;
 
-						if (propName === prop) // If name is equal to getter, replace it with one of the names so we can deserialize it later
-							propName = name1;
+			if (object.serializationID && seenObjects[object.serializationID]) // Replace seen objects with references
+				return {serializationReference: object.serializationID};
 
-						seenProps.push(prop, name1, name2);
-					} else if (!isGetter)
-						seenProps.push(propName);
-					else
-						continue;
+			// Deeply serialize everything else
 
-					json.propertiesOrder.push(propName);
-					let getter = isGetter ? prop : L.ALS.Serializable.findGetter(prop, object);
-					let property = (getter === undefined) ? object[prop] : object[getter]();
-					if (property instanceof Element)
-						continue;
+			this._registerObject(object, seenObjects);
 
-					if (!(property instanceof Object)) // Copy non-object properties
-						json[propName] = L.ALS.Serializable.serializePrimitive(property);
-					else if (property.serializationID && seenObjects[property.serializationID]) // Replace seen objects with references
-						json[propName] = { serializationReference: property.serializationID };
-					else if (property.serialize) // Serialize serializable objects
-						json[propName] = property.serialize(seenObjects);
-					else { // Deeply serialize everything else
-						if (!property.serializationID) // Create id for an object
-							property.serializationID = L.ALS.Helpers.generateID();
-						seenObjects[property.serializationID] = property; // Add object to seen objects
+			// Serialize arrays by copying all its items to an object and serializing that object instead.
+			// This is also needed because JSON.stringify() removes custom array properties.
+			let newObject;
+			if (object instanceof Array) {
+				newObject = {
+					alsSerializableArray: true,
+					serializationID: object.serializationID,
+				};
+				for (let i in object)
+					newObject[i] = object[i];
+			} else
+				newObject = object;
 
-						// Serialize arrays by copying all its items to an object and serializing that object instead.
-						// This is also needed because JSON.stringify() removes custom array properties.
-						if (property instanceof Array) {
-							let newProperty = {
-								alsSerializableArray: true,
-								serializationID: property.serializationID
-							};
-							for (let i in property)
-								newProperty[i] = property[i];
-							json[propName] = serialize(newProperty);
-						} else
-							json[propName] = serialize(property); // Serialize object
+			let json = {propertiesOrder: []}; // Gotta keep properties' order
+			let seenProps = [];
+			for (let prop in newObject) {
+				// Check if property is getter
+				let isGetter = (typeof newObject[prop] === "function" && prop.startsWith("get") && prop[3] === prop[3].toUpperCase());
+
+				if (seenProps.includes(prop) || (!newObject.hasOwnProperty(prop) && !isGetter) || this.shouldIgnoreProperty(prop, newObject, isGetter))
+					continue;
+
+				let propName = prop; // Property name to write into JSON
+				if (isGetter && newObject[prop].length === 0) {
+					let name1 = prop[3].toLowerCase() + prop.slice(4, prop.length);
+					let name2 = "_" + name1;
+					for (let name of [prop, name1, name2]) {
+						if (newObject[name])
+							propName = name;
 					}
-				}
-				return json;
+
+					if (propName === prop) // If name is equal to getter, replace it with one of the names so we can deserialize it later
+						propName = name1;
+
+					seenProps.push(prop, name1, name2);
+				} else if (!isGetter)
+					seenProps.push(propName);
+				else
+					continue;
+
+				json.propertiesOrder.push(propName);
+				let getter = isGetter ? prop : this.findGetter(prop, newObject);
+				let property = (getter === undefined) ? newObject[prop] : newObject[getter]();
+
+				json[propName] = (property && property.serialize && !(property.serializationID && seenObjects[property.serializationID])) ? property.serialize(seenObjects) : this.serializeAnyObject(property, seenObjects);
 			}
-			return serialize(object);
+			return json;
 		},
 
 		/**
@@ -412,71 +461,63 @@ L.ALS.Serializable = L.Class.extend( /** @lends L.ALS.Serializable.prototype */ 
 		 * @memberOf L.ALS.Serializable
 		 */
 		deserialize: function (serialized, seenObjects) {
+			if (serialized === undefined || serialized === null)
+				return serialized;
+
 			if (!(serialized instanceof Object))
-				return L.ALS.Serializable.deserializePrimitive(serialized);
+				return this.deserializePrimitive(serialized);
 
-			let deserialize = (obj) => {
-				let props = (obj.propertiesOrder === undefined) ? Object.keys(obj) : obj.propertiesOrder;
-				for (let prop of props) {
-					let property = obj[prop];
-					if (prop === "_" || L.ALS.Serializable.shouldIgnoreProperty(prop, obj))
-						continue;
+			if (serialized.skipDeserialization)
+				return undefined;
 
-					// Deserialize Serializable objects
-					if (property.serializableClassName) {
-						let constructor = this.getSerializableConstructor(property.serializableClassName);
-						if (constructor.deserialize)
-							property = constructor.deserialize(property, seenObjects);
-						else {
-							property = deserialize(property, seenObjects);
-							seenObjects[property.serializationID] = property;
-						}
-					}
-					// If current property is a reference, restore it
-					else if (property.serializationReference && seenObjects[property.serializationReference] !== undefined)
-						property = seenObjects[property.serializationReference];
-					else if (property instanceof Object) { // Objects and arrays
-						// Preparations for deserializing arrays
-						let oldProperty = property;
-						if (property.alsSerializableArray) {
-							property = [];
-							property.serializationID = oldProperty.serializationID;
-						}
+			if (serialized.serializationReference && seenObjects[serialized.serializationReference])
+				return seenObjects[serialized.serializationReference];
 
-						// Objects in general
-						if (!property.serializationID)
-							property.serializationID = L.ALS.Helpers.generateID();
-						seenObjects[property.serializationID] = property;
+			if (serialized.alsSerializableArray) {
+				let newObject = [];
+				newObject.serializationID = serialized.serializationID;
+				this._registerObject(newObject, seenObjects);
 
-						if (oldProperty.alsSerializableArray) { // Arrays
-							for (let i in oldProperty) {
-								if (!L.ALS.Serializable._arrayIgnoreList.includes(i))
-									property[i] = deserialize({item: oldProperty[i]}).item; // Keeps both items and custom properties while preserving array type
-							}
-						}
-						 else {
-							property = deserialize(property);
-							seenObjects[property.serializationID] = property;
-						}
-					} else // Primitives
-						property = L.ALS.Serializable.deserializePrimitive(property);
-
-					let setter = L.ALS.Serializable.findSetter(prop, obj);
-					if (setter === undefined)
-						obj[prop] = property;
-					else
-						obj[setter](property);
-
+				let props = (serialized.propertiesOrder) ? serialized.propertiesOrder : Object.keys(serialized)
+				for (let i of props) {
+					if (!this._arrayIgnoreList.includes(i))
+						newObject[i] = this.deserialize(serialized[i], seenObjects); // Keeps both items and custom properties while preserving array type
 				}
-				return obj;
+				return newObject;
 			}
 
 			let object = this.getObjectFromSerialized(serialized, seenObjects);
-			// Copy properties from serialized object to instance
-			for (let prop in serialized)
-				object[prop] = serialized[prop];
 
-			return deserialize(object);
+			let props = (serialized.propertiesOrder) ? serialized.propertiesOrder : Object.keys(object);
+			for (let prop of props) {
+				if (this.shouldIgnoreProperty(prop, serialized) || this.shouldIgnoreProperty(prop, object, false, true))
+					continue;
+
+				let property = (prop in serialized) ? serialized[prop] : object[prop];
+				let newProperty;
+
+				if (property.serializableClassName) {
+					if (property.skipDeserialization)
+						continue;
+
+					let constructor = this.getSerializableConstructor(property.serializableClassName);
+					if (constructor.deserialize)
+						newProperty = constructor.deserialize(property, seenObjects);
+				}
+
+				if (!newProperty)
+					newProperty = this.deserialize(property, seenObjects);
+
+				if (newProperty instanceof Object)
+					this._registerObject(newProperty, seenObjects);
+
+				let setter = this.findSetter(prop, object);
+				if (setter)
+					object[setter](newProperty);
+				else
+					object[prop] = newProperty;
+			}
+			return object;
 		},
 	}
 });

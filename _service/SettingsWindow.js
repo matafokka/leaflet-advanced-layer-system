@@ -2,14 +2,21 @@
  * Application settings window
  *
  * @class
- * @extends L.ALS._service.SidebarWindow
+ * @extends L.ALS.SidebarWindow
  * @ignore
  */
-L.ALS._service.SettingsWindow = L.ALS._service.SidebarWindow.extend( /** @lends L.ALS._service.SettingsWindow.prototype */ {
+L.ALS._service.SettingsWindow = L.ALS.SidebarWindow.extend( /** @lends L.ALS._service.SettingsWindow.prototype */ {
 
 	initialize: function (button, onCloseCallback, aboutHTML = undefined) {
-		L.ALS._service.SidebarWindow.prototype.initialize.call(this, button, "settingsSelectTitle", "settingsContentTitle", "settingsApplyButton", () => { this.saveSettings(); });
-		this.onCloseCallback = onCloseCallback;
+		L.ALS.SidebarWindow.prototype.initialize.call(this, "settingsSelectTitle", "settingsContentTitle", button);
+
+		/**
+		 * Contains callbacks that will be called when settings are applied
+		 * @type {function[]}
+		 */
+		this.onCloseCallbacks = [];
+
+		this.onCloseCallbacks.push(onCloseCallback);
 
 		// Create "About" section
 		if (!aboutHTML)
@@ -22,28 +29,15 @@ L.ALS._service.SettingsWindow = L.ALS._service.SidebarWindow.extend( /** @lends 
 
 		L.ALS.Helpers.HTMLToElement(aboutHTML, wrapper);
 
-		// Create export and import buttons
-		let exportButton = document.createElement("div");
-		L.ALS.Locales.localizeElement(exportButton, "settingsExportButton");
-		exportButton.setAttribute("data-mobile-class", "ri ri-save-3-line");
-		exportButton.addEventListener("click", () => { this.exportSettings(); });
-
-		let importButton = document.createElement("label");
-		importButton.htmlFor = "als-load-settings-input";
-		L.ALS.Locales.localizeElement(importButton, "settingsImportButton");
-		importButton.setAttribute("data-mobile-class", "ri ri-folder-open-line");
-		importButton.addEventListener("click", () => { this.importSettings(); });
-
-		for (let button of [exportButton, importButton]) {
-			button.className = "als-button-base";
-			this.closeButton.parentElement.insertBefore(button, this.closeButton);
-		}
-
-		L.ALS.Helpers._applyButtonsIconsIfMobile(this.buttonsWrapper);
+		this.buttonsGroup.addButtons(
+			new L.ALS.Widgets.Button("export", "settingsExportButton", this, "exportSettings").setMobileIcon("ri-save-3-line"),
+			new L.ALS.Widgets.Button("import", "settingsImportButton", this, "importSettings").setMobileIcon("ri-folder-open-line"),
+		);
+		this.addCloseButton("close", "settingsApplyButton", "ri-close-line", this, "saveSettings");
 	},
 
 	addItem: function (name, item) {
-		L.ALS._service.SidebarWindow.prototype.addItem.call(this, name, item);
+		L.ALS.SidebarWindow.prototype.addItem.call(this, name, item);
 		if (name === "settingsAboutItem")
 			return;
 
@@ -79,7 +73,8 @@ L.ALS._service.SettingsWindow = L.ALS._service.SidebarWindow.extend( /** @lends 
 		this.forEachWidget((item, widget, key, value) => {
 			L.ALS.Helpers.localStorage.setItem(key, value);
 		});
-		this.onCloseCallback();
+		for (let cb of this.onCloseCallbacks)
+			cb();
 	},
 
 	/**
@@ -154,7 +149,13 @@ L.ALS._service.SettingsWindow = L.ALS._service.SidebarWindow.extend( /** @lends 
 	 * @param value {*} Value to set
 	 */
 	setWidgetValue: function (item, widget, value) {
-		let w = this.getItem(item).getWidgetById(widget);
+		let w;
+		try {
+			w = this.getItem(item).getWidgetById(widget);
+		} catch (e) {
+			return;
+		}
+
 		w.setValue(value);
 		w.callCallback();
 	}

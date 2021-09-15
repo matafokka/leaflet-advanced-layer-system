@@ -147,6 +147,9 @@ L.ALS.LeafletLayers.CanvasLayer = (L.Layer ? L.Layer : L.Class).extend( /** @len
 	},
 
 	_drawLayer: function () {
+		if (!this._map)
+			return;
+
 		this.draw({
 			layer: this,
 			canvas: this._canvas,
