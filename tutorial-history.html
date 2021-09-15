@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ALS Namespace: ALS</title>
+	<title>ALS Tutorial: History</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -88,320 +88,54 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
-			
-
-	<h1 class="page-title">Namespace: ALS</h1>
-<section>
+			<section class="tutorial-section">
 
 <header>
     
-        <h2>
-        ALS
-        </h2>
-        
-    
+
+    <h2>History</h2>
 </header>
 
-
 <article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>Root object containing all Layer System stuff.</p>
-<p>Layer System contains these important &quot;subsystems&quot;:</p>
-<ol>
-<li>System itself. See <a href="L.ALS.System.html"><code>L.ALS.System</code></a> docs for examples of general usage.</li>
-<li>Layers. See <a href="L.ALS.System.html"><code>L.ALS.System</code></a> example on how to create a basic layer:
-<ol>
-<li>Layers themselves. Those are not Leaflet layers but wrappers around theme. System works with these layers, not with Leaflet layers. See <a href="L.ALS.Layer.html"><code>L.ALS.Layer</code></a> docs for examples on how to create custom layers.</li>
-<li>Wizards - widgetables (see below) that provides initial layer parameters. See <a href="L.ALS.Wizard.html"><code>L.ALS.Wizard</code></a> for examples of general usage.</li>
-<li>Settings - widgetables that provides settings for your layers. See <a href="L.ALS.Settings.html"><code>L.ALS.Settings</code></a> for examples of general usage.</li>
-</ol>
-</li>
-<li>Widget system:
-<ol>
-<li>Widgetables - containers for widgets. See <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a> docs for examples of general usage.</li>
-<li>Widgets. See <a href="L.ALS.Widgets.html"><code>L.ALS.Widgets</code></a> for examples of general usage. See <a href="L.ALS.Widgets.BaseWidget.html"><code>L.ALS.Widgets.BaseWidget</code></a> for examples on how to create custom widgets.</li>
-</ol>
-</li>
-<li>Serialization and deserialization - used to save and load projects. See <a href="L.ALS.Serializable.html"><code>L.ALS.Serializable</code></a> docs for examples on how to use it and create custom mechanisms.</li>
-<li>Locales - allows you to localize your whole application. See <a href="L.ALS.Locales.html"><code>L.ALS.Locales</code></a> docs for examples on how to use it.</li>
-<li>Useful helpers. See <a href="L.ALS.Helpers.html"><code>L.ALS.Helpers</code></a>.</li>
-<li>Zoom control which matches ALS aesthetics. See <a href="L.ALS.ControlZoom.html"><code>L.ALS.ControlZoom</code></a>.</li>
-<li>Patches:
-<ol>
-<li><code>L.Layer#setInteractive</code>, <code>L.Layer#getInteractive</code>, <code>L.Layer#isInteractive</code> - patch made by <a href="https://github.com/Jadaw1n">Piero &quot;Jadaw1n&quot; Steinger</a> which adds ability to set and check interactive state of Leaflet layers.</li>
-<li>Serialization patches: <code>RegExp#serialize</code>, <code>RegExp.deserialize</code>, <code>L.LatLng#serialize</code>, <code>L.LatLng.deserialize</code></li>
-</ol>
-</li>
-</ol>
-<p><strong>Note:</strong> ALS uses Leaflet class system. Please, read about it at <a href="https://leafletjs.com/reference-1.7.1.html#class">Leaflet docs</a>.</p></div>
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="L.ALS.ControlZoom.html">ControlZoom</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Layer.html">Layer</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.OperationsWindow.html">OperationsWindow</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Serializable.html">Serializable</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Settings.html">Settings</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.System.html">System</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Widgetable.html">Widgetable</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.WidgetableWindow.html">WidgetableWindow</a></dt>
-            <dd></dd>
-        
-            <dt><a href="L.ALS.Wizard.html">Wizard</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-        <h3 class="subsection-title">Namespaces</h3>
-
-        <dl>
-            <dt><a href="namespaces.html#L.ALS.Helpers"><a href="L.ALS.Helpers.html">Helpers</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#L.ALS.LeafletLayers"><a href="L.ALS.LeafletLayers.html">LeafletLayers</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#L.ALS.Locales"><a href="L.ALS.Locales.html">Locales</a></a></dt>
-            <dd></dd>
-        
-            <dt><a href="namespaces.html#L.ALS.Widgets"><a href="L.ALS.Widgets.html">Widgets</a></a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<hr>
-<dt class="name" id=".locale">
-    <h4 id=".locale"><span class="type-signature">&lt;static> </span>locale<span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Current locale which contains both default and custom locale properties.</p>
-<p>Use it only &quot;one-time&quot;, for example, in <code>window.alert()</code>.</p>
-<p>Do NOT use it in HTML elements, use <a href="L.ALS.Locales.html"><code>L.ALS.Locales</code></a> for that.</p>
-    </div>
-    
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id=".operationsWindow">
-    <h4 id=".operationsWindow"><span class="type-signature">&lt;static> </span>operationsWindow<span class="type-signature"> :<a href="L.ALS.OperationsWindow.html">L.ALS.OperationsWindow</a></span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>A loading window for your long-running operations</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type"><a href="L.ALS.OperationsWindow.html">L.ALS.OperationsWindow</a></span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-
-    
-
-    
+    <h1>Introduction</h1>
+<p>History allows your users to perform undo and redo operations.</p>
+<p>In ALS, history is based on serialization and deserialization of the whole project, so before using it, you <strong>must</strong> implement serialization and deserialization of your layer.</p>
+<p>Since deserialization causes page redrawing, it can be quite slow, so you might want to ignore some operations.</p>
+<p>ALS already manages its own operations such as adding a layer, renaming, deleting, etc. You need to write history records only for your layers.</p>
+<h1>Setting up history</h1>
+<p>You must explicitly enable history by setting <code>SystemOptions.enableHistory</code> option to <code>true</code> when creating <a href="L.ALS.System.html"><code>L.ALS.System</code></a> instance. This will also add undo and redo buttons.</p>
+<p>You might want to modify <code>SystemOptions.historySize</code> option which defines how many history records can be stored (<code>20</code> by default, <code>0</code> means unlimited). The optimal value depends on complexity of your layers. See the &quot;Memory&quot; tab in your browser, do some actions, watch how memory consumption grows and decide the history size based on this factor.</p>
+<p>All together now:</p>
+<pre class="prettyprint source"><code>let layerSystem = new L.ALS.System(map, {
+	// Your other options...
+	enableHistory: true, // Enable history and undo/redo buttons and their keyboard shortcuts
+	historySize: 25, // Change history size from 20 to 25
+});
+</code></pre>
+<h1>Using history</h1>
+<p>History is managed by calling <code>method. It should be called at the end of each operation caused by user interaction, for example:</p> <pre class="prettyprint source"><code>L.ALS.MyLayer = L.ALS.Layer.extend({
+
+	someOperation: function() {
+		// Operation code...
+		this.writeToHistory(); // Write to history at the end of this operation
+	</code>
+
+});
+</code></pre>
+<p>You should always wait until all the code for the operation is executed. If you're using async functions, you should <code>await</code> all of them.</p>
+<p>There are no other methods for managing history, and you don't need them, ALS does everything for you.</p>
 </article>
 
 </section>
-
-
-
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
@@ -432,7 +166,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a>
 	
-		on 2021-09-15T20:29:43+03:00
+		on 2021-09-15T20:29:44+03:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
