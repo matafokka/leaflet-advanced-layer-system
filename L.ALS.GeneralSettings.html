@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ALS Class: WidgetableWindow</title>
+	<title>ALS Class: GeneralSettings</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,7 +93,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: WidgetableWindow</h1>
+	<h1 class="page-title">Class: GeneralSettings</h1>
 <section>
 
 <header>
@@ -101,7 +101,7 @@
         <h2>
             <span class="ancestors"><a href="L.ALS.html">.ALS</a>.</span>
         
-        WidgetableWindow
+        GeneralSettings
         </h2>
         
     
@@ -114,7 +114,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="WidgetableWindow"><span class="type-signature"></span>new WidgetableWindow(button)</h4>
+    <h4 class="name" id="GeneralSettings"><span class="type-signature"></span>new GeneralSettings(defaultLocale)</h4>
     
     
 </dt>
@@ -122,13 +122,7 @@
 
     
     <div class="description">
-        <p>Customizable widgetable window. Creation of the window is a very slow process, so please, reuse existing windows as much as possible.</p>
-<p>Some important properties:</p>
-<ol>
-<li><a href="L.ALS.WidgetableWindow.html#windowContainer"><code>L.ALS.WidgetableWindow#windowContainer</code></a> - container for the window which should be added to the page</li>
-<li><a href="L.ALS.WidgetableWindow.html#window"><code>L.ALS.WidgetableWindow#window</code></a> - actual window. It contains only one child: <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a>'s container (<a href="L.ALS.Widgetable.html#container"><code>L.ALS.Widgetable#container</code></a> property). You can add custom elements to the window at <code>L.ALS.WidgetableWindow#initialize</code>.</li>
-<li><a href="L.ALS.WidgetableWindow.html#container"><code>L.ALS.WidgetableWindow#container</code></a> - Widgetable's container.</li>
-</ol>
+        <p>General application settings. Parent constructor should be immediately called in constructor of your custom child class</p>
     </div>
     
 
@@ -163,16 +157,13 @@
 
         <tr>
             
-                <td class="name"><code>button</code></td>
+                <td class="name"><code>defaultLocale</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Element</span>
-|
-
-<span class="param-type">undefined</span>
+<span class="param-type">string</span>
 
 
 
@@ -183,7 +174,7 @@
 
             
 
-            <td class="description last"><p>Button which will activate this window. Don't pass anything if you'll add this functionality later.</p></td>
+            <td class="description last"><p>Locale to use by default. Just pass it to the parent constructor</p></td>
         </tr>
 
     
@@ -257,7 +248,7 @@
 
 
     <ul>
-        <li><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></li>
+        <li><a href="L.ALS.Settings.html">L.ALS.Settings</a></li>
     </ul>
 
 
@@ -275,66 +266,6 @@
         <h3 class="subsection-title">Members</h3>
 
         <dl>
-            
-<hr>
-<dt class="name" id="buttonsGroup">
-    <h4 id="buttonsGroup"><span class="type-signature">&lt;protected> </span>buttonsGroup<span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Button group for this window</p>
-    </div>
-    
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
             
 <hr>
 <dt class="name" id="constructorArguments">
@@ -574,148 +505,6 @@
     
 </dd>
 
-        
-            
-<hr>
-<dt class="name" id="window">
-    <h4 id="window"><span class="type-signature"></span>window<span class="type-signature"> :HTMLDivElement</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Window which contains Widgetable's container</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">HTMLDivElement</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id="windowContainer">
-    <h4 id="windowContainer"><span class="type-signature"></span>windowContainer<span class="type-signature"> :HTMLDivElement</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Container for the window which should be added to the page</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">HTMLDivElement</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
         </dl>
     
 
@@ -726,7 +515,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addCloseButton"><span class="type-signature"></span>addCloseButton(id, text, icon, callbackObject, callback)</h4>
+    <h4 class="name" id="_writeSettings"><span class="type-signature">&lt;protected> </span>_writeSettings(object)</h4>
     
     
 </dt>
@@ -734,7 +523,7 @@
 
     
     <div class="description">
-        <p>Adds close button to this window. You should add this button after you've added all your own buttons.</p>
+        <p>Gathers and writes settings to the specified object</p>
     </div>
     
 
@@ -769,16 +558,10 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>object</code></td>
             
 
             <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
             
             </td>
 
@@ -786,106 +569,7 @@
 
             
 
-            <td class="description last"><p>Button ID</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>text</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button label</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>icon</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button icon - a RemixIcon class.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>callbackObject</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-|
-
-<span class="param-type"><a href="L.ALS.Serializable.html">L.ALS.Serializable</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Just pass &quot;this&quot;. If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>callback</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of a method of callbackObject that will be called when button will be pressed.</p></td>
+            <td class="description last"></td>
         </tr>
 
     
@@ -903,6 +587,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Settings.html#_writeSettings">L.ALS.Settings#_writeSettings</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -945,30 +638,6 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Added button</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="L.ALS.Widgets.Button.html">L.ALS.Widgets.Button</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -977,7 +646,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addWidget"><span class="type-signature"></span>addWidget(widget)</h4>
+    <h4 class="name" id="addWidget"><span class="type-signature"></span>addWidget(widget, defaultValue)</h4>
     
     
 </dt>
@@ -1041,6 +710,30 @@
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>defaultValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Value that will be set to the widget when user will press revert button</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -1059,7 +752,7 @@
 	<dd class="inherited-from">
 		<ul class="dummy">
 			<li>
-				<a href="L.ALS.Widgetable.html#addWidget">L.ALS.Widgetable#addWidget</a>
+				<a href="L.ALS.Settings.html#addWidget">L.ALS.Settings#addWidget</a>
 			</li>
 		</ul>
 	</dd>
@@ -1121,7 +814,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
+<span class="param-type"><a href="L.ALS.Settings.html">L.ALS.Settings</a></span>
 
 
 
@@ -1138,7 +831,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addWidgets"><span class="type-signature"></span>addWidgets(widgets)</h4>
+    <h4 class="name" id="addWidgets"><span class="type-signature"></span>addWidgets()</h4>
     
     
 </dt>
@@ -1146,7 +839,7 @@
 
     
     <div class="description">
-        <p>Adds all widgets to this widgetable</p>
+        <p>Does nothing, just call <a href="L.ALS.Settings.html#addWidget"><code>L.ALS.Settings#addWidget</code></a> multiple times</p>
     </div>
     
 
@@ -1155,56 +848,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>widgets</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Widgets to add</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -1220,7 +863,7 @@
 	<dd class="inherited-from">
 		<ul class="dummy">
 			<li>
-				<a href="L.ALS.Widgetable.html#addWidgets">L.ALS.Widgetable#addWidgets</a>
+				<a href="L.ALS.Settings.html#addWidgets">L.ALS.Settings#addWidgets</a>
 			</li>
 		</ul>
 	</dd>
@@ -1282,7 +925,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
+<span class="param-type"><a href="L.ALS.Settings.html">L.ALS.Settings</a></span>
 
 
 
@@ -1291,134 +934,6 @@
 
 
         
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="bindButton"><span class="type-signature"></span>bindButton(button)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Binds a button that will open and close this window</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>button</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">HTMLElement</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Button to bind</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
     
 </dd>
@@ -1580,104 +1095,6 @@
     
 
     
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getButtonsGroup"><span class="type-signature"></span>getButtonsGroup()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Buttons group to which you can add your own buttons</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="L.ALS.Widgets.ButtonsGroup.html">L.ALS.Widgets.ButtonsGroup</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -1856,6 +1273,113 @@
     <dd>
         
 <span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getSettings"><span class="type-signature"></span>getSettings()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Settings.html#getSettings">L.ALS.Settings#getSettings</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Settings as {widgetID: widgetValue} pairs</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="global.html#SettingsObject">SettingsObject</a></span>
 
 
 
