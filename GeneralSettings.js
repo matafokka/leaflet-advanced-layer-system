@@ -1,13 +1,12 @@
 /**
- * General application settings
+ * General application settings. Parent constructor should be immediately called in constructor of your custom child class
  *
- * @param defaultLocale {string} Locale to use by default
+ * @param defaultLocale {string} Locale to use by default. Just pass it to the parent constructor
  *
  * @class
  * @extends L.ALS.Settings
- * @ignore
  */
-L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._service.GeneralSettings.prototype */ {
+L.ALS.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._service.GeneralSettings.prototype */ {
 
 	/**
 	 * Light theme radio button ID
@@ -30,11 +29,24 @@ L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._servic
 	 */
 	_systemTheme: "generalSettingsSystemTheme",
 
+	/**
+	 * Current theme. Updated by general settings, should be passed to all other settings.
+	 * @type {"light"|"dark"}
+	 * @private
+	 */
+	_currentTheme: "light",
+
+	/**
+	 * Current menu position. Updated by general settings, should be passed to all other settings.
+	 */
+	_currentMenuPosition: "left",
+
 	initialize: function (defaultLocale = "English") {
 		L.ALS.Settings.prototype.initialize.call(this);
+		this.widgetsIgnoreList.push("lang", "theme", "menuPosition", "notify");
 
 		// Build language widget
-		let languageWidget = new L.ALS.Widgets.DropDownList("lang", "generalSettingsLanguage", this, "changeLocale");
+		let languageWidget = new L.ALS.Widgets.DropDownList("lang", "generalSettingsLanguage", this, "_changeLocale");
 		for (let locale in L.ALS.Locales) {
 			if (L.ALS.Locales.hasOwnProperty(locale) && typeof L.ALS.Locales[locale] !== "function" && L.ALS.Locales._ignoreList.indexOf(locale) === -1)
 				languageWidget.addItem(locale);
@@ -42,7 +54,7 @@ L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._servic
 		this.addWidget(languageWidget, defaultLocale);
 
 		// Build theme widget
-		let themeWidget = new L.ALS.Widgets.RadioButtonsGroup("theme", "generalSettingsTheme", this, "changeTheme").addItems(this._lightTheme, this._darkTheme);
+		let themeWidget = new L.ALS.Widgets.RadioButtonsGroup("theme", "generalSettingsTheme", this, "_changeTheme").addItems(this._lightTheme, this._darkTheme);
 
 		// Check if prefers-color-scheme supported and add system theme to the themes list
 		let defaultValue = this._lightTheme;
@@ -79,16 +91,18 @@ L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._servic
 	/**
 	 * Changes application's locale
 	 * @param widget {L.ALS.Widgets.DropDownList}
+	 * @private
 	 */
-	changeLocale: function (widget) {
+	_changeLocale: function (widget) {
 		L.ALS.Locales.changeLocale(widget.getValue());
 	},
 
 	/**
 	 * Changes application's theme
 	 * @param widget {L.ALS.Widgets.RadioButtonsGroup}
+	 * @private
 	 */
-	changeTheme: function (widget) {
+	_changeTheme: function (widget) {
 		this._changeThemeWorker(widget.getValue());
 	},
 
@@ -100,19 +114,41 @@ L.ALS._service.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._servic
 	_changeThemeWorker: function (value) {
 		if (value === this._systemTheme)
 			this._changeThemeWorker(this._systemThemeMedia.matches ? this._darkTheme : this._lightTheme);
-		else if (value === this._darkTheme)
+		else if (value === this._darkTheme) {
 			document.body.classList.add("als-dark");
-		else
+			this._currentTheme = "dark";
+		}
+		else {
 			document.body.classList.remove("als-dark");
+			this._currentTheme = "light";
+		}
 	},
 
 	_setMenuPosition(widget) {
-		L.ALS.Helpers.dispatchEvent(document, `als-set-menu-to-${
-			widget.getValue() === "generalSettingsMenuLeft" ? "left" : "right"
-		}`);
+		this._currentMenuPosition = widget.getValue() === "generalSettingsMenuLeft" ? "left" : "right";
+		L.ALS.Helpers.dispatchEvent(document, `als-set-menu-to-${this._currentMenuPosition}`);
 	},
 
 	_changeNotifications: function (widget) {
 		L.ALS._notifyWhenLongRunningOperationComplete = widget.getValue();
+	},
+
+	_onApply: function () {
+		L.ALS.generalSettings = {
+			theme: this._currentTheme,
+			menuPosition: this._currentMenuPosition,
+		}
+		this._writeSettings(L.ALS.generalSettings)
+		this.onApply();
+	},
+
+	/**
+	 * Called when user clicks "Apply" button.
+	 */
+	onApply: function () {
+	},
+
+	getSettings: function () {
+		return L.ALS.generalSettings;
 	}
 })

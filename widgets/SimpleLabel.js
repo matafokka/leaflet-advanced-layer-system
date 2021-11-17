@@ -18,9 +18,9 @@ L.ALS.Widgets.SimpleLabel = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Wi
 	initialize: function (id, value ="", textAlign= "left", style="nostyle") {
 		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "", id, "");
 		this.setConstructorArguments(arguments);
-		this.setValue(value);
-		this.setTextAlign(textAlign);
-		this.setStyle(style);
+		this.setValue(value)
+			.setTextAlign(textAlign)
+			.setStyle(style)
 	},
 
 	toHtmlElement: function () {

@@ -1117,7 +1117,7 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 
 /* Leaflet.Draw fix */
 
-.leaflet-draw {
+.leaflet-draw.leaflet-control {
 	background: none;
 	border: none;
 }

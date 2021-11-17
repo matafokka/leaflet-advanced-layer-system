@@ -14,6 +14,12 @@ L.ALS.Settings = L.ALS.Widgetable.extend( /** @lends L.ALS.Settings.prototype */
 
 	initialize: function () {
 		L.ALS.Widgetable.prototype.initialize.call(this);
+
+		/**
+		 * Widgets' IDs to ignore when calling {@link L.ALS.Settings#getSettings}
+		 * @type {string[]}
+		 */
+		this.widgetsIgnoreList = [];
 	},
 
 	/**
@@ -37,17 +43,24 @@ L.ALS.Settings = L.ALS.Widgetable.extend( /** @lends L.ALS.Settings.prototype */
 	},
 
 	/**
-	 * @return {Object} Settings as {widgetID: widgetValue} pairs
+	 * @return {SettingsObject} Settings as {widgetID: widgetValue} pairs
 	 */
 	getSettings: function () {
-		let settings = {
-			skipSerialization: true,
-			skipDeserialization: true,
-		};
+		return this._writeSettings({generalSettings: L.ALS.generalSettings});
+	},
+
+	/**
+	 * Gathers and writes settings to the specified object
+	 * @param object
+	 * @protected
+	 */
+	_writeSettings: function (object) {
+		object.skipSerialization = true;
+		object.skipDeserialization = true;
 		for (let w in this._widgets) {
-			if (this._widgets.hasOwnProperty(w))
-				settings[w] = this._widgets[w].getValue();
+			if (this._widgets.hasOwnProperty(w) && this.widgetsIgnoreList.indexOf(w) === -1)
+				object[w] = this._widgets[w].getValue();
 		}
-		return settings;
+		return object;
 	}
 });

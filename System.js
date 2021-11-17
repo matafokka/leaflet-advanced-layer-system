@@ -33,6 +33,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	_canWriteToHistory: true,
 
+	/**
+	 * Indicates whether toolbar is enabled
+	 * @type {boolean}
+	 * @private
+	 */
+	_toolbarEnabled: false,
+
 	initialize: function (map, options) {
 		L.Control.prototype.initialize.call(this);
 
@@ -72,6 +79,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			toolbarZoomControl: new L.ALS.ControlZoom({position: "topleft"}),
 			makeMapFullscreen: false,
 			removeMenuBar: false,
+			generalSettings: L.ALS.GeneralSettings,
 		}
 
 		let callbacks = ["onJsonSave", "onJsonLoad", "onProjectExport"];
@@ -80,6 +88,15 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
 		/** @type {SystemOptions} */
 		let newOptions = L.ALS.Helpers.mergeOptions(defaultOptions, options);
+
+		if (!L.ALS._service.generalSettings) {
+
+			/**
+			 * General settings instance
+			 * @type {L.ALS.GeneralSettings}
+			 */
+			L.ALS._service.generalSettings = new newOptions.generalSettings(newOptions.defaultLocale);
+		}
 
 		for (let callback of callbacks)
 			L.ALS._service[callback] = newOptions[callback];
@@ -244,13 +261,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
 		// Add settings window or bind settings button to open it, if window exists
 
-		let applySettingsCallback = () => {
-			this._applyNewSettings();
-		}
+		let applySettingsCallback = () => {this._applyNewSettings()}
 
 		if (!L.ALS._service.settingsWindow) {
 			L.ALS._service.settingsWindow = new L.ALS._service.SettingsWindow(this._settingsButton, applySettingsCallback, newOptions.aboutHTML);
-			L.ALS._service.settingsWindow.addItem("settingsGeneralSettings", new L.ALS._service.GeneralSettings(newOptions.defaultLocale));
+			L.ALS._service.settingsWindow.addItem("settingsGeneralSettings", L.ALS._service.generalSettings);
+			L.ALS._service.settingsWindow.onCloseCallbacks.push(() => {L.ALS._service.generalSettings._onApply();});
+			L.ALS._service.generalSettings._onApply();
 		} else {
 			L.ALS._service.settingsWindow.bindButton(this._settingsButton);
 			L.ALS._service.settingsWindow.onCloseCallbacks.push(applySettingsCallback);
@@ -292,7 +309,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		if (L.ALS.Helpers.isIElte9 && newOptions.enableProjects) {
 
 			/**
-			 * Error window to display when user tries to load prokect in IE <= 9 and error occurs
+			 * Error window to display when user tries to load project in IE <= 9 and error occurs
 			 * @memberOf L.ALS.Helpers
 			 * @type {L.ALS._service.IEErrorWindow}
 			 */
@@ -326,7 +343,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 				e.preventDefault();
 		});
 
-		// Add notification that says "Successfuly saved"
+		// Add notification that says "Successfully saved"
 		if (L.ALS.Helpers._chromeFSSupported) {
 			this._saveLabel = new L.ALS.Widgets.SimpleLabel("als-saved-notification", "systemProjectSaved", "center", "success").container;
 			this._saveLabel.classList.add("als-saved-notification");
@@ -351,6 +368,8 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		let removeZoomButtons = (L.ALS.Helpers.isMobile && topPanel.children.length > 9); // Phones can hold only 9 buttons + spacer + close buttons container = 11 children. -2 buttons for zoom buttons.
 
 		if (newOptions.enableToolbar) {
+			this._toolbarEnabled = true;
+
 			// Move panel from the menu to the top of the map's container
 			if (newOptions.makeMapFullscreen)
 				mapContainer.parentElement.insertBefore(topPanel, mapContainer);
@@ -550,10 +569,11 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @ignore
 	 */
 	_selectLayer: function (layerId) {
-		if (this._selectedLayer !== undefined) {
+		if (this._selectedLayer) {
 			if (this._selectedLayer.id === layerId)
 				return;
-			this._selectedLayer.onDeselect();
+			this._selectedLayer.isSelected = false;
+			this._selectedLayer._onDeselect();
 		}
 
 		// Deselect other layers, remove interactive and dragging abilities, and select given layer
@@ -599,7 +619,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			child.setAttribute("data-is-selected", "0");
 		document.getElementById(layerId).setAttribute("data-is-selected", "1");
 
-		this._selectedLayer.onSelect();
+		this._selectedLayer._onSelect();
 	},
 
 	/**
@@ -614,7 +634,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			return;
 
 		this._addHistoryOperation("deleteLayer");
-		this._selectedLayer.onDelete();
+		this._selectedLayer._onDelete();
 
 		// Remove layer's widget
 		let widget = document.getElementById(this._selectedLayer.id);

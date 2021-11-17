@@ -12,7 +12,7 @@ L.ALS._service.SettingsWindow = L.ALS.SidebarWindow.extend( /** @lends L.ALS._se
 
 		/**
 		 * Contains callbacks that will be called when settings are applied
-		 * @type {function[]}
+		 * @type {Function[]}
 		 */
 		this.onCloseCallbacks = [];
 
@@ -34,6 +34,25 @@ L.ALS._service.SettingsWindow = L.ALS.SidebarWindow.extend( /** @lends L.ALS._se
 			new L.ALS.Widgets.Button("import", "settingsImportButton", this, "importSettings").setMobileIcon("ri-folder-open-line"),
 		);
 		this.addCloseButton("close", "settingsApplyButton", "ri-close-line", this, "saveSettings");
+
+		this._importSettingsButton = document.getElementById("als-load-settings-input");
+		this._importSettingsButton.addEventListener("change", () => {
+			L.ALS.Helpers.readTextFile(this._importSettingsButton, L.ALS.locale.settingsLoadingNotSupported, (text) => {
+
+				let json;
+				try { json = JSON.parse(text); }
+				catch (e) {
+					window.alert(L.ALS.locale.settingsImportError);
+					return;
+				}
+
+				this.forEachWidget((item, widget, key) => {
+					if (json[key])
+						this.setWidgetValue(item, widget, json[key])
+				});
+			});
+			this.updateWindowHeight();
+		});
 	},
 
 	addItem: function (name, item) {
@@ -92,24 +111,7 @@ L.ALS._service.SettingsWindow = L.ALS.SidebarWindow.extend( /** @lends L.ALS._se
 	 * Imports settings from a text file. Being called when user presses the button.
 	 */
 	importSettings: function () {
-		let loadButton = document.getElementById("als-load-settings-input");
-		loadButton.addEventListener("change", () => {
-			L.ALS.Helpers.readTextFile(loadButton, L.ALS.locale.settingsLoadingNotSupported, (text) => {
-
-				let json;
-				try { json = JSON.parse(text); }
-				catch (e) {
-					window.alert(L.ALS.locale.settingsImportError);
-					return;
-				}
-
-				this.forEachWidget((item, widget, key) => {
-					if (json[key])
-						this.setWidgetValue(item, widget, json[key])
-				});
-			});
-			this.updateWindowHeight();
-		});
+		L.ALS.Helpers.dispatchEvent(this._importSettingsButton, "click");
 	},
 
 	/**

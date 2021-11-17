@@ -9,6 +9,8 @@
  *
  * `Wall width (m): 10` - When unitsPosition set to "description"
  *
+ * This widget is useful for displaying formatted values, but working with actual values, i.e. {@link L.ALS.Widgets.ValueLabel#getValue} will return an actual number that you've set.
+ *
  * @param id {string} ID of this label
  * @param description {string} Value description. Pass locale property to localize it.
  * @param units {string} Units for this label. If set to empty string, unitsPosition won't take an effect.
@@ -27,12 +29,12 @@ L.ALS.Widgets.ValueLabel = L.ALS.Widgets.SimpleLabel.extend( /** @lends L.ALS.Wi
 	initialize: function (id, description, units = "", unitsPosition = "description", formatNumbers = false, style="nostyle", initialValue = "") {
 		L.ALS.Widgets.SimpleLabel.prototype.initialize.call(this, id, "");
 		this.setConstructorArguments(arguments);
-		this.setDescription(description);
-		this.setFormatNumbers(formatNumbers);
-		this.setValue(initialValue);
-		this.setUnits(units);
-		this.setUnitsPosition(unitsPosition);
-		this.setStyle(style);
+		this.setDescription(description)
+			.setFormatNumbers(formatNumbers)
+			.setUnits(units)
+			.setUnitsPosition(unitsPosition)
+			.setStyle(style)
+			.setValue(initialValue)
 	},
 
 	/**
@@ -79,6 +81,25 @@ L.ALS.Widgets.ValueLabel = L.ALS.Widgets.SimpleLabel.extend( /** @lends L.ALS.Wi
 	 */
 	getFormatNumbers: function () {
 		return this._formatNumbers;
+	},
+
+	/**
+	 * Sets number of digits after floating point to display. Doesn't depend on {@link L.ALS.Widgets.ValueLabel#setFormatNumbers}.
+	 *
+	 * @param number {number|undefined} Number of digits. Pass undefined to output all numbers.
+	 * @return {L.ALS.Widgets.ValueLabel} This
+	 */
+	setNumberOfDigitsAfterPoint: function (number) {
+		this._numberOfDigitsAfterPoint = number;
+		this._updateValue();
+		return this;
+	},
+
+	/**
+	 * @return {number|undefined} Number of digits after floating point to display or undefined, if not set
+	 */
+	getNumberOfDigitsAfterPoint: function () {
+		return this._numberOfDigitsAfterPoint;
 	},
 
 	/**
@@ -150,15 +171,20 @@ L.ALS.Widgets.ValueLabel = L.ALS.Widgets.SimpleLabel.extend( /** @lends L.ALS.Wi
 	 * @private
 	 */
 	_updateValue: function () {
-		let hasUnits = this._units !== "";
-		let isDescription = this._unitsPosition === "description";
-		let localizedValue = L.ALS.locale[this._description];
-		let value = (localizedValue) ? localizedValue : this._description;
+		let hasUnits = this._units !== "",
+			isDescription = this._unitsPosition === "description",
+			localizedValue = L.ALS.locale[this._description],
+			value = (localizedValue) ? localizedValue : this._description;
+
 		if (isDescription && hasUnits)
 			value += " (" + this._units + ")";
-		value += ": " + (this._formatNumbers ? L.ALS.Helpers.formatNumber(this._labelValue) : this._labelValue);
+
+		let fValue = this._numberOfDigitsAfterPoint !== undefined ? parseFloat(this._labelValue).toFixed(this._numberOfDigitsAfterPoint) : this._labelValue;
+		value += ": " + (this._formatNumbers ? L.ALS.Helpers.formatNumber(fValue) : fValue);
+
 		if (!isDescription && hasUnits)
 			value += " " + this._units;
+
 		L.ALS.Widgets.SimpleLabel.prototype.setValue.call(this, value);
 	},
 

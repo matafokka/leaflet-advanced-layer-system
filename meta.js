@@ -57,6 +57,12 @@ L.ALS = {
 	 * @ignore
 	 */
 	_service: {},
+
+	/**
+	 * General settings object. Updated automatically by ALS.
+	 * @type {GeneralSettingsObject}
+	 */
+	generalSettings: {},
 };
 
 require("./ControlZoom.js");
@@ -70,7 +76,7 @@ require("./widgets/Spoiler.js"); // Because it mixes Widget and Widgetable
 require("./Wizard.js");
 require("./Settings.js");
 require("./Layer.js");
-require("./_service/GeneralSettings.js");
+require("./GeneralSettings.js");
 require("./WidgetableWindow.js");
 require("./SidebarWindow.js");
 require("./_service/WizardWindow.js");
@@ -155,10 +161,29 @@ if (!L.ALS.operationsWindow) {
  * @property {onProjectExport} [onProjectExport=undefined] A function to call when user exports project. Replaces default file saving routine. It will be called ONLY if user's browser doesn't support Blob. Here you must provide a routine to save a JSZip instance. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks , fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to undefined.
  *
  * @property {boolean} [removeMenuBar=false] Completely removes the menu bar. Useful for creating your own UI. Defaults to false.
+ *
+ * @property {function(new:L.ALS.GeneralSettings)} [generalSettings=L.ALS.GeneralSettings] Custom general settings class. Use it to add custom application-wide settings. Extend {@link L.ALS.GeneralSettings} and pass it here. Then you can access both layer and general settings at {@link L.ALS.Layer#applyNewSettings}. Default general settings will be applied automatically. If multiple ALS instances are used, this option will be considered only for the first instance.
+ */
+
+/**
+ * Default general settings object
+ * @typedef {Object} DefaultGeneralSettingsObject
+ * @property {"light"|"dark"} theme Current theme
+ * @property {"left"|"right"} menuPosition Current menu position.
+ */
+
+/**
+ * General settings object that contains default settings
+ * @typedef {DefaultGeneralSettingsObject | Object.<string, any>} GeneralSettingsObject
+ */
+
+/**
+ * Settings object. Keys are layer settings.  general settings are in `generalSettings` property.
+ * @typedef {Object.<string, any>} SettingsObject
+ * @property {GeneralSettingsObject} generalSettings Default and custom general settings
  */
 
 // L.ALS.System docs
-
 
 /**
  * System itself. Everything else revolves around it
