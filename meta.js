@@ -74,6 +74,7 @@ require("./Widgetable.js");
 require("./widgets/Widgets.js");
 require("./widgets/Spoiler.js"); // Because it mixes Widget and Widgetable
 require("./Wizard.js");
+require("./EmptyWizard.js");
 require("./Settings.js");
 require("./Layer.js");
 require("./GeneralSettings.js");

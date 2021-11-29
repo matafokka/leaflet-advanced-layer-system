@@ -31,6 +31,7 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 	wizardSelectTitle: "Тип нового слоя",
 	wizardContentTitle: "Параметры нового слоя",
 	wizardAddButton: "Добавить",
+	wizardEmptyLabel: "Этот слой не имеет исходных параметров",
 
 	// Settings
 

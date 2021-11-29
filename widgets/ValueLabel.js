@@ -104,7 +104,7 @@ L.ALS.Widgets.ValueLabel = L.ALS.Widgets.SimpleLabel.extend( /** @lends L.ALS.Wi
 
 	/**
 	 * Sets value of this label. It's not an alias for {@link L.ALS.Widgets.SimpleLabel#setValue}! There's no alias for this method.
-	 * @param value Value to set
+	 * @param value {string|number} Value to set. If value is a string, this widget will try to format it as a number and, if fails, will set it as is.
 	 * @return {L.ALS.Widgets.ValueLabel} This
 	 */
 	setValue: function (value) {
@@ -114,7 +114,7 @@ L.ALS.Widgets.ValueLabel = L.ALS.Widgets.SimpleLabel.extend( /** @lends L.ALS.Wi
 	},
 
 	/**
-	 * @return Value of this label. It doesn't return the whole text! To get whole text, use {@link L.ALS.Widgets.ValueLabel#getActualValue}.
+	 * @return {string|number} Value of this label. It doesn't return the whole text! To get whole text, use {@link L.ALS.Widgets.ValueLabel#getActualValue}.
 	 */
 	getValue: function () {
 		return this._labelValue;
@@ -179,8 +179,14 @@ L.ALS.Widgets.ValueLabel = L.ALS.Widgets.SimpleLabel.extend( /** @lends L.ALS.Wi
 		if (isDescription && hasUnits)
 			value += " (" + this._units + ")";
 
-		let fValue = this._numberOfDigitsAfterPoint !== undefined ? parseFloat(this._labelValue).toFixed(this._numberOfDigitsAfterPoint) : this._labelValue;
-		value += ": " + (this._formatNumbers ? L.ALS.Helpers.formatNumber(fValue) : fValue);
+		let parsedValue = parseFloat(this._labelValue), fValue = this._labelValue === undefined ? 0 : this._labelValue;
+		if (parsedValue.toString() === fValue.toString()) {
+			fValue = this._numberOfDigitsAfterPoint !== undefined ? parsedValue.toFixed(this._numberOfDigitsAfterPoint) : parsedValue;
+			if (this._formatNumbers)
+				fValue = L.ALS.Helpers.formatNumber(fValue);
+		}
+
+		value += ": " + fValue;
 
 		if (!isDescription && hasUnits)
 			value += " " + this._units;

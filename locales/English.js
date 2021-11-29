@@ -31,6 +31,7 @@ L.ALS.Locales["English"] = {
 	wizardSelectTitle: "New layer type",
 	wizardContentTitle: "New layer options",
 	wizardAddButton: "Add",
+	wizardEmptyLabel: "This layer has no starting parameters",
 
 	// Settings
 
