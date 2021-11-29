@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ALS Class: Serializable</title>
+	<title>ALS Class: EmptyWizard</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,7 +93,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Serializable</h1>
+	<h1 class="page-title">Class: EmptyWizard</h1>
 <section>
 
 <header>
@@ -101,7 +101,7 @@
         <h2>
             <span class="ancestors"><a href="L.ALS.html">.ALS</a>.</span>
         
-        Serializable
+        EmptyWizard
         </h2>
         
     
@@ -114,7 +114,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Serializable"><span class="type-signature"></span>new Serializable()</h4>
+    <h4 class="name" id="EmptyWizard"><span class="type-signature"></span>new EmptyWizard()</h4>
     
     
 </dt>
@@ -122,32 +122,12 @@
 
     
     <div class="description">
-        <h1>Introduction</h1>
-<p>Provides serialization capabilities, used to serialize different kinds of objects to JSON and deserialize them back.</p>
-<p>Deals with cyclic references.</p>
-<p>Serializes following types: Array, RegExp, BigInt, Symbol. Serializes custom properties in all of those types.</p>
-<p>Tries to deal with any types of objects, but you may want to provide your own serialization and deserialization mechanisms. To do so, override serialize() and static deserialize() methods.</p>
-<p><strong>Caveats</strong>:</p>
-<ol>
-<li>Objects' ownership (where object has been created) changes after deserialization. The way it changes depends on how user's browser handles <code>for ... in</code> loop. The first place object will appear at would be the owner of that object after deserialization.</li>
-<li>If user's browser doesn't support BigInt or Symbol, those types will be deserialized as number and string respectively.</li>
-</ol>
-<h1>How to implement custom mechanisms</h1>
-<p>You'll have to override <a href="L.ALS.Serializable.html#serialize"><code>L.ALS.Serializable#serialize</code></a> and <a href="L.ALS.Serializable.html#.deserialize"><code>L.ALS.Serializable.deserialize</code></a> methods.</p>
-<p><a href="L.ALS.Serializable.html#serialize"><code>L.ALS.Serializable#serialize</code></a> should return an object that can be serialized by <code>JSON.stringify()</code>. You may want to create plain objects containing your data or use static <a href="L.ALS.Serializable.html#.serializeAnyObject"><code>L.ALS.Serializable.serializeAnyObject</code></a> method to serialize complex objects. Though it won't work with custom classes, it may be still useful.</p>
-<p>Static <a href="L.ALS.Serializable.html#.deserialize"><code>L.ALS.Serializable.deserialize</code></a> method accepts your serialized object as an argument and must return a deserialized instance of your class. You can use static <a href="L.ALS.Serializable.html#.getObjectFromSerialized"><code>L.ALS.Serializable.getObjectFromSerialized</code></a> method to do so and perform your deserialization on returned object. You may also find default deserialization mechanism useful for deserializing complex objects such as described above.</p>
-<p>There are also plenty of helpers methods to accomplish your goal. <a href="L.ALS.Layer.html"><code>L.ALS.Layer</code></a> has additional methods to help you.</p>
-<h1>Hints</h1>
-<p>Every <a href="L.ALS.Serializable.html"><code>L.ALS.Serializable</code></a> instance has public <a href="L.ALS.Serializable.html#serializationIgnoreList"><code>L.ALS.Serializable#serializationIgnoreList</code></a> property which contains properties' names to ignore while serializing. You may want to use it if you want to stick to default serialization mechanisms. Just append your properties' and methods' names to <code>serializationIgnoreList</code>.</p>
-<p>Both <a href="L.ALS.Serializable.html#serialize"><code>L.ALS.Serializable#serialize</code></a> and <a href="L.ALS.Serializable.html#.deserialize"><code>L.ALS.Serializable.deserialize</code></a> methods accepts two additional arguments: <code>seenObjects</code> and <code>seenObjectsForCleanUp</code>. Those are used internally by serialization mechanism. If you're making layer, just don't pass anything to the default mechanism. If your class serializes some other <a href="L.ALS.Serializable.html"><code>L.ALS.Serializable</code></a> that uses default mechanism, please, pass those parameters to its <code>serialize()</code> and <code>deserialize()</code> methods.</p>
-<p>You can prevent constructor arguments from being serialized or deserialized by creating custom <code>skipSerialization</code> and <code>skipDeserialization</code> properties respectively and setting them to <code>true</code>. If you choose to prevent serialization, you'll need to set skipped arguments at deserialization yourself. For this, see the next tip.</p>
-<p>You can put custom objects as arguments to the constructor while deserializing using default mechanisms. To do so:</p>
-<ol>
-<li>Assign <code>serialized.constructorArguments</code> to the array.</li>
-<li>For each custom object argument: create <code>skipDeserialization</code> property and set it to <code>true</code>.</li>
-<li>Put your custom arguments to <code>serialized.constructorArguments</code> in such order that constructor requires.</li>
-<li>Pass your <code>serialized</code> object to the default mechanism: <code>L.ALS.Serializable.deserialize(serialized);</code></li>
-</ol>
+        <p>Wizard with only label that says that current layer has no starting parameters.</p>
+<p>Just extend this wizard and change <a href="L.ALS.Wizard.html#displayName"><code>L.ALS.Wizard#displayName</code></a> like so:</p>
+<pre class="prettyprint source"><code>L.ALS.MyWizard = L.ALS.EmptyWizard.extend({
+    displayName: &quot;My Wizard Name&quot;,
+});
+</code></pre>
     </div>
     
 
@@ -223,7 +203,7 @@
 
 
     <ul>
-        <li>L.Class</li>
+        <li><a href="L.ALS.Wizard.html">L.ALS.Wizard</a></li>
     </ul>
 
 
@@ -276,6 +256,175 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Serializable.html#constructorArguments">L.ALS.Serializable#constructorArguments</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="container">
+    <h4 id="container"><span class="type-signature"></span>container<span class="type-signature"> :HTMLDivElement</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Container to add widgets to. This element must be added to the page.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">HTMLDivElement</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#container">L.ALS.Widgetable#container</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="displayName">
+    <h4 id="displayName"><span class="type-signature">&lt;readonly> </span>displayName<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Name of the layer type that will be displayed in the wizard window. Set it to locale property to localize it.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Wizard.html#displayName">L.ALS.Wizard#displayName</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -348,6 +497,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Serializable.html#serializationIgnoreList">L.ALS.Serializable#serializationIgnoreList</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -392,7 +550,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".cleanUp"><span class="type-signature">&lt;static> </span>cleanUp(seenObjects)</h4>
+    <h4 class="name" id="addWidget"><span class="type-signature"></span>addWidget(widget)</h4>
     
     
 </dt>
@@ -400,7 +558,7 @@
 
     
     <div class="description">
-        <p>Cleans up seen objects. Must be called after first call of <code>serialize()</code>, <code>serializeAnyObjects()</code> or <code>deserialize()</code>. Should not be called in the middle of serialization or deserialization, for example, at <code>serialize()</code>.</p>
+        <p>Adds widget to this widgetable</p>
     </div>
     
 
@@ -435,13 +593,13 @@
 
         <tr>
             
-                <td class="name"><code>seenObjects</code></td>
+                <td class="name"><code>widget</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></span>
 
 
 
@@ -452,7 +610,7 @@
 
             
 
-            <td class="description last"><p><code>seenObjects</code> argument that you've passed to serialization and deserialization methods</p></td>
+            <td class="description last"><p>Widget to add</p></td>
         </tr>
 
     
@@ -470,157 +628,14 @@
 	
 
 	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".deserialize"><span class="type-signature">&lt;static> </span>deserialize(serialized, seenObjects)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Generic deserialization method, can be used to deserialize any object or primitive anywhere by calling <a href="L.ALS.Serializable.html#.deserialize"><code>L.ALS.Serializable.deserialize</code></a>.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>serialized</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Serialized object or primitive</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>seenObjects</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Already seen objects' ids. Intended only for internal use.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#addWidget">L.ALS.Widgetable#addWidget</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -668,140 +683,7 @@
     
             
 <div class="param-desc">
-    <p>Deserialized object or primitive</p>
-</div>
-
-
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".deserializePrimitive"><span class="type-signature">&lt;static> </span>deserializePrimitive(primitive)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Deserializes primitives including types unsupported by JSON</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>primitive</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Primitive to deserialize</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Deserialized primitive</p>
+    <p>This</p>
 </div>
 
 
@@ -812,13 +694,7 @@
     </dt>
     <dd>
         
-<span class="param-type">bigint</span>
-|
-
-<span class="param-type">number</span>
-|
-
-<span class="param-type">*</span>
+<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
 
 
 
@@ -835,7 +711,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".findGetter"><span class="type-signature">&lt;static> </span>findGetter(property, object)</h4>
+    <h4 class="name" id="addWidgets"><span class="type-signature"></span>addWidgets(widgets)</h4>
     
     
 </dt>
@@ -843,7 +719,7 @@
 
     
     <div class="description">
-        <p>Finds getter name for given property in a given object</p>
+        <p>Adds all widgets to this widgetable</p>
     </div>
     
 
@@ -878,13 +754,13 @@
 
         <tr>
             
-                <td class="name"><code>property</code></td>
+                <td class="name"><code>widgets</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type"><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></span>
 
 
 
@@ -895,31 +771,7 @@
 
             
 
-            <td class="description last"><p>Property name</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>object</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Object to find getter in</p></td>
+            <td class="description last"><p>Widgets to add</p></td>
         </tr>
 
     
@@ -936,6 +788,15 @@
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#addWidgets">L.ALS.Widgetable#addWidgets</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -983,7 +844,7 @@
     
             
 <div class="param-desc">
-    <p>Either getter name or undefined if nothing has been found</p>
+    <p>This</p>
 </div>
 
 
@@ -994,10 +855,7 @@
     </dt>
     <dd>
         
-<span class="param-type">string</span>
-|
-
-<span class="param-type">undefined</span>
+<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
 
 
 
@@ -1014,7 +872,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".findSetter"><span class="type-signature">&lt;static> </span>findSetter(property, object)</h4>
+    <h4 class="name" id="deserializeWidgets"><span class="type-signature"></span>deserializeWidgets(serializedWidgets, seenObjects)</h4>
     
     
 </dt>
@@ -1022,7 +880,7 @@
 
     
     <div class="description">
-        <p>Finds setter name for given property in a given object</p>
+        <p>Deserializes widgets and adds them to this object. Removes all previously added widgets. Use this if you want to deserialize only widgets in your own Widgetable.</p>
     </div>
     
 
@@ -1057,31 +915,7 @@
 
         <tr>
             
-                <td class="name"><code>property</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Property name</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>object</code></td>
+                <td class="name"><code>serializedWidgets</code></td>
             
 
             <td class="type">
@@ -1098,484 +932,7 @@
 
             
 
-            <td class="description last"><p>Object to find setter in</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Either setter name or undefined if nothing has been found</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">string</span>
-|
-
-<span class="param-type">undefined</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".getObjectFromSerialized"><span class="type-signature">&lt;static> </span>getObjectFromSerialized(serialized, seenObjects)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Constructs new instance of Serializable and passes serialized arguments to the constructor. Assigns <code>serializationID</code> to the object and adds it to <code>seenObjects</code>.</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>serialized</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Serialized Serializable object</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>seenObjects</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Already seen objects' ids. Intended only for internal use.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Instance of given object or <code>serialized</code> argument if constructor hasn't been found</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="L.ALS.Serializable.html">L.ALS.Serializable</a></span>
-|
-
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".getSerializableConstructor"><span class="type-signature">&lt;static> </span>getSerializableConstructor(className)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Finds a constructor by given class name</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>className</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Full class name. Just pass serialized.serializableClassName.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Found constructor or undefined</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">function</span>
-|
-
-<span class="param-type">undefined</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".serializeAnyObject"><span class="type-signature">&lt;static> </span>serializeAnyObject(object, seenObjects)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Generic serialization mechanism. Tries to serialize everything possible</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>object</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Any object or primitive to serialize</p></td>
+            <td class="description last"><p>Result of <a href="L.ALS.Widgetable.html#serializeWidgets"><code>L.ALS.Widgetable#serializeWidgets</code></a></p></td>
         </tr>
 
     
@@ -1617,151 +974,14 @@
 	
 
 	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Serialized object or primitive</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Object</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".serializePrimitive"><span class="type-signature">&lt;static> </span>serializePrimitive(primitive)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Serializes primitives including types unsupported by JSON</p>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>primitive</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Primitive to serialize</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#deserializeWidgets">L.ALS.Widgetable#deserializeWidgets</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -1805,248 +1025,6 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Serialized primitive</p>
-</div>
-
-
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".shouldIgnoreProperty"><span class="type-signature">&lt;static> </span>shouldIgnoreProperty(property, object, isGetter, checkOnlyIgnoreList)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Checks if property should be ignored when serializing or deserializing.</p>
-<p>If you're deserializing, call it for both serialized object and new instance like this:</p>
-<pre class="prettyprint source"><code>if (this.shouldIgnoreProperty(property, serialized) || this.shouldIgnoreProperty(property, newObject, false, true))
-    // Ignore this property
-</code></pre>
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>property</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Name of the property</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>object</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="L.ALS.Serializable.html">L.ALS.Serializable</a></span>
-|
-
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Object containing ignore lists</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>isGetter</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Indicates whether given property is getter or not</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>checkOnlyIgnoreList</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>If true, will only check if property is in the ignore lists</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>True, if property is in ignore lists. False otherwise.</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">boolean</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -2158,6 +1136,15 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Serializable.html#getObjectToSerializeTo">L.ALS.Serializable#getObjectToSerializeTo</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -2216,6 +1203,439 @@
     <dd>
         
 <span class="param-type">Object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getWidgetById"><span class="type-signature"></span>getWidgetById(id)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Finds widget by ID</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ID of a control to find</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#getWidgetById">L.ALS.Widgetable#getWidgetById</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Widget with given ID.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeAllWidgets"><span class="type-signature"></span>removeAllWidgets()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Removes all widgets from the container</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#removeAllWidgets">L.ALS.Widgetable#removeAllWidgets</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>This</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="removeWidget"><span class="type-signature"></span>removeWidget(id)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Removes widget from the container</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ID of a widget to remove</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#removeWidget">L.ALS.Widgetable#removeWidget</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>This</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
 
 
 
@@ -2315,6 +1735,15 @@ return json; // Finally return JSON
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Serializable.html#serialize">L.ALS.Serializable#serialize</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
@@ -2419,6 +1848,15 @@ return json; // Finally return JSON
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Serializable.html#serializeConstructorArguments">L.ALS.Serializable#serializeConstructorArguments</a>
+			</li>
+		</ul>
+	</dd>
+	
 
     
 
@@ -2486,6 +1924,168 @@ return json; // Finally return JSON
     <dd>
         
 <span class="param-type">Array</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="serializeWidgets"><span class="type-signature"></span>serializeWidgets(seenObjects)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Serializes widgets.</p>
+<p>If you're serializing <a href="L.ALS.Layer.html"><code>L.ALS.Layer</code></a>, you don't need to call this method, <a href="L.ALS.Layer.html#getObjectToSerializeTo"><code>L.ALS.Layer#getObjectToSerializeTo</code></a> already does that.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>seenObjects</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Already seen objects' ids. Intended only for internal use.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Widgetable.html#serializeWidgets">L.ALS.Widgetable#serializeWidgets</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Object where keys are widget's ids and values are serialized widgets themselves</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
 
 
 
@@ -2573,6 +2173,15 @@ return json; // Finally return JSON
 
 	
 
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.Serializable.html#setConstructorArguments">L.ALS.Serializable#setConstructorArguments</a>
+			</li>
+		</ul>
+	</dd>
 	
 
     
