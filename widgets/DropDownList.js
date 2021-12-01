@@ -12,7 +12,7 @@
 L.ALS.Widgets.DropDownList = L.ALS.Widgets.BaseItemsWidget.extend( /** @lends L.ALS.Widgets.DropDownList.prototype */ {
 
 	initialize: function (id, label, callbackObject = undefined, callback = "") {
-		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "", id, label, callbackObject, callback, ["change"]);
+		L.ALS.Widgets.BaseItemsWidget.prototype.initialize.call(this, id, label, callbackObject, callback, ["change"]);
 		this.setConstructorArguments(arguments);
 	},
 
@@ -21,6 +21,7 @@ L.ALS.Widgets.DropDownList = L.ALS.Widgets.BaseItemsWidget.extend( /** @lends L.
 	},
 
 	addItem: function (item) {
+		L.ALS.Widgets.BaseItemsWidget.prototype.addItem.call(this, item);
 		let option = document.createElement("option");
 		L.ALS.Locales.localizeOrSetValue(option, item, "text");
 		this.input.appendChild(option);
@@ -29,6 +30,7 @@ L.ALS.Widgets.DropDownList = L.ALS.Widgets.BaseItemsWidget.extend( /** @lends L.
 	},
 
 	removeItem: function (item) {
+		L.ALS.Widgets.BaseItemsWidget.prototype.removeItem.call(this, item);
 		for (let child of this.input.childNodes) {
 			if (L.ALS.Locales.getLocalePropertyOrValue(child) === item) {
 				this.input.removeChild(child);

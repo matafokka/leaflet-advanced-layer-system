@@ -210,10 +210,9 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 
 		// Bind events
 		let eventHandler = (e) => {
-			if (!this.onChange(e))
-				this.input.classList.add("als-invalid-input");
-			else
-				this.input.classList.remove("als-invalid-input");
+			if (this.shouldIgnoreEvent(e))
+				return;
+			this.input.classList[this.onChange(e) ? "remove" : "add"]("als-invalid-input");
 			this.callCallback();
 		}
 		for (let event of this._events)
@@ -232,11 +231,25 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 	 * Default implementation just returns true.
 	 *
 	 * @param event {Event} Event fired by input
-	 * @return {boolean} If true, the attached callback will be called. If false, attached callback won't be called.
+	 * @return {boolean} If true, the attached callback will be called.
 	 * @protected
 	 */
 	onChange: function (event) {
 		return true;
+	},
+
+	/**
+	 * Whether ALS should ignore given event. If returns true, both {@link L.ALS.Widgets.BaseWidget#onChange} and ({@link L.ALS.Widgets.BaseWidget#callCallback}) won't be called, and none of the input's attributes will change. `event.preventDefault()` won't be called though.
+	 *
+	 * Useful for precise control over your widget's behavior. For example, if your widget doesn't behave correctly when working with keyboard, here you can detect which actions shouldn't affect your widget.
+	 *
+	 * You can also use `event.preventDefault()` here.
+	 *
+	 * @param event {Event} Event that should be passed or ignored.
+	 * @return {boolean} True, if event should be skipped.
+	 */
+	shouldIgnoreEvent: function (event) {
+		return false;
 	},
 
 	/**

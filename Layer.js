@@ -218,6 +218,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			this._onShow();
 			this.onShow();
 		}, false);
+		this._hideButton.setAttribute("data-hidden", "0");
 
 		let layerWidget = document.createElement("div");
 		layerWidget.className = "als-layer-container";

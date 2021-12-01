@@ -14,7 +14,7 @@ L.ALS.Widgets.RadioButtonsGroup = L.ALS.Widgets.BaseItemsWidget.extend( /** @len
 	customContainerClassName: "als-radio-group-wrapper",
 
 	initialize: function (id, label, callbackObject = undefined, callback = "") {
-		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "", id, label, callbackObject, callback, ["change"]);
+		L.ALS.Widgets.BaseItemsWidget.prototype.initialize.call(this, id, label, callbackObject, callback, ["change"]);
 		this.radioNames = L.ALS.Helpers.generateID();
 		this.containerForRevertButton = this.container.getElementsByClassName("als-radio-label-wrapper")[0];
 		this.setConstructorArguments(arguments);
@@ -30,6 +30,7 @@ L.ALS.Widgets.RadioButtonsGroup = L.ALS.Widgets.BaseItemsWidget.extend( /** @len
 	},
 
 	addItem: function (item) {
+		L.ALS.Widgets.BaseItemsWidget.prototype.addItem.call(this, item);
 		let itemWrapper = document.createElement("div");
 		itemWrapper.className = "als-widget-row";
 
@@ -70,9 +71,10 @@ L.ALS.Widgets.RadioButtonsGroup = L.ALS.Widgets.BaseItemsWidget.extend( /** @len
 	},
 
 	removeItem: function (item) {
+		L.ALS.Widgets.BaseItemsWidget.prototype.removeItem.call(this, item);
 		let container = this._getButtonsContainer(item);
 		if (!container)
-			return;
+			return this;
 		this.container.removeChild(container);
 		return this;
 	},
@@ -80,7 +82,7 @@ L.ALS.Widgets.RadioButtonsGroup = L.ALS.Widgets.BaseItemsWidget.extend( /** @len
 	selectItem: function (item) {
 		let container = this._getButtonsContainer(item);
 		if (!container)
-			return;
+			return this;
 		container.getElementsByTagName("input")[0].checked = true;
 		return this;
 	},

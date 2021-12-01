@@ -57,7 +57,7 @@ L.ALS.Widgets.Spoiler = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widget
 	/**
 	 * Adds widgets to this spoiler
 	 *
-	 * @param {L.ALS.Widgets.BaseWidget} Widgets to add
+	 * @param {L.ALS.Widgets.BaseWidget} widgets Widgets to add
 	 * @return {L.ALS.Widgets.Spoiler} This
 	 */
 	addWidgets: function (...widgets) {

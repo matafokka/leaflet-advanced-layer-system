@@ -15,19 +15,8 @@ L.ALS.Widgets.Number = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets
 	customWrapperClassName: "als-number",
 
 	initialize: function (id, label, callbackObject = undefined, callback = "") {
-		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "text", id, label, callbackObject, callback, ["edit", "change", "keyup"]);
+		L.ALS.Widgets.BaseWidget.prototype.initialize.call(this, "text", id, label, callbackObject, callback, ["edit", "change", "keydown"]);
 		this.setConstructorArguments(arguments);
-
-		this.input.addEventListener("keydown", (event) => {
-			// If:
-			if (!(event.key === "." && this.input.value.indexOf(".") === -1) // 1. Not first comma in the value
-				&& !(event.key === "-" && this.input.selectionStart === 0 && this.input.value[0] !== "-") // Not first and only minus
-				&& !event.ctrlKey // 2. Ctrl has not been pressed
-				&& event.key.length === 1 // 3. Functional button has not been pressed
-				&& isNaN(parseInt(event.key)) // 4. Number has not been entered
-			)
-				event.preventDefault(); // Then don't enter pressed key
-		});
 	},
 
 	toHtmlElement: function () {
@@ -59,6 +48,25 @@ L.ALS.Widgets.Number = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets
 		wrapper.appendChild(plusButton);
 
 		return container;
+	},
+
+	shouldIgnoreEvent: function (event) {
+		// Other events are handled by validation
+		if (event.type !== "keydown")
+			return false;
+
+		// If:
+		if (!(event.key === "." && this.input.value.indexOf(".") === -1) // 1. Not first comma in the value
+			&& !(event.key === "-" && this.input.selectionStart === 0 && this.input.value[0] !== "-") // 2. Not first and only minus
+			&& !event.ctrlKey // 3. Ctrl has not been pressed
+			&& event.key.length === 1 // 4. Functional button has not been pressed
+			&& isNaN(parseInt(event.key)) // 5. Number has not been entered
+		) {
+			event.preventDefault(); // Then don't enter pressed key
+			return true;
+		}
+
+		return event.ctrlKey || event.key.length !== 1;
 	},
 
 	/**
@@ -95,9 +103,9 @@ L.ALS.Widgets.Number = L.ALS.Widgets.BaseWidget.extend( /** @lends L.ALS.Widgets
 		if (this.input.value[0] === "-")
 			newValue = "-" + newValue;
 
-		let selectionStart = this.input.selectionStart; // Some browsers reset selection when input's value changes programmatically. We need to restore that.
+		let {selectionStart, selectionEnd} = this.input; // Some browsers reset selection when input's value changes programmatically. We need to restore that.
 		this.input.value = newValue;
-		this.input.setSelectionRange(selectionStart, selectionStart);
+		this.input.setSelectionRange(selectionStart, selectionEnd);
 		return this._validateValue(parseFloat(this.input.value));
 	},
 
