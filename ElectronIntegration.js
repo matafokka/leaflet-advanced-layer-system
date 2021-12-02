@@ -1,7 +1,8 @@
-const {app, ipcMain, dialog} = require("electron");
+const {ipcMain, dialog} = require("electron");
 const mergeOptions = require("./_service/mergeOptions.js");
 
 /**
+ * Integration options
  * @typedef ElectronIntegrationOptions
  * @property {boolean} [useToolbarAsFrame=true] If true, ALS toolbar will be used as a window frame. Takes effect only when {@link SystemOptions.enableToolbar} is `true`. Set `BrowserWindow`'s `frame` option to `false` and webPreferences.enableRemoteModule to `true` before using this option!
  */
@@ -14,18 +15,30 @@ const mergeOptions = require("./_service/mergeOptions.js");
  * ```
  * // Your Electron entry point
  * const { app, BrowserWindow } = require("electron"); // Import Electron stuff
+ * const remote = require("@electron/remote/main"); // Required since Electron 12
+ * remote.initialize(); // Required since Electron 12
+ *
  * const integrate = require("leaflet-advenced-layer-system/ElectronIntegration"); // Import integration function
  *
  * function createWindow () {
+ *      // Create window
  *      const mainWindow = new BrowserWindow({
- *          // Window options...
- *      }); // Create window instance
+ *          frame: false, // Required to use ElectronIntegrationOptions.useToolbarAsFrame = true
+ *          webPreferences: {
+ *               enableRemoteModule: true, // Required to use ElectronIntegrationOptions.useToolbarAsFrame = true
+ *               nodeIntegration: true,
+ *               contextIsolation: false, // Required since Electron 12
+ *           }
+ *      });
+ *
+ *      remote.enable(mainWindow.webContents); // Required since Electron 12
+ *
+ *      // Integrate ALS with Electron
  *      integrate(mainWindow, {
  *          // Options...
- *      }); // Integrate ALS with Electron
+ *      });
  *      // Do your other stuff...
  * }
- *
  * ```
  *
  * @param mainWindow {Electron.BrowserWindow} Electron main window
@@ -43,7 +56,16 @@ module.exports = function (mainWindow, options = {}) {
 	let newOptions = mergeOptions(defaultOptions, options);
 
 	// Import renderer process
-	mainWindow.webContents.executeJavaScript(`const {ipcRenderer, remote} = require("electron");`);
+	mainWindow.webContents.executeJavaScript(`
+		let electron;
+		try {electron = require("@electron/remote");}
+		catch (e) {
+			console.log(e)
+			try {electron = require("electron");}
+			catch (e) {console.error("You need to install '@electron/remote' package or downgrade to Electron 11 to use ALS Electron integration!");}
+		}
+		const {ipcRenderer} = require("electron"), remote = electron.remote || electron;
+	`);
 
 	// Show messagebox on exit
 	ipcMain.on("close", (e, locale) => {
