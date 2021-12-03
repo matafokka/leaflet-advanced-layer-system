@@ -8,18 +8,31 @@ All the code should be in your Electron entry point.
 
 Before creating a window, execute following line: `app.commandLine.appendSwitch("enable-experimental-web-platform-features");`.
 
-# Make app quit properly
+# Make app run and quit properly
 
 Use {@link ElectronIntegration}:
 
 ```
 const { app, BrowserWindow } = require("electron"); // Import Electron stuff
+const remote = require("@electron/remote/main"); // Required since Electron 12
+remote.initialize(); // Required since Electron 12
 const integrate = require("leaflet-advenced-layer-system/ElectronIntegration"); // Import integration function
-
 function createWindow () {
-     const mainWindow = new BrowserWindow({ /* Window options... */ }); // Create window instance
-     integrate(mainWindow); // Integrate ALS with Electron
-     // Do your other stuff...
+    // Create window
+    const mainWindow = new BrowserWindow({
+        frame: false, // Required to use ElectronIntegrationOptions.useToolbarAsFrame = true
+        webPreferences: {
+            enableRemoteModule: true, // Required to use ElectronIntegrationOptions.useToolbarAsFrame = true
+            nodeIntegration: true,
+            contextIsolation: false, // Required since Electron 12
+         }
+    });
+    remote.enable(mainWindow.webContents); // Required since Electron 12
+    // Integrate ALS with Electron
+    integrate(mainWindow, {
+        // Options...
+    });
+    // Do your other stuff...
 }
 ```
 
@@ -29,12 +42,22 @@ Let's put all of that together:
 
 ```
 const { app, BrowserWindow } = require("electron");
+const remote = require("@electron/remote/main");
+remote.initialize();
 const integrate = require("leaflet-advanced-layer-system/ElectronIntegration");
 
 function createWindow () {
-     const mainWindow = new BrowserWindow({ /* Window options... */ });
-     integrate(mainWindow);
-     // Do your other stuff...
+    const mainWindow = new BrowserWindow({
+        frame: false,
+        webPreferences: {
+            enableRemoteModule: true,
+            nodeIntegration: true,
+            contextIsolation: false,
+         }
+        // Your other window options...
+    });
+    integrate(mainWindow, {/* Integration options... */});
+    // Do your other stuff...
 }
 
 app.commandLine.appendSwitch("enable-experimental-web-platform-features");
