@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ALS Tutorial: Styling ALS</title>
+	<title>ALS Tutorial: Using ALS with Leaflet.Draw</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -96,76 +96,28 @@
 <header>
     
 
-    <h2>Styling ALS</h2>
+    <h2>Using ALS with Leaflet.Draw</h2>
 </header>
 
 <article>
-    <h1>Styling map containers</h1>
-<p>ALS wraps Leaflet maps into the div with <code>als-map-container</code> class. Style it the way you style Leaflet maps.</p>
-<p>To make a map fullscreen, set <code>SystemOptions.makeMapFullscreen</code> property to <code>true</code>. Don't style the container yourself, use that option!</p>
-<h1>ALS classes</h1>
-<p>ALS sets following classes to the <code>body</code> if:</p>
-<ol>
-<li><code>als-dark</code> - dark theme is selected.</li>
-<li><code>mobile</code> - user's device is a phone, i.e. when <a href="L.ALS.Helpers.html#.isMobile"><code>L.ALS.Helpers.isMobile</code></a> is <code>true</code>.</li>
-<li><code>not-mobile</code> - user's device is a desktop, i.e. when <a href="L.ALS.Helpers.html#.isMobile"><code>L.ALS.Helpers.isMobile</code></a> is <code>false</code>.</li>
-<li><code>ie-lte-9</code> - user's browser is IE9 or less, i.e. when <a href="L.ALS.Helpers.html#.isIElte9"><code>L.ALS.Helpers.isIElte9</code></a> is <code>true</code>.</li>
-<li><code>als-fullscreen-map</code> - <code>SystemOptions.makeMapFullscreen</code> is <code>true</code>.</li>
-<li><code>als-electron-toolbar-as-frame</code> - <code>SystemOptions.makeMapFullscreen</code> and <code>ElectronIntegration.useToolbarAsFrame</code> are true.</li>
-<li><code>als-no-scroll</code> - <a href="L.ALS.WidgetableWindow.html"><code>L.ALS.WidgetableWindow</code></a> is open.</li>
-</ol>
-<h1>Global styles</h1>
-<p>ALS sets following global styles to match aesthetics and normalize elements' behavior:</p>
-<pre class="prettyprint source"><code>body {
-	padding: 0;
-	margin: 0;
-	font-family: arial, sans-serif;
-	background: var(--background);
-	color: var(--text-color);
-}
+    <h1>Using ALS with Leaflet.Draw</h1>
+<p>This tutorial will help you to set up ALS with Leaflet.Draw.</p>
+<h1>Make appearance match ALS aesthetics</h1>
+<p>In your HTML, first import Leaflet.Draw stylesheet, then - ALS stylesheet:</p>
+<pre class="prettyprint source lang-html"><code>&lt;!-- Leaflet.Draw -->
+&lt;link rel=&quot;stylesheet&quot; href=&quot;node_modules/leaflet-draw/dist/leaflet.draw.css&quot; />
 
-* {
-	outline: none;
-}
-
-input, select {
-	font-size: 1rem;
-	padding: 0;
-	background: var(--background);
-	color: var(--text-color);
-	border: var(--border);
-}
-
-input, select {
-	font-size: 1rem;
-	padding: 0;
-	background: var(--background);
-	color: var(--text-color);
-	border: var(--border);
-}
-
-input:invalid {
-	box-shadow: none;
-}
-
-input:disabled {
-	background: var(--fixed-element-bg);
-}
-
-input[type=&quot;color&quot;] {
-	padding: 0;
-	height: 1.3rem;
-}
-
-select {
-	height: 1.5rem;
-}
-
-select > * {
-	background: var(--background);
-}
+&lt;!-- ALS stylesheet -->
+&lt;link rel=&quot;stylesheet&quot; href=&quot;node_modules/leaflet-advanced-layer-system/dist/css/base.css&quot; />
 </code></pre>
-<p>ALS will set <code>:root {font-size: 16pt;}</code> for mobile devices. To prevent it, pass <code>false</code> as the <a href="L.ALS.System.html#.initializeSystem"><code>L.ALS.System.initializeSystem</code></a> argument.</p>
+<h1>Fix objects not drawing</h1>
+<p>L.Draw seems to be abandoned and has a nasty bug: if project is built using strict syntax, drawing will fail with an error. It's because devs forgot to initialize a variable. More about this issue <a href="https://github.com/Leaflet/Leaflet.draw/issues/1026">here</a>.</p>
+<p>To fix it, just import Leaflet.Draw before ALS like so:</p>
+<pre class="prettyprint source"><code>require(&quot;leaflet-draw&quot;);
+require(&quot;leaflet-advanced-layer-system&quot;);
+</code></pre>
+<h1>Display controls only for certain layers</h1>
+<p>Use <a href="L.ALS.Layer.html#addControl"><code>L.ALS.Layer#addControl</code></a> to do this.</p>
 </article>
 
 </section>
