@@ -29,11 +29,11 @@
 }
 
 /* Leaflet.Draw fix */
-.als-dark .leaflet-draw a {
+.als-dark .leaflet-draw .leaflet-draw-toolbar a {
 	filter: invert(90%);
 }
 
-.als-dark .leaflet-draw a:hover {
+.als-dark .leaflet-draw .leaflet-draw-toolbar a:hover {
 	filter: invert(77%);
 }
 

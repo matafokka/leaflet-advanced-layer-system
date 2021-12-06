@@ -601,3 +601,15 @@ if (!L.ALS.operationsWindow) {
  * @extends L.Control
  */
 L.ALS.System;
+
+// Leaflet.Draw fix
+
+if (L.Draw) {
+	if (window.type === undefined)
+		window.type = true;
+	else {
+		console.log(`You're using Leaflet.Draw which might not work after you'll build the project! To fix it, "window.type" property must be initialized, however, it seems like something's already using this property.
+
+If it's you, remove property initialization to remove this warning. Otherwise, find what uses this property and either switch from that dependency or switch to another drawing library.`);
+	}
+}
