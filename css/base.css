@@ -1157,6 +1157,46 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 	transition: background-color 0.2s;
 }
 
+.mobile .leaflet-draw-actions {
+	left: 2rem;
+}
+
+.mobile .leaflet-draw-toolbar a {
+	background-size: 600px 60px;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-draw-polyline {
+	background-position: -10px -8px;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-draw-polygon {
+	background-position: -70px -8px;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-draw-rectangle {
+	background-position: -130px -8px;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-draw-circle {
+	background-position: -190px -8px;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-draw-marker {
+	background-position: -250px -8px;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-draw-circlemarker {
+	background-position: -550px -8px;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-edit-edit {
+	background-position: -310px -8px !important;
+}
+
+.mobile .leaflet-draw-toolbar .leaflet-draw-edit-remove {
+	background-position: -370px -8px !important;
+}
+
 /* Fullscreen map */
 
 .als-fullscreen-map .als-top-panel.als-toolbar-enabled {

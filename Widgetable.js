@@ -76,9 +76,8 @@ L.ALS.Widgetable = L.ALS.Serializable.extend( /** @lends L.ALS.Widgetable.protot
 	 * @return {L.ALS.Widgetable} This
 	 */
 	removeAllWidgets: function () {
-		while (this.container.hasChildNodes())
-			this.container.removeChild(this.container.firstChild);
-		this._widgets = {};
+		for (let id in this._widgets)
+			this.removeWidget(id);
 		return this;
 	},
 
