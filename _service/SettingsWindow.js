@@ -30,10 +30,10 @@ L.ALS._service.SettingsWindow = L.ALS.SidebarWindow.extend( /** @lends L.ALS._se
 		L.ALS.Helpers.HTMLToElement(aboutHTML, wrapper);
 
 		this.buttonsGroup.addButtons(
-			new L.ALS.Widgets.Button("export", "settingsExportButton", this, "exportSettings").setMobileIcon("ri-save-3-line"),
+			new L.ALS.Widgets.Button("export", "settingsExportButton", this, "exportSettings").setMobileIcon("ri-download-2-line"),
 			new L.ALS.Widgets.Button("import", "settingsImportButton", this, "importSettings").setMobileIcon("ri-folder-open-line"),
 		);
-		this.addCloseButton("close", "settingsApplyButton", "ri-close-line", this, "saveSettings");
+		this.addCloseButton("close", "settingsApplyButton", "ri-save-3-line", this, "saveSettings");
 
 		this._importSettingsButton = document.getElementById("als-load-settings-input");
 		this._importSettingsButton.addEventListener("change", () => {

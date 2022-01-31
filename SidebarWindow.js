@@ -13,7 +13,6 @@ const debounce = require("debounce");
  *
  * @class
  * @extends L.ALS.WidgetableWindow
- * @ignore
  */
 L.ALS.SidebarWindow = L.ALS.WidgetableWindow.extend( /** @lends L.ALS.SidebarWindow.prototype */ {
 
@@ -104,13 +103,6 @@ L.ALS.SidebarWindow = L.ALS.WidgetableWindow.extend( /** @lends L.ALS.SidebarWin
 		}
 
 		window.addEventListener("resize", debounce(onResize, 200));
-
-		/**
-		 * Buttons' height
-		 * @type {number}
-		 * @private
-		 */
-		this._buttonsHeight = this.buttonsGroup.container.offsetHeight;
 
 		/**
 		 * Sidebar width
@@ -251,7 +243,7 @@ L.ALS.SidebarWindow = L.ALS.WidgetableWindow.extend( /** @lends L.ALS.SidebarWin
 			let vh = window.innerHeight * ((L.ALS.Helpers.isMobile) ?  0.99 : 0.9); // 99vh for mobile and 90vh for desktop
 			if (height > vh)
 				height = vh;
-			contentHeight = height - this._buttonsHeight + "px";
+			contentHeight = (height - this.buttonsGroup.container.offsetHeight) + "px";
 		}
 
 		for (let prop of ["minHeight", "height"]) {

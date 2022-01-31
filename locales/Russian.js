@@ -8,6 +8,7 @@ L.ALS.Locales.AdditionalLocales.Russian = function() { L.ALS.Locales["Русск
 
 	// Menu buttons tooltips
 
+	menuButton: "Меню",
 	menuCloseButton: "Закрыть меню",
 	menuNewProjectButton: "Новый проект",
 	menuSaveButton: "Сохранить проект",

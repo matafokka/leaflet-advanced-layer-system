@@ -1,13 +1,15 @@
 {
   "name": "leaflet-advanced-layer-system",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "An advanced layer system and more for Leaflet",
   "main": "dist/System.js",
   "browserslist": [
     "chrome >= 7",
     "firefox >= 4",
     "ie >= 8",
-    "last 2 versions"
+    "last 2 versions",
+    "safari >= 5",
+    "ios_saf >= 5"
   ],
   "babel": {
     "presets": [
@@ -19,7 +21,7 @@
             "version": 3,
             "proposals": true
           },
-          "targets": "chrome >= 7, firefox >= 4, ie >= 8, last 2 versions",
+          "targets": "chrome >= 7, firefox >= 4, ie >= 8, last 2 versions, safari >= 5, ios_saf >= 5",
           "forceAllTransforms": true,
           "spec": true
         }

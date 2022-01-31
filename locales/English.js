@@ -8,6 +8,7 @@ L.ALS.Locales["English"] = {
 
 	// Menu buttons tooltips
 
+	menuButton: "Menu",
 	menuCloseButton: "Close menu",
 	menuNewProjectButton: "New project",
 	menuSaveButton: "Save project",

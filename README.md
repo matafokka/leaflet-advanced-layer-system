@@ -72,6 +72,7 @@ ALS supports following browsers:
 
 * Chrome 8 or later.
 * Firefox 22 or later.
+* Safari 6 or later.
 * Internet Explorer 9 or later.
 * Any other modern desktop or mobile browser.
 

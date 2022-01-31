@@ -379,7 +379,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			// Change class of the close button
 			this._menuCloseButton.classList.remove("ri-close-line");
 			this._menuCloseButton.classList.add("ri-menu-line");
-			this._menuCloseButton.setAttribute("data-als-locale-property", "");
+			L.ALS.Locales.localizeOrSetValue(this._menuCloseButton, "menuButton", "title");
 
 			// Add toolbar-specific classnames
 			let items = [topPanel, this._menu];
@@ -889,6 +889,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	onAdd: function () {
 		let button = document.createElement("i");
 		button.className = "als-button-base icon-button ri ri-menu-line als-menu-button";
+		L.ALS.Locales.localizeOrSetValue(button, "menuButton", "title");
 		L.ALS.Helpers.makeHideable(button, this._menu, undefined, undefined, false);
 
 		let container = document.createElement("div");

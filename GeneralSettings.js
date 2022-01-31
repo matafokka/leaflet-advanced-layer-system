@@ -68,10 +68,17 @@ L.ALS.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._service.General
 			 * @private
 			 */
 			this._systemThemeMedia = window.matchMedia(mediaQuery);
-			this._systemThemeMedia.addEventListener("change", () => {
+
+			const onThemeChange = () => {
 				if (themeWidget.getValue() === this._systemTheme)
 					this._changeThemeWorker(this._systemTheme);
-			});
+			}
+
+			if (this._systemThemeMedia.addEventListener)
+				this._systemThemeMedia.addEventListener("change", onThemeChange);
+			else
+				this._systemThemeMedia.addListener(onThemeChange);
+
 			defaultValue = this._systemTheme;
 		}
 		this.addWidget(themeWidget, defaultValue);
