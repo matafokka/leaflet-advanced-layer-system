@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ALS Class: Settings</title>
+	<title>ALS Class: SidebarWindow</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -93,7 +93,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Settings</h1>
+	<h1 class="page-title">Class: SidebarWindow</h1>
 <section>
 
 <header>
@@ -101,7 +101,7 @@
         <h2>
             <span class="ancestors"><a href="L.ALS.html">.ALS</a>.</span>
         
-        Settings
+        SidebarWindow
         </h2>
         
     
@@ -114,7 +114,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Settings"><span class="type-signature"></span>new Settings()</h4>
+    <h4 class="name" id="SidebarWindow"><span class="type-signature"></span>new SidebarWindow(sidebarTitle, contentTitle, button)</h4>
     
     
 </dt>
@@ -122,10 +122,9 @@
 
     
     <div class="description">
-        <p>Base class for all settings.</p>
-<p>It works the same way as <a href="L.ALS.Wizard.html"><code>L.ALS.Wizard</code></a>s.</p>
-<p>Start by adding some widgets using <a href="L.ALS.Settings.html#addWidget"><code>L.ALS.Settings#addWidget</code></a> method (note: <a href="L.ALS.Settings.html#addWidgets"><code>L.ALS.Settings#addWidgets</code></a> doesn't do anything).</p>
-<p>Settings will be passed to <a href="L.ALS.Layer.html#applyNewSettings"><code>L.ALS.Layer#applyNewSettings</code></a> and to <a href="L.ALS.Layer.html#init"><code>L.ALS.Layer#init</code></a> methods of your layer the same way as wizard results: you'll receive an object where keys are widgets' IDs and values are widgets' values.</p>
+        <p>A sidebar window similar to the settings and wizard windows.</p>
+<p>It's based on items. Each item is <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a>. Its name will be displayed in the sidebar (or a drop-down menu, if viewport is too narrow). User can switch between the items.</p>
+<p><strong>Note</strong>: All widget-related methods from <a href="L.ALS.Widgetable.html"><code>L.ALS.Widgetable</code></a> won't work here.</p>
     </div>
     
 
@@ -134,6 +133,107 @@
     
 
     
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>sidebarTitle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Title of the sidebar. Pass locale property to localize it.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>contentTitle</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Title of the content. Pass locale property to localize it.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>button</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Element</span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Button which will activate this window. Don't pass anything if you'll add this functionality later.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
     
 
     
@@ -201,7 +301,7 @@
 
 
     <ul>
-        <li><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></li>
+        <li><a href="L.ALS.WidgetableWindow.html">L.ALS.WidgetableWindow</a></li>
     </ul>
 
 
@@ -219,6 +319,146 @@
         <h3 class="subsection-title">Members</h3>
 
         <dl>
+            
+<hr>
+<dt class="name" id="_windowWrapper">
+    <h4 id="_windowWrapper"><span class="type-signature"></span>_windowWrapper<span class="type-signature"> :HTMLDivElement</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Div that wraps entire window</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">HTMLDivElement</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="buttonsGroup">
+    <h4 id="buttonsGroup"><span class="type-signature">&lt;protected> </span>buttonsGroup<span class="type-signature"></span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Button group for this window</p>
+    </div>
+    
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.WidgetableWindow.html#buttonsGroup">L.ALS.WidgetableWindow#buttonsGroup</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
             
 <hr>
 <dt class="name" id="constructorArguments">
@@ -381,6 +621,77 @@
         
             
 <hr>
+<dt class="name" id="select">
+    <h4 id="select"><span class="type-signature"></span>select<span class="type-signature"> :HTMLSelectElement</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Select element</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">HTMLSelectElement</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
 <dt class="name" id="serializationIgnoreList">
     <h4 id="serializationIgnoreList"><span class="type-signature">&lt;protected> </span>serializationIgnoreList<span class="type-signature"> :Array.&lt;string></span></h4>
 
@@ -458,6 +769,166 @@
     
 </dd>
 
+        
+            
+<hr>
+<dt class="name" id="window">
+    <h4 id="window"><span class="type-signature"></span>window<span class="type-signature"> :HTMLDivElement</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Window which contains Widgetable's container</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">HTMLDivElement</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.WidgetableWindow.html#window">L.ALS.WidgetableWindow#window</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="windowContainer">
+    <h4 id="windowContainer"><span class="type-signature"></span>windowContainer<span class="type-signature"> :HTMLDivElement</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Container for the window which should be added to the page</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">HTMLDivElement</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.WidgetableWindow.html#windowContainer">L.ALS.WidgetableWindow#windowContainer</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
         </dl>
     
 
@@ -468,7 +939,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="_writeSettings"><span class="type-signature">&lt;protected> </span>_writeSettings(object)</h4>
+    <h4 class="name" id="_setWindowHeight"><span class="type-signature"></span>_setWindowHeight(height)</h4>
     
     
 </dt>
@@ -476,7 +947,7 @@
 
     
     <div class="description">
-        <p>Gathers and writes settings to the specified object</p>
+        <p>Sets window height</p>
     </div>
     
 
@@ -511,10 +982,19 @@
 
         <tr>
             
-                <td class="name"><code>object</code></td>
+                <td class="name"><code>height</code></td>
             
 
             <td class="type">
+            
+                
+<span class="param-type">number</span>
+|
+
+<span class="param-type">"auto"</span>
+
+
+
             
             </td>
 
@@ -522,7 +1002,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Height to set</p></td>
         </tr>
 
     
@@ -590,7 +1070,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="addWidget"><span class="type-signature"></span>addWidget(widget, defaultValue)</h4>
+    <h4 class="name" id="addCloseButton"><span class="type-signature"></span>addCloseButton(id, text, icon, callbackObject, callback)</h4>
     
     
 </dt>
@@ -598,7 +1078,7 @@
 
     
     <div class="description">
-        <p>Adds widget to this widgetable</p>
+        <p>Adds close button to this window. You should add this button after you've added all your own buttons.</p>
     </div>
     
 
@@ -633,13 +1113,13 @@
 
         <tr>
             
-                <td class="name"><code>widget</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type"><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></span>
+<span class="param-type">string</span>
 
 
 
@@ -650,20 +1130,20 @@
 
             
 
-            <td class="description last"><p>Widget to add</p></td>
+            <td class="description last"><p>Button ID</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>defaultValue</code></td>
+                <td class="name"><code>text</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">*</span>
+<span class="param-type">string</span>
 
 
 
@@ -674,7 +1154,82 @@
 
             
 
-            <td class="description last"><p>Value that will be set to the widget when user will press revert button</p></td>
+            <td class="description last"><p>Button label</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>icon</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Button icon - a RemixIcon class.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callbackObject</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type"><a href="L.ALS.Serializable.html">L.ALS.Serializable</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Just pass &quot;this&quot;. If you plan to use serialization, this object MUST be instance of L.ALS.Serializable.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callback</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of a method of callbackObject that will be called when button will be pressed.</p></td>
         </tr>
 
     
@@ -692,12 +1247,16 @@
 	
 
 	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.WidgetableWindow.html#addCloseButton">L.ALS.WidgetableWindow#addCloseButton</a>
+			</li>
+		</ul>
+	</dd>
+	
 
-    
-    <dt class="tag-overrides">Overrides:</dt>
-    <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="L.ALS.Widgetable.html#addWidget">L.ALS.Widgetable#addWidget</a>
-    </li></ul></dd>
     
 
     
@@ -743,7 +1302,7 @@
     
             
 <div class="param-desc">
-    <p>This</p>
+    <p>Added button</p>
 </div>
 
 
@@ -754,7 +1313,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="L.ALS.Settings.html">L.ALS.Settings</a></span>
+<span class="param-type"><a href="L.ALS.Widgets.Button.html">L.ALS.Widgets.Button</a></span>
 
 
 
@@ -763,6 +1322,241 @@
 
 
         
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addItem"><span class="type-signature"></span>addItem(name, item)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Adds item to this window</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Name of the item or locale string</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>item</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Item to add</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="addWidget"><span class="type-signature"></span>addWidget()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Doesn't do anything</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="L.ALS.WidgetableWindow.html#addWidget">L.ALS.WidgetableWindow#addWidget</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -779,7 +1573,7 @@
 
     
     <div class="description">
-        <p>Does nothing, just call <a href="L.ALS.Settings.html#addWidget"><code>L.ALS.Settings#addWidget</code></a> multiple times</p>
+        <p>Doesn't do anything</p>
     </div>
     
 
@@ -803,7 +1597,7 @@
     
     <dt class="tag-overrides">Overrides:</dt>
     <dd class="tag-overrides"><ul class="dummy"><li>
-        <a href="L.ALS.Widgetable.html#addWidgets">L.ALS.Widgetable#addWidgets</a>
+        <a href="L.ALS.WidgetableWindow.html#addWidgets">L.ALS.WidgetableWindow#addWidgets</a>
     </li></ul></dd>
     
 
@@ -846,30 +1640,143 @@
     
 
     
-    <h5>Returns:</h5>
+
     
-            
-<div class="param-desc">
-    <p>This</p>
-</div>
+</dd>
 
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
         
-<span class="param-type"><a href="L.ALS.Settings.html">L.ALS.Settings</a></span>
+            
+<hr>
+<dt>
+    <h4 class="name" id="bindButton"><span class="type-signature"></span>bindButton(button)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Binds a button that will open and close this window</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>button</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">HTMLElement</span>
 
 
 
-    </dd>
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Button to bind</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.WidgetableWindow.html#bindButton">L.ALS.WidgetableWindow#bindButton</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -1031,6 +1938,396 @@
     
 
     
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="displayItem"><span class="type-signature"></span>displayItem(name)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Displays item with given name</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Item to display</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getButtonsGroup"><span class="type-signature"></span>getButtonsGroup()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
+	<dd class="inherited-from">
+		<ul class="dummy">
+			<li>
+				<a href="L.ALS.WidgetableWindow.html#getButtonsGroup">L.ALS.WidgetableWindow#getButtonsGroup</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Buttons group to which you can add your own buttons</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="L.ALS.Widgets.ButtonsGroup.html">L.ALS.Widgets.ButtonsGroup</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getItem"><span class="type-signature"></span>getItem(name)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Gets item's widgetable by item's name</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>name of the item</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>Item's widgetable or undefined if there's no such item.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
+|
+
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -1225,105 +2522,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="getSettings"><span class="type-signature"></span>getSettings()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>Settings as {widgetID: widgetValue} pairs</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="global.html#SettingsObject">SettingsObject</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getWidgetById"><span class="type-signature"></span>getWidgetById(id)</h4>
+    <h4 class="name" id="getWidgetById"><span class="type-signature"></span>getWidgetById()</h4>
     
     
 </dt>
@@ -1331,7 +2530,7 @@
 
     
     <div class="description">
-        <p>Finds widget by ID</p>
+        <p>Doesn't do anything</p>
     </div>
     
 
@@ -1341,56 +2540,6 @@
 
     
     
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>ID of a control to find</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
 
     
 <dl class="details">
@@ -1401,14 +2550,84 @@
 	
 
 	
-	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="L.ALS.Widgetable.html#getWidgetById">L.ALS.Widgetable#getWidgetById</a>
-			</li>
-		</ul>
-	</dd>
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="L.ALS.WidgetableWindow.html#getWidgetById">L.ALS.WidgetableWindow#getWidgetById</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="isHidden"><span class="type-signature"></span>isHidden()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
 	
 
     
@@ -1456,7 +2675,7 @@
     
             
 <div class="param-desc">
-    <p>Widget with given ID.</p>
+    <p>True, if this window is hidden</p>
 </div>
 
 
@@ -1467,7 +2686,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="L.ALS.Widgets.BaseWidget.html">L.ALS.Widgets.BaseWidget</a></span>
+<span class="param-type">boolean</span>
 
 
 
@@ -1492,7 +2711,7 @@
 
     
     <div class="description">
-        <p>Removes all widgets from the container</p>
+        <p>Doesn't do anything</p>
     </div>
     
 
@@ -1512,16 +2731,12 @@
 	
 
 	
-	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="L.ALS.Widgetable.html#removeAllWidgets">L.ALS.Widgetable#removeAllWidgets</a>
-			</li>
-		</ul>
-	</dd>
-	
 
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="L.ALS.WidgetableWindow.html#removeAllWidgets">L.ALS.WidgetableWindow#removeAllWidgets</a>
+    </li></ul></dd>
     
 
     
@@ -1563,30 +2778,6 @@
     
 
     
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    <p>This</p>
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
@@ -1595,7 +2786,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="removeWidget"><span class="type-signature"></span>removeWidget(id)</h4>
+    <h4 class="name" id="removeItem"><span class="type-signature"></span>removeItem(name)</h4>
     
     
 </dt>
@@ -1603,7 +2794,7 @@
 
     
     <div class="description">
-        <p>Removes widget from the container</p>
+        <p>Removes item from this window</p>
     </div>
     
 
@@ -1638,7 +2829,7 @@
 
         <tr>
             
-                <td class="name"><code>id</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -1655,7 +2846,7 @@
 
             
 
-            <td class="description last"><p>ID of a widget to remove</p></td>
+            <td class="description last"><p>Name of the item to remove</p></td>
         </tr>
 
     
@@ -1673,15 +2864,6 @@
 	
 
 	
-	<dt class="inherited-from method-doc-label method-doc-details-label">Inherited From:</dt>
-	<dd class="inherited-from">
-		<ul class="dummy">
-			<li>
-				<a href="L.ALS.Widgetable.html#removeWidget">L.ALS.Widgetable#removeWidget</a>
-			</li>
-		</ul>
-	</dd>
-	
 
     
 
@@ -1724,30 +2906,89 @@
     
 
     
-    <h5>Returns:</h5>
+
     
+</dd>
+
+        
             
-<div class="param-desc">
-    <p>This</p>
-</div>
+<hr>
+<dt>
+    <h4 class="name" id="removeWidget"><span class="type-signature"></span>removeWidget()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Doesn't do anything</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+    <dt class="tag-overrides">Overrides:</dt>
+    <dd class="tag-overrides"><ul class="dummy"><li>
+        <a href="L.ALS.WidgetableWindow.html#removeWidget">L.ALS.WidgetableWindow#removeWidget</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="L.ALS.Widgetable.html">L.ALS.Widgetable</a></span>
+	
 
+	
 
+	
 
-    </dd>
+	
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
 
     
 </dd>
@@ -2286,6 +3527,85 @@ return json; // Finally return JSON
 			</li>
 		</ul>
 	</dd>
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="updateWindowHeight"><span class="type-signature"></span>updateWindowHeight()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Updates window height.</p>
+<p>Call it if you update window contents dynamically.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
 	
 
     
