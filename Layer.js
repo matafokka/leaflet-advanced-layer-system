@@ -72,7 +72,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	initialize: function (layerSystem, args, settings) {
 		L.ALS.Widgetable.prototype.initialize.call(this, "als-layer-menu");
 		this.setConstructorArguments([args]);
-		this.serializationIgnoreList.push("_layerSystem", "_nameLabel", "_leafletLayers", "_mapEvents", "getBounds", "isSelected", "_controls");
+		this.serializationIgnoreList.push("_layerSystem", "layerSystem", "_nameLabel", "_leafletLayers", "_mapEvents", "getBounds", "isSelected", "_controls");
 
 		/**
 		 * Contains event listeners bound to various objects. Looks like this:
@@ -114,11 +114,18 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		this._controls = {};
 
 		/**
-		 * Layer system managing this layer
+		 * Layer system managing this layer. Deprecated in favor of {@link L.ALS.Layer#layerSystem}
 		 * @type {L.ALS.System}
+		 * @deprecated
 		 * @private
 		 */
 		this._layerSystem = layerSystem;
+
+		/**
+		 * Layer system managing this layer
+		 * @type {L.ALS.System}
+		 */
+		this.layerSystem = layerSystem;
 
 		/**
 		 * Map on which this layer is being added
@@ -192,11 +199,11 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
 		// Duplicate button
 		let duplicateButton;
-		if (this._layerSystem._enableDuplicateButton) {
+		if (this.layerSystem._enableDuplicateButton) {
 			duplicateButton = document.createElement("i");
 			duplicateButton.className = "ri ri-file-copy-line";
 			duplicateButton.addEventListener("click", () => {
-				this._layerSystem._duplicateLayer(this);
+				this.layerSystem._duplicateLayer(this);
 			});
 		}
 
@@ -233,24 +240,24 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 				controlsContainer.appendChild(e);
 		}
 
-		if (!this._layerSystem._useOnlyOneLayer)
+		if (!this.layerSystem._useOnlyOneLayer)
 			layerWidget.appendChild(controlsContainer);
 		else
 			this.container.classList.add("als-only-one-layer");
 
 		layerWidget.appendChild(this.container);
 		layerWidget.addEventListener("click", () => {
-			if (this._layerSystem) // It's still called when delete button has been clicked. Tis condition fixes this issue.
-				this._layerSystem._selectLayer(this.id);
+			if (this.layerSystem) // It's still called when delete button has been clicked. Tis condition fixes this issue.
+				this.layerSystem._selectLayer(this.id);
 		});
 
-		this._layerSystem._layerContainer.appendChild(layerWidget);
-		this._layerSystem._layers[this.id] = this;
+		this.layerSystem._layerContainer.appendChild(layerWidget);
+		this.layerSystem._layers[this.id] = this;
 		this._nameLabel = label;
 
 		// Select new layer, so system can work. But onSelect() might fail, so we gotta catch that.
 		try {
-			this._layerSystem._selectLayer(this.id);
+			this.layerSystem._selectLayer(this.id);
 		} catch (e) {}
 
 		for (let pos of ["left", "right"])
@@ -281,7 +288,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		let handlerFunction = (event) => {
 			let callHandler = (event) => {
 				this[handler](event);
-				this._layerSystem._reorderLayers();
+				this.layerSystem._reorderLayers();
 			}
 
 			// Always fire map events
@@ -299,7 +306,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			}
 
 			// Forward event to the underlying layer
-			this._layerSystem._selectedLayer._leafletLayers.bringToFront(); // Bring selected layer to the front
+			this.layerSystem._selectedLayer._leafletLayers.bringToFront(); // Bring selected layer to the front
 			let oldEvent = event.originalEvent;
 			if (!oldEvent || oldEvent.dispatchedByALS) // Uncaught events will lead to infinite recursion. Also, there might be no originalEvent property. Yup, that's strange, but it happens in Leaflet.Draw, for example.
 				return;
@@ -307,7 +314,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			let newEvent = new oldEvent.constructor(oldEvent.type, oldEvent); // Clone old event
 			newEvent.dispatchedByALS = true; // If event won't be caught, it will call the handler again and again. So let's mark it, so we can just don't fire it again.
 			oldEvent.target.dispatchEvent(newEvent); // The target will be a canvas, not a Leaflet object. So let's dispatch cloned event to it
-			this._layerSystem._reorderLayers(); // Bring selected layer back to its place simply by reordering layers
+			this.layerSystem._reorderLayers(); // Bring selected layer back to its place simply by reordering layers
 		}
 
 		let handlerObject = {
@@ -380,7 +387,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		this._controls[control._alsId] = control;
 
 		if (automanagePosition) {
-			if (this._layerSystem._toolbarEnabled && !L.ALS.Helpers.isMobile) {
+			if (this.layerSystem._toolbarEnabled && !L.ALS.Helpers.isMobile) {
 				control._alsPos = automanagePosition;
 				this._setControlPosition(control, this._getControlPosition(L.ALS.generalSettings.menuPosition));
 			} else if (L.ALS.Helpers.isMobile && positionOnMobile)
@@ -543,7 +550,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		if (this.isShown)
 			this._onShow();
 
-		this._layerSystem._reorderLayers(); // We gotta reorder layers because Leaflet will bring lastly added layer on top.
+		this.layerSystem._reorderLayers(); // We gotta reorder layers because Leaflet will bring lastly added layer on top.
 	},
 
 	/**
@@ -585,8 +592,8 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 * @param writeToHistory {boolean} If true, will write deletion to the history
 	 */
 	deleteLayer: function (shouldAskUser = false, writeToHistory = false) {
-		this._layerSystem._selectLayer(this.id);
-		this._layerSystem._deleteLayer(shouldAskUser, writeToHistory);
+		this.layerSystem._selectLayer(this.id);
+		this.layerSystem._deleteLayer(shouldAskUser, writeToHistory);
 	},
 
 	_onDelete: function () {

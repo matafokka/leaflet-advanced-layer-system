@@ -25,7 +25,6 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	_tabTitle: "",
 
-
 	/**
 	 * Indicates whether system is in the middle of serialization or deserialization, i.e. if {@link L.ALS.System#writeToHistory} should work.
 	 * @type {boolean}
@@ -858,8 +857,6 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
 	/**
 	 * Loads the project
-	 * @param json {string} JSON from read file
-	 * @private
 	 */
 	loadProject: function () {
 		if (!L.ALS.Helpers.isObjectEmpty(this._layers) && !window.confirm(L.ALS.locale.systemProjectAlreadyOpen)) {
@@ -1119,6 +1116,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	openWizardWindow: function () {
 		L.ALS.Helpers.dispatchEvent(this._wizardButton, "click");
+	},
+
+	/**
+	 * Clicks on menu
+	 */
+	clickOnMenu: function () {
+		L.ALS.Helpers.dispatchEvent(this._menuCloseButton, "click");
 	}
 
 });
