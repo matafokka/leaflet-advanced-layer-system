@@ -41,7 +41,7 @@ L.ALS.OperationsWindow = L.ALS.WidgetableWindow.extend( /** @lends L.ALS.Operati
 		this.removeWidget(id);
 		if (this.container.children.length === 0) {
 			this.windowContainer.setAttribute("data-hidden", "1");
-			if (L.ALS._notifyWhenLongRunningOperationComplete)
+			if (L.ALS.generalSettings.notifyWhenLongRunningOperationComplete)
 				window.alert(L.ALS.locale.systemOperationsComplete);
 		}
 	},

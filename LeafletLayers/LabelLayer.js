@@ -1,12 +1,12 @@
 /**
  * Display options for a label
  * @typedef {Object} DisplayOptions
- * @property {string} [backgroundColor="white"] Background color in format which Canvas can read. Defaults to "white".
- * @property {string} [borderColor="#ccc"] Border color in format which Canvas can read. Defaults to "#ccc".
- * @property {string} [fontColor="black"] Font color in format which Canvas can read. Defaults to "black".
- * @property {"left"|"center"|"right"} [textAlign="left"] alignment. Defaults to "left".
- * @property {"topLeft"|"topCenter"|"topRight"|"bottomLeft"|"bottomCenter"|"bottomRight"|"leftCenter"|"rightCenter"|"center"} [origin="center"] Origin of a label, i.e. which "part" of it will be at given latLng. Defaults to "center".
- * @property {number} [maxWidth=0] Maximum width of a label in number of characters per line. If label will exceed this parameter, it will be wrapped. If it's less than 1, label width will not be limited. Must be an integer. Defaults to 0.
+ * @property {string} [backgroundColor="white"] Background color in format which Canvas can read. Defaults to `"white"`.
+ * @property {string} [borderColor="#ccc"] Border color in format which Canvas can read. Defaults to `"#ccc"`.
+ * @property {string} [fontColor="black"] Font color in format which Canvas can read. Defaults to `"black"`.
+ * @property {"left"|"center"|"right"} [textAlign="left"] alignment. Defaults to `"left"`.
+ * @property {"topLeft"|"topCenter"|"topRight"|"bottomLeft"|"bottomCenter"|"bottomRight"|"leftCenter"|"rightCenter"|"center"} [origin="center"] Origin of a label, i.e. which "part" of it will be at given latLng. Defaults to `"center"`.
+ * @property {number} [maxWidth=0] Maximum width of a label in number of characters per line. If label will exceed this parameter, it will be wrapped. If it's less than 1, label width will not be limited. Must be an integer. Defaults to `0`.
  */
 
 /**
@@ -14,7 +14,7 @@
  * @typedef {DisplayOptions} LabelProperties
  * @property {string} id ID of a label
  * @property {string} text Text of a label
- * @property {number[]} latLng Position of a label in format: [lat, lng]. It doesn't work with Leaflet LatLng objects.
+ * @property {number[]} latLng Position of a label in format: `[lat, lng]`. It doesn't work with Leaflet LatLng objects.
  */
 
 /**

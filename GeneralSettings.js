@@ -129,23 +129,21 @@ L.ALS.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._service.General
 			document.body.classList.remove("als-dark");
 			this._currentTheme = "light";
 		}
+		L.ALS.generalSettings.theme = this._currentTheme; // Update general settings object
 	},
 
 	_setMenuPosition(widget) {
 		this._currentMenuPosition = widget.getValue() === "generalSettingsMenuLeft" ? "left" : "right";
 		L.ALS.Helpers.dispatchEvent(document, `als-set-menu-to-${this._currentMenuPosition}`);
+		L.ALS.generalSettings.menuPosition = this._currentMenuPosition; // Update general settings object
 	},
 
 	_changeNotifications: function (widget) {
-		L.ALS._notifyWhenLongRunningOperationComplete = widget.getValue();
+		L.ALS.generalSettings.notifyWhenLongRunningOperationComplete = widget.getValue();
 	},
 
 	_onApply: function () {
-		L.ALS.generalSettings = {
-			theme: this._currentTheme,
-			menuPosition: this._currentMenuPosition,
-		}
-		this._writeSettings(L.ALS.generalSettings)
+		this._writeSettings(L.ALS.generalSettings);
 		this.onApply();
 	},
 

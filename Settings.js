@@ -51,7 +51,7 @@ L.ALS.Settings = L.ALS.Widgetable.extend( /** @lends L.ALS.Settings.prototype */
 
 	/**
 	 * Gathers and writes settings to the specified object
-	 * @param object
+	 * @param {Object} object Object to write settings to
 	 * @protected
 	 */
 	_writeSettings: function (object) {

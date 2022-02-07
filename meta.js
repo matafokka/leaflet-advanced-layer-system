@@ -117,13 +117,13 @@ if (!L.ALS.operationsWindow) {
  * Options for the Layer System
  * @typedef {Object} SystemOptions
  *
- * @property {string} [aboutHTML=undefined] HTML that will be displayed in "About" section in settings. Defaults to undefined.
+ * @property {string} [aboutHTML=undefined] HTML that will be displayed in "About" section in settings. Defaults to `undefined`.
  *
- * @property {string} [defaultLocale="English"] Locale to use by default. Defaults to "English".
+ * @property {string} [defaultLocale="English"] Locale to use by default. Defaults to `"English"`.
  *
  * @property {string} [filePrefix=""] Prefix that will be added to the saved files, i.e. if equals to "MyApp", saved project file will be called "MyAppProject.json" instead of "Project.json". Defaults to empty string.
  *
- * @property {"project-and-title"|"project"|"title"} [tabTitle="project-and-title"] For Chrome with FileSystem API support only. Defines what to put in tab title, uses existing `<title>` tag. Possible values: `project-and-title` - will prepend project name to the existing title, so it'll look like "ProjectFileNameWithoutExtension - Existing Title"; `"project-name"` - will replace existing title with project name; `"title"` - will not change title. **Note:** to enable this feature in Electron, add `app.commandLine.appendSwitch("enable-experimental-web-platform-features");` to your main script. Defaults to "project-and-title".
+ * @property {"project-and-title"|"project"|"title"} [tabTitle="project-and-title"] For Chrome with FileSystem API support only. Defines what to put in tab title, uses existing `<title>` tag. Possible values: `project-and-title` - will prepend project name to the existing title, so it'll look like "ProjectFileNameWithoutExtension - Existing Title"; `"project-name"` - will replace existing title with project name; `"title"` - will not change title. **Note:** to enable this feature in Electron, add `app.commandLine.appendSwitch("enable-experimental-web-platform-features");` to your main script. Defaults to `"project-and-title"`.
  *
  * @property {boolean} [makeMapFullscreen=false] If true, will make your map fullscreen. Setting this option to `true` is necessary if you want to use a toolbar and make the map fullscreen unless you want to write necessary hacks.
  *
@@ -143,25 +143,25 @@ if (!L.ALS.operationsWindow) {
  *
  * @property {boolean} [enableNewProjectButton=true] If true, there will be "new project" button which simply reloads page. Defaults to `true`.
  *
- * @property {boolean} [enableSettings=true] If true, user will be able to set up your application using built-in settings system. Otherwise, settings button will be removed. Setting this option to `false` is not recommended because you'll need to implement theme and locale switching yourself. System doesn't provide any API for that, so disabling this option is not recommended. Defaults to true.
+ * @property {boolean} [enableSettings=true] If true, user will be able to set up your application using built-in settings system. Otherwise, settings button will be removed. Setting this option to `false` is not recommended because you'll need to implement theme and locale switching yourself. System doesn't provide any API for that, so disabling this option is not recommended. Defaults to `true`.
  *
- * @property {boolean} [enableProjects=true] If true, user will be able to save and load projects using built-in serialization system. Otherwise, save and load buttons will be removed. Defaults to true.
+ * @property {boolean} [enableProjects=true] If true, user will be able to save and load projects using built-in serialization system. Otherwise, save and load buttons will be removed. Defaults to `true`.
  *
- * @property {boolean} [enableExport=true] If true, user will be able to export project to JSON. Otherwise, export button will be removed. Defaults to true.
+ * @property {boolean} [enableExport=true] If true, user will be able to export project to JSON. Otherwise, export button will be removed. Defaults to `true`.
  *
- * @property {boolean} [enableBaseLayerSwitching=true] If true, user will be able to switch Leaflet base layers (i.e. map providers). Otherwise, maps select menu will be removed. Defaults to true.
+ * @property {boolean} [enableBaseLayerSwitching=true] If true, user will be able to switch Leaflet base layers (i.e. map providers). Otherwise, maps select menu will be removed. Defaults to `true`.
  *
- * @property {"topleft"|"topright"|"bottomleft"|"bottomright"} [position="topright"] Position of the menu button. If set to topleft or bottom left, menu itself will be on the left side. Defaults to "topright".
+ * @property {"topleft"|"topright"|"bottomleft"|"bottomright"} [position="topright"] Position of the menu button. If set to topleft or bottom left, menu itself will be on the left side. Defaults to `"topright"`.
  *
- * @property {Function} [useOnlyThisLayer=undefined] If you need to display only one layer and disable ability to add other layers, pass your layer's class (class, not an instance, i.e. `L.ALS.Layer`, not `new L.ALS.Layer()`) here. So you'll end up with pretty much static menu. Defaults to undefined.
+ * @property {Function} [useOnlyThisLayer=undefined] If you need to display only one layer and disable ability to add other layers, pass your layer's class (class, not an instance, i.e. `L.ALS.Layer`, not `new L.ALS.Layer()`) here. So you'll end up with pretty much static menu. Defaults to `undefined`.
  *
- * @property {onJsonSave} [onJsonSave=undefined] A function to call when project is being saved. Replaces default saving routine. Will be used ONLY if user's browser doesn't support Blob. Here you must provide a routine to save a string to a file. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks, fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to undefined.
+ * @property {onJsonSave} [onJsonSave=undefined] A function to call when project is being saved. Replaces default saving routine. Will be used ONLY if user's browser doesn't support Blob. Here you must provide a routine to save a string to a file. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks, fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to `undefined`.
  *
- * @property {onJsonLoad} [onJsonLoad=undefined] A function to call when user wants to load a project. Replaces default file loading routine. Will be used ONLY if user's browser doesn't support FileReader. Here you must provide a routine to read file from an input as text and return it. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks, fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to undefined.
+ * @property {onJsonLoad} [onJsonLoad=undefined] A function to call when user wants to load a project. Replaces default file loading routine. Will be used ONLY if user's browser doesn't support FileReader. Here you must provide a routine to read file from an input as text and return it. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks, fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to `undefined`.
  *
- * @property {onProjectExport} [onProjectExport=undefined] A function to call when user exports project. Replaces default file saving routine. It will be called ONLY if user's browser doesn't support Blob. Here you must provide a routine to save a JSZip instance. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks , fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to undefined.
+ * @property {onProjectExport} [onProjectExport=undefined] A function to call when user exports project. Replaces default file saving routine. It will be called ONLY if user's browser doesn't support Blob. Here you must provide a routine to save a JSZip instance. Use it ONLY if you have a backend to upload files to and simulate a download! ALS already provides all the needed hacks , fixes bugs in saveAs and much more. If you don't trust this text, check the source code. Don't waste your time on making your own hacks. Value defaults to `undefined`.
  *
- * @property {boolean} [removeMenuBar=false] Completely removes the menu bar. Useful for creating your own UI. Defaults to false.
+ * @property {boolean} [removeMenuBar=false] Completely removes the menu bar. Useful for creating your own UI. Defaults to `false`.
  *
  * @property {function(new:L.ALS.GeneralSettings)} [generalSettings=L.ALS.GeneralSettings] Custom general settings class. Use it to add custom application-wide settings. Extend {@link L.ALS.GeneralSettings} and pass it here. Then you can access both layer and general settings at {@link L.ALS.Layer#applyNewSettings}. Default general settings will be applied automatically. If multiple ALS instances are used, this option will be considered only for the first instance.
  */

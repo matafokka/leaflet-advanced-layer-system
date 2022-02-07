@@ -261,16 +261,16 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
 		// Add settings window or bind settings button to open it, if window exists
 
-		let applySettingsCallback = () => {this._applyNewSettings()}
-
 		if (!L.ALS._service.settingsWindow) {
-			L.ALS._service.settingsWindow = new L.ALS._service.SettingsWindow(this._settingsButton, applySettingsCallback, newOptions.aboutHTML);
+			L.ALS._service.settingsWindow = new L.ALS._service.SettingsWindow(this._settingsButton, () => {
+				L.ALS._service.generalSettings._onApply(); // General settings should be updated first
+				this._applyNewSettings();
+			}, newOptions.aboutHTML);
 			L.ALS._service.settingsWindow.addItem("settingsGeneralSettings", L.ALS._service.generalSettings);
-			L.ALS._service.settingsWindow.onCloseCallbacks.push(() => {L.ALS._service.generalSettings._onApply();});
 			L.ALS._service.generalSettings._onApply();
 		} else {
 			L.ALS._service.settingsWindow.bindButton(this._settingsButton);
-			L.ALS._service.settingsWindow.onCloseCallbacks.push(applySettingsCallback);
+			L.ALS._service.settingsWindow.onCloseCallbacks.push(() => {this._applyNewSettings()});
 		}
 
 		this._zoomInButton = mapContainer.getElementsByClassName("als-zoom-in-button")[0];
