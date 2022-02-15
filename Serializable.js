@@ -557,8 +557,10 @@ RegExp.prototype.deserialize = function (serialized, seenObjects) {
  * @memberOf L.LatLng
  */
 L.LatLng.prototype.serialize = function (seenObjects) {
-	let serialized = {
+	let {lat, lng, alt} = this, serialized = {
 		serializableClassName: "L.LatLng",
+		// L.LatLng.deserialize doesn't seem to be called for some reason, so we have to rely on default mechanism
+		constructorArguments: [lat, lng, alt],
 	};
 
 	for (let prop in this) {

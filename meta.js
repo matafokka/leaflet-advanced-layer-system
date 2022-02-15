@@ -43,6 +43,12 @@ require("keyboardevent-key-polyfill").polyfill();
 L.ALS = {
 
 	/**
+	 * Current ALS version
+	 * @since 2.1.8
+	 */
+	version: require("./package.json").version,
+
+	/**
 	 * Current locale which contains both default and custom locale properties.
 	 *
 	 * Use it only "one-time", for example, in `window.alert()`.

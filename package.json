@@ -1,6 +1,6 @@
 {
   "name": "leaflet-advanced-layer-system",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "An advanced layer system and more for Leaflet",
   "main": "dist/System.js",
   "browserslist": [
@@ -92,6 +92,7 @@
     "keyboardevent-key-polyfill": "^1.1.0",
     "leaflet": "^1.7.1",
     "object-defineproperty-ie": "^3.1.0",
+    "package-json-versionify": "^1.0.4",
     "persistify": "^2.0.1",
     "postcss": "^8.2.4",
     "postcss-css-variables": "^0.17.0",

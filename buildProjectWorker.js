@@ -11,7 +11,8 @@ for (let file of files) {
 	let build = persistify({
 		entries: [file + ".js"],
 		debug: generateSourceMaps
-	}).require(require.resolve("buffer/"), {expose: "buffer"});
+	}).require(require.resolve("buffer/"), {expose: "buffer"})
+		.transform("package-json-versionify");
 
 	if (notPolyfills) { // Transform everything except polyfills from CoreJS
 		build = build.transform("babelify", {
