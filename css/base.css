@@ -112,6 +112,7 @@ body.als-no-scroll {
 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
 	background: var(--background);
+	color: var(--text-color);
 }
 
 /* Map container. To properly display menu, we'll need to set some styles to it */

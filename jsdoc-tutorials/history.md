@@ -39,7 +39,8 @@ L.ALS.MyLayer = L.ALS.Layer.extend({
 });
 ```
 
-You should always wait until all the code for the operation is executed. If you're using async functions, you should `await` all of them.
+You should always wait until all the code for the operation is executed. If you're using `async` functions, you should `await` all of them.
+
+If you have asynchronous operations at {@link L.ALS.Layer#init}, set {@link L.ALS.Layer#writeToHistoryOnInit} to `false` and write to history manually by calling {@link L.ALS.Layer#writeToHistory}.
 
 There are no other methods for managing history, and you don't need them, ALS does everything for you.
-

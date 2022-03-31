@@ -63,6 +63,35 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	_controlsShown: false,
 
 	/**
+	 * Whether ALS should write an entry to the history when this layer is created or duplicated, i.e. when
+	 * {@link L.ALS.Layer#init} is called.
+	 *
+	 * Setting it to `false` allows you to control when an action should be added to the history.
+	 * Useful for things like dynamic content loading. You also may want to use {@link L.ALS.operationsWindow} to
+	 * display loading text and animation.
+	 *
+	 * You should always call {@link L.ALS.Layer#writeToHistory} when you're done!
+	 *
+	 * You can always change the value of this property back to `true` to make ALS write to history automatically.
+	 *
+	 * @example Read file from a wizard asynchronously. Write to the history when file is read.
+	 * L.ALS.MyLayer = L.ALS.Layer.extend({
+	 *     writeToHistoryOnInit: false, // Disable writing to the history on initialization
+	 *
+	 *     init: function (wizardResults, settings) {
+	 *          // Read a file from a wizard
+	 *          let file = wizardResults["fileWidget"][0], fileReader = new FileReader();
+	 *          fileReader.addEventListener("load", (event) => {
+	 *              // File reading logic here...
+	 *
+	 *              writeToHistory(); // File is read, time to write layer creation to the history
+	 *          });
+	 *     }
+	 * });
+	 */
+	writeToHistoryOnInit: true,
+
+	/**
 	 * Layer's constructor. Do NOT override it! Use {@link L.ALS.Layer#init} method instead!
 	 * @param layerSystem {L.ALS.System} Layer system that creates this layer
 	 * @param args {Array} Arguments to pass to {@link L.ALS.Layer#init}
@@ -706,11 +735,13 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 * Writes a record to the history. Call it at the end of each action.
 	 *
 	 * This method interferes with serialization and deserialization.
+	 * It won't do anything, if called when serialization or deserialization hasn't finished,
+	 * for example, when restoring from history.
 	 *
-	 * It won't do anything, if called when serialization or deserialization hasn't finished, for example, when restoring from history.
+	 * Basically, an alias for {@link L.ALS.System#writeToHistory}.
 	 */
 	writeToHistory: function () {
-		this._layerSystem.writeToHistory();
+		this.layerSystem.writeToHistory();
 	},
 
 	getObjectToSerializeTo: function (seenObjects) {

@@ -185,7 +185,6 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		this._wizardButton = mapContainer.getElementsByClassName("als-menu-add")[0];
 		this._wizardWindow = new L.ALS._service.WizardWindow(this._wizardButton, () => {
 			this._createLayerFromWizard();
-			this.writeToHistory();
 		});
 		let wizardWindow = this._wizardWindow.window;
 
@@ -546,19 +545,23 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @private
 	 */
 	_createLayer: function (type) {
-		// Gather arguments from wizard
-		let args = {};
-		let wizardInstance = type._wizards[this._id];
+		// Get arguments from wizard
+		let args = {}, wizardInstance = type._wizards[this._id];
+
 		for (let property in wizardInstance._widgets) {
 			if (!wizardInstance._widgets.hasOwnProperty(property))
 				continue;
 			let widget = wizardInstance._widgets[property];
 			args[widget.id] = widget.getValue();
 		}
+
+		// Create layer
 		this._addHistoryOperation("createLayer");
-		new type(this, args, type.settings.getSettings());
+		let layer = new type(this, args, type.settings.getSettings());
 		this._removeHistoryOperation("createLayer");
-		this.writeToHistory();
+
+		if (layer.writeToHistoryOnInit)
+			this.writeToHistory();
 	},
 
 	/**
@@ -765,7 +768,9 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
 		this._selectLayer(newLayer.id);
 		this._removeHistoryOperation("duplicateLayer");
-		this.writeToHistory();
+
+		if (newLayer.writeToHistoryOnInit)
+			this.writeToHistory();
 	},
 
 	/**
