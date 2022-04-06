@@ -8,6 +8,9 @@
   "electron": {
 	"title": "Using ALS with Electron"
   },
+  "misc_events": {
+	"title": "Miscellaneous events fired by ALS"
+  },
   "l_draw": {
 	"title": "Using ALS with Leaflet.Draw"
   },

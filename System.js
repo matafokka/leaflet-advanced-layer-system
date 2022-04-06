@@ -39,6 +39,8 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	_toolbarEnabled: false,
 
+	includes: L.ALS.ControlManager.prototype,
+
 	initialize: function (map, options) {
 		L.Control.prototype.initialize.call(this);
 
@@ -363,10 +365,12 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
 		// Toolbar
 
-		let removeZoomButtons = (L.ALS.Helpers.isMobile && topPanel.children.length > 9); // Phones can hold only 9 buttons + spacer + close buttons container = 11 children. -2 buttons for zoom buttons.
+		// Phones can hold only 9 buttons + spacer + close buttons container = 11 children. -2 buttons for zoom buttons.
+		let removeZoomButtons = (L.ALS.Helpers.isMobile && topPanel.children.length > 9),
+			zoomControl; // Zoom control to add later
 
-		if (newOptions.enableToolbar) {
-			this._toolbarEnabled = true;
+		this._toolbarEnabled = newOptions.enableToolbar;
+		if (this._toolbarEnabled) {
 
 			// Move panel from the menu to the top of the map's container
 			if (newOptions.makeMapFullscreen)
@@ -384,9 +388,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			for (let item of items)
 				item.classList.add("als-toolbar-enabled");
 
-			let zoomControl = newOptions.toolbarZoomControl;
-			if (zoomControl && removeZoomButtons)
-				this.map.addControl(zoomControl);
+			zoomControl = newOptions.toolbarZoomControl;
 
 			// Add events to window controls for Electron. They'll be caught at ElectronIntegration.
 			let buttonsContainer = topPanel.getElementsByClassName("als-electron-buttons-container")[0];
@@ -418,6 +420,12 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			if (L.ALS.Helpers.isIElte9)
 				this._menu.classList.add("menu-left");
 		}
+
+		// Everything's important is set up, time to call control manager's constructor
+		L.ALS.ControlManager.prototype.initialize.call(this, this);
+
+		if (zoomControl && removeZoomButtons)
+			this.addControl(zoomControl, "top", "follow-menu");
 
 		map.invalidateSize();
 		this.writeToHistory(); // This will start a logical chain where an action should be written to the history after it's complete

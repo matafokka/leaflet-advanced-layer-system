@@ -1,7 +1,7 @@
 module.exports = `
 <input type="file" class="als-file-hidden" id="als-load-input" />
 <input type="file" class="als-file-hidden" id="als-load-settings-input" />
-<div class="als-menu">
+<div class="als-element als-border als-menu">
 	<!-- Top panel -->
 	<div class="als-items-row als-top-panel">
 		

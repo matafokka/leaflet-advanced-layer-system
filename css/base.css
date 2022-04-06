@@ -6,7 +6,7 @@
 	--border: 1px solid #ccc; /* Borders */
 	--hover-bg: #eaeaea; /* Applied to every action element such as buttons */
 
-	--fixed-element-bg: #f8f8f8; /* Applies to fixed elements such as sidebar and top bar. Should be different than general background */
+	--fixed-element-bg: #f8f8f8; /* Applies to fixed elements such as sidebar and top bar. Should be different from general background */
 	--fixed-element-selected-bg: #e2e2e2; /* Applied to selected child of a fixed element. Should be darker than the background but lighter than the borders. */
 
 	/* Scrollbars */
@@ -98,11 +98,19 @@ body.als-no-scroll {
 	box-shadow: none;
 }
 
-.als-zoom {
+.leaflet-bar.leaflet-control.als-zoom {
 	border: none;
 }
 
-.als-zoom *:first-child {
+.als-zoom-vertical {
+	width: 2rem;
+}
+
+.als-zoom-vertical *:first-child {
+	border-bottom: none;
+}
+
+.als-zoom-horizontal *:first-child {
 	border-right: none;
 }
 

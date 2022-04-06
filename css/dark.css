@@ -4,7 +4,7 @@
 	--border: 1px solid #696969; /* Borders */
 	--hover-bg: #414141; /* Applied to every action element such as buttons */
 
-	--fixed-element-bg: #2d2d2d; /* Applies to fixed elements such as sidebar and top bar. Should be different than general background */
+	--fixed-element-bg: #2d2d2d; /* Applies to fixed elements such as sidebar and top bar. Should be different from general background */
 	--fixed-element-selected-bg: #555555; /* Applied to selected child of a fixed element. Should be darker than the background but lighter than the borders. */
 
 	/* Scrollbars */

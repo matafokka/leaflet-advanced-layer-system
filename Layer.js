@@ -21,16 +21,17 @@
  *
  * 1. NEVER use {@link L.LayerGroup} because it breaks layer system!
  * 1. Use {@link L.ALS.Layer#addLayers} and {@link L.ALS.Layer#removeLayers} to add and remove Leaflet layers.
- * 1. To hide layer from the map, use `this.map.remove()` and `this.map.add()`.
+ * 1. To hide Leaflet layers from the map, use `this.map.remove()` and `this.map.add()`.
  * 1. Use {@link L.ALS.Layer#addEventListenerTo} and {@link L.ALS.Layer#removeEventListenerFrom} to add and remove event listeners from objects and map.
+ * 1. Use {@link L.ALS.ControlManager} methods to manage controls.
  * 1. Unless your layer is super simple, you'll most likely need to implement custom serialization and deserialization mechanisms. Please, refer to the {@link L.ALS.Serializable} docs and [example project](https://github.com/matafokka/SynthFlight) for this.
  *
- * @param wizardResults {Object} Results compiled from the wizard. It is an object who's keys are IDs of your controls and values are values of your controls.
+ * @param wizardResults {Object} Results compiled from the wizard. It is an object who's keys are IDs of your widgets and values are, well, their values.
  * @param settings {SettingsObject} Current layer settings.
  *
  * @class
  * @extends L.ALS.Widgetable
- *
+ * @mixes L.ALS.ControlManager
  */
 L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
@@ -55,11 +56,6 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 */
 	isSelected: false,
 
-	/**
-	 * Indicates whether controls of this layer are shown
-	 * @type {boolean}
-	 * @private
-	 */
 	_controlsShown: false,
 
 	/**
@@ -91,6 +87,8 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 */
 	writeToHistoryOnInit: true,
 
+	includes: L.ALS.ControlManager.prototype,
+
 	/**
 	 * Layer's constructor. Do NOT override it! Use {@link L.ALS.Layer#init} method instead!
 	 * @param layerSystem {L.ALS.System} Layer system that creates this layer
@@ -100,8 +98,9 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 */
 	initialize: function (layerSystem, args, settings) {
 		L.ALS.Widgetable.prototype.initialize.call(this, "als-layer-menu");
+		L.ALS.ControlManager.prototype.initialize.call(this, layerSystem);
 		this.setConstructorArguments([args]);
-		this.serializationIgnoreList.push("_layerSystem", "layerSystem", "_nameLabel", "_leafletLayers", "_mapEvents", "getBounds", "isSelected", "_controls");
+		this.serializationIgnoreList.push("_layerSystem", "_nameLabel", "_leafletLayers", "_mapEvents", "getBounds", "isSelected");
 
 		/**
 		 * Contains event listeners bound to various objects. Looks like this:
@@ -136,13 +135,6 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		this._mapEvents = [];
 
 		/**
-		 * Contains controls added to this layer
-		 * @type {Object}
-		 * @private
-		 */
-		this._controls = {};
-
-		/**
 		 * Layer system managing this layer. Deprecated in favor of {@link L.ALS.Layer#layerSystem}
 		 * @type {L.ALS.System}
 		 * @deprecated
@@ -161,7 +153,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		 * @type {L.Map}
 		 * @protected
 		 */
-		this.map = this._layerSystem.map;
+		this.map = this.layerSystem.map;
 
 		/**
 		 * Unique ID of this layer
@@ -289,9 +281,6 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			this.layerSystem._selectLayer(this.id);
 		} catch (e) {}
 
-		for (let pos of ["left", "right"])
-			document.addEventListener(`als-set-menu-to-${pos}`, () => {this._updateControlsPosition(pos)});
-
 		this.init(args, settings); // Initialize layer and pass all the properties
 		this._onSelect();
 	},
@@ -405,43 +394,6 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	},
 
 	/**
-	 * Adds control to this layer. This control will be managed automatically.
-	 * @param control {Control} Control to add
-	 * @param automanagePosition {"top"|"bottom"|undefined} When toolbar is enabled, users can move menu to left or right. It's always good to make controls always visible by moving it to the different side. ALS can do it for you, just set this argument to "top" or "bottom" to display control at the top or bottom side respectively. Or leave it as undefined, and ALS will not override control's position. This argument doesn't take effect when toolbar is disabled or user's device is a phone.
-	 * @param positionOnMobile {"topleft"|"topright"|"bottomleft"|"bottomright"|undefined} Sets control position on mobile devices, if previous argument is used. Leave it as undefined, and ALS will not override control's position on mobile devices. This argument doesn't take effect when toolbar is disabled or user's device is a desktop. This is just convenience argument.
-	 */
-	addControl: function (control, automanagePosition = undefined, positionOnMobile = undefined) {
-		if (!control._alsId)
-			control._alsId = L.ALS.Helpers.generateID();
-		this._controls[control._alsId] = control;
-
-		if (automanagePosition) {
-			if (this.layerSystem._toolbarEnabled && !L.ALS.Helpers.isMobile) {
-				control._alsPos = automanagePosition;
-				this._setControlPosition(control, this._getControlPosition(L.ALS.generalSettings.menuPosition));
-			} else if (L.ALS.Helpers.isMobile && positionOnMobile)
-				control.setPosition(positionOnMobile);
-		}
-
-		if (this._controlsShown)
-			control.addTo(this.map);
-	},
-
-	/**
-	 * Removes control from this layer
-	 * @param control {Control} Control to remove
-	 */
-	removeControl: function (control) {
-		if (!this._controls[control._alsId])
-			return;
-
-		delete this._controls[control._alsId];
-
-		if (this._controlsShown)
-			control.remove();
-	},
-
-	/**
 	 * Shows or hides controls of this layer
 	 * @private
 	 */
@@ -456,38 +408,6 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
 		for (let id in this._controls)
 			this._controls[id][fn](this.map);
-	},
-
-	/**
-	 * Updates controls positions
-	 * @param pos {"left"|"right"} New position
-	 * @private
-	 */
-	_updateControlsPosition: function (pos) {
-		pos = this._getControlPosition(pos);
-		for (let id in this._controls)
-			this._setControlPosition(this._controls[id], pos);
-	},
-
-	/**
-	 * Reverses menu position and returns position for controls
-	 * @param menuPos {string} Menu position
-	 * @return {string} Position for controls
-	 * @private
-	 */
-	_getControlPosition: function (menuPos) {
-		return menuPos === "left" ? "right" : "left";
-	},
-
-	/**
-	 * Sets control position if it's automanaged
-	 * @param control {Control} Control
-	 * @param pos {string} position to set
-	 * @private
-	 */
-	_setControlPosition: function (control, pos) {
-		if (control._alsPos)
-			control.setPosition(control._alsPos + pos);
 	},
 
 	/**

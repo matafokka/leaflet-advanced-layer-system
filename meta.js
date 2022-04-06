@@ -82,6 +82,7 @@ require("./widgets/Spoiler.js"); // Because it mixes Widget and Widgetable
 require("./Wizard.js");
 require("./EmptyWizard.js");
 require("./Settings.js");
+require("./ControlManager.js");
 require("./Layer.js");
 require("./GeneralSettings.js");
 require("./WidgetableWindow.js");
@@ -143,7 +144,7 @@ if (!L.ALS.operationsWindow) {
  *
  * @property {boolean} [enableToolbar=false] If true, enables toolbar which contains buttons from the menu and takes the whole width of the container. If you're using ALS for more than just a menu, a toolbar will greatly improve your app's UX. Defaults to `false`.
  *
- * @property {L.Control} [toolbarZoomControl] A zoom control to put on the map if there's no space left on the toolbar. Takes effect only on mobile devices and when {@link SystemOptions.enableToolbar} is true. Pass `undefined` to disable zoom control in this case. Defaults to an instance of {@link L.ALS.ControlZoom} which will be placed to the top-left corner.
+ * @property {L.Control} [toolbarZoomControl] A zoom control to put on the map if there's no space left on the toolbar. This control will be automanaged and placed at the top of the map. Takes effect only on mobile devices and when {@link SystemOptions.enableToolbar} is true. Pass `undefined` to disable zoom control in this case and, if needed, add zoom control by calling {@link L.ALS.System#addControl} and customize its position. Defaults to an instance of {@link L.ALS.ControlZoom}.
  *
  * @property {boolean} [enableDuplicateButton=true] If true, will enable "duplicate" button in layers. This functionality requires serialization. Defaults to `true`.
  *
@@ -193,9 +194,12 @@ if (!L.ALS.operationsWindow) {
 // L.ALS.System docs
 
 /**
- * System itself. Everything else revolves around it
+ * System itself. Everything else revolves around it.
  *
  * Just add it, implement your layer types by extending {@link L.ALS.Layer}, register them, and you're good to go.
+ *
+ * Also note that both this class and {@link L.ALS.Layer} can automatically manage Leaflet controls. Refer to the
+ * {@link L.ALS.ControlManager} docs for more information.
  *
  * @example
  *
@@ -605,6 +609,7 @@ if (!L.ALS.operationsWindow) {
  *
  * @class
  * @extends L.Control
+ * @mixes L.ALS.ControlManager
  */
 L.ALS.System;
 
