@@ -1,6 +1,6 @@
 {
   "name": "leaflet-advanced-layer-system",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "description": "An advanced layer system and more for Leaflet",
   "main": "dist/System.js",
   "browserslist": [

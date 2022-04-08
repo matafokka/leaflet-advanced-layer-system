@@ -7,6 +7,7 @@
  * @property {"left"|"center"|"right"} [textAlign="left"] alignment. Defaults to `"left"`.
  * @property {"topLeft"|"topCenter"|"topRight"|"bottomLeft"|"bottomCenter"|"bottomRight"|"leftCenter"|"rightCenter"|"center"} [origin="center"] Origin of a label, i.e. which "part" of it will be at given latLng. Defaults to `"center"`.
  * @property {number} [maxWidth=0] Maximum width of a label in number of characters per line. If label will exceed this parameter, it will be wrapped. If it's less than 1, label width will not be limited. Must be an integer. Defaults to `0`.
+ * @property {boolean} [breakWords=true] Whether to break words when {@link DisplayOptions.maxWidth} is greater than zero. If `false`, label will be wrapped at the first space after {@link DisplayOptions.maxWidth} is exceeded.
  */
 
 /**
@@ -62,6 +63,7 @@ L.ALS.LeafletLayers.LabelLayer = L.ALS.LeafletLayers.CanvasLayer.extend( /** @le
 			textAlign: "left",
 			origin: "center",
 			maxWidth: 0,
+			breakWords: true,
 		}
 		this._automaticallyRedraw = automaticallyRedraw;
 		this._labels = {};
@@ -182,20 +184,29 @@ L.ALS.LeafletLayers.LabelLayer = L.ALS.LeafletLayers.CanvasLayer.extend( /** @le
 			ctx.textAlign = label.textAlign;
 
 			// Split text into lines
-			let lines = [], line = "", pos = 1, shouldWrap = label.maxWidth >= 1, textWidth = 0;
+			let lines = [], line = "", pos = 0, wrapAt = label.maxWidth >= 1 ? label.maxWidth : Infinity, textWidth = 0;
 			for (let i = 0; i < label.text.length; i++) {
+				pos++;
 				let symbol = label.text[i], isLineBreak = symbol === "\n";
+
 				if (!isLineBreak)
 					line += symbol;
 
-				if (isLineBreak || i + 1 === label.text.length || (shouldWrap && pos === label.maxWidth)) {
-					lines.push(line);
-					let width = ctx.measureText(line).width;
-					if (width > textWidth)
-						textWidth = width;
-					line = "";
-					pos = 1;
-				}
+				if (!(
+					// Break text on line breaks, at the end of the text or when position exceeding maxWidth
+					isLineBreak || i + 1 === label.text.length || pos >= wrapAt &&
+					// In last case, break when breakWords is true or it's false but current symbol is space
+					(label.breakWords || (!label.breakWords && symbol === " "))
+				))
+					continue;
+
+				line = line.trim();
+				lines.push(line);
+				let width = ctx.measureText(line).width;
+				if (width > textWidth)
+					textWidth = width;
+				line = "";
+				pos = 0;
 			}
 
 			let origCoords = this.latLngToCanvasCoords(label.latLng); // Coordinates of a label position on the canvas
@@ -225,8 +236,7 @@ L.ALS.LeafletLayers.LabelLayer = L.ALS.LeafletLayers.CanvasLayer.extend( /** @le
 				coords.x += padding;
 			else if (label.origin === "topCenter" || isCenter || label.origin === "bottomCenter") {
 				coords.x -= textWidth / 2;
-			}
-			else if (label.origin === "topRight" || label.origin === "rightCenter" || label.origin === "bottomRight")
+			} else if (label.origin === "topRight" || label.origin === "rightCenter" || label.origin === "bottomRight")
 				coords.x -= textWidth + padding;
 
 			// Y
@@ -269,7 +279,8 @@ L.ALS.LeafletLayers.LabelLayer = L.ALS.LeafletLayers.CanvasLayer.extend( /** @le
 
 			// Draw text
 			ctx.fillStyle = label.fontColor;
-			x = coords.x; y = coords.y;
+			x = coords.x;
+			y = coords.y;
 			if (label.textAlign === "center")
 				x += textWidth / 2;
 			else if (label.textAlign === "right") // right
