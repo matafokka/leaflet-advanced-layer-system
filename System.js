@@ -2,6 +2,7 @@ require("./meta.js");
 const Sortable = require("sortablejs");
 const JSZip = require("jszip");
 const saveAs = require("file-saver");
+const debounce = require("debounce");
 
 L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
@@ -206,9 +207,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		L.ALS.Helpers.makeHideable(this._menuCloseButton, this._menu, undefined, undefined, false);
 
 		this._baseLayerMenu = mapContainer.getElementsByClassName("als-menu-maps-select")[0];
-		this._baseLayerMenu.addEventListener("change", (event) => {
-			this._onBaseLayerChange(event);
-		});
+		this._baseLayerMenu.addEventListener("change", (event) => this._onBaseLayerChange(event));
 
 		// Browsers that doesn't support flexbox won't display an icon with select no matter how hard you try. Hacks like position absolute inside position relative just doesn't work. Transforms and margins affects layout for some reason.
 		// So let's just remove the freaking icon and forget about this nightmare.
@@ -218,19 +217,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		}
 
 		this._newButton = mapContainer.getElementsByClassName("als-new-project-button")[0];
-		this._newButton.addEventListener("click", () => {
-			this.createNewProject();
-		});
+		this._newButton.addEventListener("click", () => this.createNewProject());
 
 		this._saveButton = mapContainer.getElementsByClassName("als-save-button")[0];
-		this._saveButton.addEventListener("click", () => {
-			this.saveProject();
-		});
+		this._saveButton.addEventListener("click", () => this.saveProject());
 
 		this._saveAsButton = mapContainer.getElementsByClassName("als-save-as-button")[0];
-		this._saveAsButton.addEventListener("click", () => {
-			this.saveProject(true);
-		});
+		this._saveAsButton.addEventListener("click", () => this.saveProject(true));
 
 		/**
 		 * Points to input, not to a button in the menu
@@ -238,24 +231,19 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		 * @private
 		 */
 		this._loadButton = document.getElementById("als-load-input");
-		this._loadButton.addEventListener("change", () => {
-			this.loadProject();
-		});
+		this._loadButton.addEventListener("change", () => this.loadProject());
 
 		this._exportButton = mapContainer.getElementsByClassName("als-export-button")[0];
-		this._exportButton.addEventListener("click", () => {
-			this.exportProject();
-		});
+		this._exportButton.addEventListener("click", () => this.exportProject());
+
+		// This and other serialization-related debounces fix errors produced by what seems like race conditions
+		// which occur when user repeatedly performs undo or redo operations
 
 		this._undoButton = mapContainer.getElementsByClassName("als-undo-button")[0];
-		this._undoButton.addEventListener("click", () => {
-			this.undo();
-		});
+		this._undoButton.addEventListener("click", debounce(() => this.undo(), 250));
 
 		this._redoButton = mapContainer.getElementsByClassName("als-redo-button")[0];
-		this._redoButton.addEventListener("click", () => {
-			this.redo();
-		});
+		this._redoButton.addEventListener("click", debounce(() => this.redo(), 250));
 
 		this._settingsButton = mapContainer.getElementsByClassName("als-settings-button")[0];
 
@@ -270,24 +258,18 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			L.ALS._service.generalSettings._onApply();
 		} else {
 			L.ALS._service.settingsWindow.bindButton(this._settingsButton);
-			L.ALS._service.settingsWindow.onCloseCallbacks.push(() => {this._applyNewSettings()});
+			L.ALS._service.settingsWindow.onCloseCallbacks.push(() => this._applyNewSettings());
 		}
 
 		this._zoomInButton = mapContainer.getElementsByClassName("als-zoom-in-button")[0];
-		this._zoomInButton.addEventListener("click", () => {
-			this.map.zoomIn();
-		});
+		this._zoomInButton.addEventListener("click", () => this.map.zoomIn());
 
 		this._zoomOutButton = mapContainer.getElementsByClassName("als-zoom-out-button")[0];
-		this._zoomOutButton.addEventListener("click", () => {
-			this.map.zoomOut();
-		})
+		this._zoomOutButton.addEventListener("click", () => this.map.zoomOut());
 
 		// IE and old browsers (which are unsupported by ALS) either doesn't implement LocalStorage or doesn't support it when app runs locally
 		if (!window.localStorage) {
-			this._settingsButton.addEventListener("click", () => {
-				window.alert(L.ALS.locale.settingsSavingNotSupported);
-			});
+			this._settingsButton.addEventListener("click", () => window.alert(L.ALS.locale.settingsSavingNotSupported));
 		}
 
 		this._topPanelSpacerText = mapContainer.getElementsByClassName("als-top-panel-spacer-text")[0];
@@ -318,7 +300,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		}
 
 		// Keyboard shortcuts
-		document.addEventListener("keydown", (e) => {
+		document.addEventListener("keydown", debounce((e) => {
 			if (!newOptions.enableKeyboardShortcuts || !e.ctrlKey)
 				return;
 
@@ -341,7 +323,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 				preventDefault = false;
 			if (preventDefault)
 				e.preventDefault();
-		});
+		}, 250)); // Doesn't work correctly with immediate=true for some reason
 
 		// Add notification that says "Successfully saved"
 		if (L.ALS.Helpers._chromeFSSupported) {
@@ -722,18 +704,19 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		for (let name in this._layers) {
 			if (!this._layers.hasOwnProperty(name))
 				continue;
-			let layer = this._layers[name];
 
-			let postfix = "";
-			let layerName = layer.getName();
+			let layer = this._layers[name],
+				layerName = layer.getName(),
+				postfix = "";
+
 			if (filenames.hasOwnProperty(layerName)) {
 				postfix = " (" + filenames[layerName] + ")";
 				filenames[layerName]++;
 			} else
 				filenames[layerName] = 1;
 
-			let json = JSON.stringify(layer.toGeoJSON());
-			let filename = layerName + postfix + ".geojson";
+			let json = JSON.stringify(layer.toGeoJSON()),
+				filename = layerName + postfix + ".geojson";
 
 			if (L.ALS.Helpers.supportsDataURL || willDoCustomExport)
 				zip.file(filename, json);
@@ -770,13 +753,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	_duplicateLayer: function (layer) {
 		this._addHistoryOperation("duplicateLayer");
-		let seenObjects = {}
-		let serialized = layer.serialize(seenObjects);
+		let seenObjects = {},
+			serialized = layer.serialize(seenObjects);
 		L.ALS.Serializable.cleanUp(seenObjects);
 
 		seenObjects = {};
-		let constructor = L.ALS.Serializable.getSerializableConstructor(serialized.serializableClassName);
-		let newLayer = constructor.deserialize(serialized, this, constructor.settings.getSettings(), seenObjects);
+		let constructor = L.ALS.Serializable.getSerializableConstructor(serialized.serializableClassName),
+			newLayer = constructor.deserialize(serialized, this, constructor.settings.getSettings(), seenObjects);
 		L.ALS.Serializable.cleanUp(seenObjects);
 
 		this._selectLayer(newLayer.id);
@@ -792,13 +775,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @private
 	 */
 	_serialize: function () {
-		let center = this.map.getCenter();
-		let json = {
-			layerOrder: [],
-			scrollTop: this._layerContainer.scrollTop,
-			center: [center.lat, center.lng],
-			zoom: this.map.getZoom(),
-		};
+		let center = this.map.getCenter(),
+			json = {
+				layerOrder: [],
+				scrollTop: this._layerContainer.scrollTop,
+				center: [center.lat, center.lng],
+				zoom: this.map.getZoom(),
+			};
 
 		this._forEachLayer((layer) => {
 			let seenObjects = {};
@@ -824,10 +807,10 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		// Restore layers
 		let selectedLayerID;
 		for (let id of json.layerOrder) {
-			let seenObjects = {};
-			let serialized = json[id];
-			let constructor = L.ALS.Serializable.getSerializableConstructor(serialized.serializableClassName);
-			let layer = constructor.deserialize(serialized, this, constructor.settings.getSettings(), seenObjects);
+			let seenObjects = {},
+				serialized = json[id],
+				constructor = L.ALS.Serializable.getSerializableConstructor(serialized.serializableClassName),
+				layer = constructor.deserialize(serialized, this, constructor.settings.getSettings(), seenObjects);
 			L.ALS.Serializable.cleanUp(seenObjects);
 
 			if (!layer.isShown)
@@ -856,8 +839,8 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @param saveAs {boolean} If true, and Chrome FileSystem API is supported, will perform "Save As" action instead of overriding already opened project.
 	 */
 	saveProject: function (saveAs = false) {
-		let json = this._serialize();
-		let promise = L.ALS.Helpers._saveAsTextWorker(JSON.stringify(json), L.ALS._service.filePrefix + "Project.json", true, saveAs);
+		let json = this._serialize(),
+			promise = L.ALS.Helpers._saveAsTextWorker(JSON.stringify(json), L.ALS._service.filePrefix + "Project.json", true, saveAs);
 
 		if (promise) {
 			promise.then(() => {
@@ -1053,11 +1036,11 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			// Add class names to all Leaflet and ALS classes for serialization
 			let addClassName = function (object, scope) {
 				for (let prop in object) {
-					let newObject = object[prop];
-					let brackets = (!(newObject instanceof Object) || newObject instanceof Array);
+					let newObject = object[prop],
+						brackets = (!(newObject instanceof Object) || newObject instanceof Array);
+
 					if (!object.hasOwnProperty(prop) || newObject === null || newObject === undefined ||
-						(newObject.serializableClassName !== undefined) ||
-						brackets
+						newObject.serializableClassName !== undefined || brackets
 					)
 						continue;
 					let newScope = scope + "." + prop;
@@ -1084,9 +1067,9 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 				[navigator.language || navigator.browserLanguage || navigator.userLanguage || navigator.systemLanguage || "en-us"];
 			let matchingLocale;
 			for (let userLocale of locales) {
-				let lowercase = userLocale.toLowerCase();
-				let userLang = lowercase.substring(0, 2);
-				let userRegion = lowercase.substring(3, 5);
+				let lowercase = userLocale.toLowerCase(),
+					userLang = lowercase.substring(0, 2),
+					userRegion = lowercase.substring(3, 5);
 
 				if (!userLang)
 					continue;

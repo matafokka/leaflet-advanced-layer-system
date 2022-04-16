@@ -643,7 +643,8 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 * Basically, an alias for {@link L.ALS.System#writeToHistory}.
 	 */
 	writeToHistory: function () {
-		this.layerSystem.writeToHistory();
+		if (this.layerSystem) // There might be cases (race conditions?) when layer's not fully initialized but something
+			this.layerSystem.writeToHistory();
 	},
 
 	getObjectToSerializeTo: function (seenObjects) {
