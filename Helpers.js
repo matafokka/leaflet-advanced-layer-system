@@ -520,3 +520,34 @@ L.ALS.Helpers.localStorage = (!!window.localStorage) ? window.localStorage : {
 		this._storage = {};
 	}
 }
+
+// Patch FeatureGroup to recursively assign pane to the layers
+
+let setPane = (layer, pane, mapOrGroup) => {
+	layer.remove();
+	layer.options.pane = pane;
+
+	if (mapOrGroup)
+		mapOrGroup.addLayer(layer);
+
+	if (!layer.eachLayer)
+		return;
+
+	// Sort layers by zIndex, so layers with lower zIndex will be rendered first and thus be on the bottom
+	let layers = layer.getLayers().sort((a, b) => a._alsZIndex < b._alsZIndex ? -1 : 1);
+
+	for (let lyr of layers)
+		setPane(lyr, pane, layer);
+}
+
+L.FeatureGroup.prototype.addLayer = function (layer) {
+	L.LayerGroup.prototype.addLayer.call(this, layer);
+
+	// Keep addition order
+	this._layersZIndex = this._layersZIndex || 1;
+	this._layersZIndex++;
+	layer._alsZIndex = this._layersZIndex;
+
+	setPane(layer, this.options.pane, this._map);
+	return this;
+}

@@ -662,14 +662,13 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 
 		// Delete reference from layers object
 		delete this._layers[layerID];
+		this._selectedLayer = undefined;
 
 		this._removeHistoryOperation("deleteLayer");
 
 		// Select first added layers or make selected layer undefined. That will remove the last reference to it.
 		let firstChild = this._layerContainer.firstElementChild;
-		if (!firstChild)
-			this._selectedLayer = undefined;
-		else
+		if (firstChild)
 			this._selectLayer(firstChild.id);
 
 		if (writeToHistory)
@@ -682,8 +681,14 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 * @ignore
 	 */
 	_reorderLayers: function () {
-		this._forEachLayer(function (layer) {
-			layer._leafletLayers.bringToBack();
+		if (!this._selectedLayer)
+			return;
+
+		let parent = this._selectedLayer.paneElement.parentElement, insertBefore = this._selectedLayer.paneElement;
+
+		this._forEachLayer((layer) => {
+			parent.insertBefore(layer.paneElement, insertBefore);
+			insertBefore = layer.paneElement;
 		});
 	},
 
@@ -694,7 +699,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 	 */
 	_forEachLayer: function (callback) {
 		let children = this._layerContainer.childNodes;
-		for (let i = 0; i <= children.length; i++) {
+		for (let i = 0; i < children.length; i++) {
 			let child = children[i];
 			if (child === undefined)
 				continue;

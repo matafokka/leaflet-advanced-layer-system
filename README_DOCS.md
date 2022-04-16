@@ -40,6 +40,12 @@ ALS includes following polyfills:
 1. [classList.js](https://github.com/eligrey/classList.js)
 1. [keyboardevent-key-polyfill](https://github.com/cvan/keyboardevent-key-polyfill)
 
+ALS applies following patches to the Leaflet classes:
+
+1. Adds `L.Layer#setInteractive`, `L.Layer#getInteractive` and `L.Layer#isInteractive` methods. Originally made by [Piero "Jadaw1n" Steinger](https://github.com/Jadaw1n).
+1. Patches `L.FeatureGroup#addLayer` to recursively assign `L.FeatureGroup#options.pane` to added layers and groups.
+1. Changes markers' Z index in custom panes, so markers will be placed on top of the layers.
+
 Please, test your application before adding any other polyfills (even CoreJS and Babel Runtime!) because it might work just fine as it is.
 
 Do **NOT** mangle object properties unless it uses hashing! It'll break everything that depends on serialization: projects, settings and undo/redo.

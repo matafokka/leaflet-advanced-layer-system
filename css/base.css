@@ -1223,6 +1223,18 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 	bottom: 0;
 }
 
+/* ALS custom panes */
+
+.leaflet-pane.als-pane.als-inactive-pane {
+	z-index: 200;
+	opacity: 0.8;
+	filter: sepia(30%);
+}
+
+.leaflet-pane.als-pane .leaflet-marker-icon {
+	z-index: 250 !important; /* Fix markers placed behind the canvas when custom pane is used */
+}
+
 /* IE11 hacks */
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
 	body {

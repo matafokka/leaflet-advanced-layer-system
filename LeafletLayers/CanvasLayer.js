@@ -116,7 +116,7 @@ L.ALS.LeafletLayers.CanvasLayer = (L.Layer ? L.Layer : L.Class).extend( /** @len
 		this._canvas.width = size.x;
 		this._canvas.height = size.y;
 
-		map._panes.overlayPane.appendChild(this._canvas);
+		this._getMapPane(map).appendChild(this._canvas);
 
 		map.on(this._events, this);
 		this._onLayerMove(); // Fixes incorrect canvas size
@@ -129,9 +129,13 @@ L.ALS.LeafletLayers.CanvasLayer = (L.Layer ? L.Layer : L.Class).extend( /** @len
 	onRemove: function (map) {
 		if (this._frame)
 			L.Util.cancelAnimFrame(this._frame);
-		map.getPanes().overlayPane.removeChild(this._canvas);
+		this._canvas.parentElement.removeChild(this._canvas);
 		map.off(this._events, this);
 		this._canvas = null;
+	},
+
+	_getMapPane: function (map) {
+		return map.getPane(this.options.pane || "overlayPane");
 	},
 
 	/**

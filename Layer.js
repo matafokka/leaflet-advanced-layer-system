@@ -163,12 +163,26 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		this.id = "ALSLayer" + L.ALS.Helpers.generateID();
 
 		/**
+		 * Pane name for this layer
+		 * @type {string}
+		 */
+		this.pane = "ALSPane" + this.id;
+
+		/**
+		 * Pane element for this layer
+		 * @type HTMLDivElement
+		 */
+		this.paneElement = this.map.createPane(this.pane);
+
+		this.paneElement.classList.add("als-pane");
+
+		/**
 		 * Contains added Leaflet layers
 		 * @type {L.FeatureGroup}
 		 * @package
 		 * @ignore
 		 */
-		this._leafletLayers = L.featureGroup();
+		this._leafletLayers = L.featureGroup([], {pane: this.pane}).addTo(this.map);
 
 		/**
 		 * Current name of this layer
@@ -304,41 +318,15 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 			this._eventsForObjects[object._advSysID][type] = [];
 
 		let handlerFunction = (event) => {
-			let callHandler = (event) => {
+			// Always handle map events. Handle layer events only if it's selected and shown.
+			if (object === this.map || (this.isSelected && this.isShown))
 				this[handler](event);
-				this.layerSystem._reorderLayers();
-			}
-
-			// Always fire map events
-			if (object === this.map) {
-				callHandler(event);
-				return;
-			}
-
-			if (!this.isShown) // Events won't be fired if this layer is hidden
-				return;
-
-			if (this.isSelected) { // Events will only be fired when this layer is selected
-				callHandler(event);
-				return;
-			}
-
-			// Forward event to the underlying layer
-			this.layerSystem._selectedLayer._leafletLayers.bringToFront(); // Bring selected layer to the front
-			let oldEvent = event.originalEvent;
-			if (!oldEvent || oldEvent.dispatchedByALS) // Uncaught events will lead to infinite recursion. Also, there might be no originalEvent property. Yup, that's strange, but it happens in Leaflet.Draw, for example.
-				return;
-
-			let newEvent = new oldEvent.constructor(oldEvent.type, oldEvent); // Clone old event
-			newEvent.dispatchedByALS = true; // If event won't be caught, it will call the handler again and again. So let's mark it, so we can just don't fire it again.
-			oldEvent.target.dispatchEvent(newEvent); // The target will be a canvas, not a Leaflet object. So let's dispatch cloned event to it
-			this.layerSystem._reorderLayers(); // Bring selected layer back to its place simply by reordering layers
 		}
 
 		let handlerObject = {
 			type: type,
 			handler: handler,
-			handlerFunction: handlerFunction
+			handlerFunction
 		}
 
 		this._eventsForObjects[object._advSysID][type].push(handlerObject);
@@ -434,12 +422,12 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		this._toggleControls();
 	},
 
-
 	/**
 	 * Called whenever user selects this layer.
 	 */
 	_onSelect: function () {
 		this._toggleControls();
+		this.paneElement.classList.remove("als-inactive-pane");
 		this.onSelect();
 	},
 
@@ -448,33 +436,30 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 */
 	_onDeselect: function () {
 		this._toggleControls();
+		this.paneElement.classList.add("als-inactive-pane");
 		this.onDeselect();
 	},
 
 	/**
 	 * Called whenever layer is being shown
 	 */
-	onShow() {
+	onShow: function () {
 	},
 
 	/**
 	 * Called whenever layer is being hidden
 	 */
-	onHide() {
+	onHide: function () {
 	},
 
 	/**
 	 * Called whenever user selects this layer.
-	 *
-	 * If you have additional controls to display, do it here.
 	 */
 	onSelect: function () {
 	},
 
 	/**
 	 * Called whenever user deselects this layer.
-	 *
-	 * If you've added additional controls, remove them here.
 	 */
 	onDeselect: function () {
 	},
@@ -509,11 +494,8 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	removeLayers: function (...layers) {
 		for (let layer of layers) {
 			// Remove layers from the layer group
-			if (layer.getLayers !== undefined) {
-				let groupLayers = layer.getLayers();
-				for (let l of groupLayers)
-					this.removeLayers(l);
-			}
+			if (layer.eachLayer)
+				layer.eachLayer(lyr => this.removeLayers(lyr));
 
 			// Remove attached event listeners
 			if (layer._advSysID !== undefined) {
