@@ -346,6 +346,7 @@ L.ALS.Widgets.BaseWidget = L.ALS.Serializable.extend( /** @lends L.ALS.Widgets.B
 	/**
 	 * @return {Element} Container for revert button
 	 * @package
+	 * @ignore
 	 */
 	_getContainerForRevertButton: function () {
 		return this.containerForRevertButton;

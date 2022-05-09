@@ -38,6 +38,7 @@ L.ALS.GeneralSettings = L.ALS.Settings.extend( /** @lends L.ALS._service.General
 
 	/**
 	 * Current menu position. Updated by general settings, should be passed to all other settings.
+	 * @protected
 	 */
 	_currentMenuPosition: "left",
 

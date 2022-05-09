@@ -721,7 +721,6 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 
 .als-widget-row > label {
 	width: 12rem; /* Hack for older browsers */
-	margin-right: 0.3rem;
 	flex: 1 1 13rem;
 	user-select: none;
 }

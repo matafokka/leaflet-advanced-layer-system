@@ -424,6 +424,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
 	/**
 	 * Called whenever user selects this layer.
+	 * @protected
 	 */
 	_onSelect: function () {
 		this._toggleControls();
@@ -433,6 +434,7 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 
 	/**
 	 * Called whenever user deselects this layer.
+	 * @protected
 	 */
 	_onDeselect: function () {
 		this._toggleControls();

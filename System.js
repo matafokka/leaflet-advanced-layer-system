@@ -294,6 +294,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			 * Error window to display when user tries to load project in IE <= 9 and error occurs
 			 * @memberOf L.ALS.Helpers
 			 * @type {L.ALS._service.IEErrorWindow}
+			 * @ignore
 			 */
 			L.ALS.Helpers._ieProjectErrorWindow = new L.ALS._service.IEErrorWindow();
 			document.body.appendChild(L.ALS.Helpers._ieProjectErrorWindow.windowContainer);
