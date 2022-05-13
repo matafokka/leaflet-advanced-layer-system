@@ -551,6 +551,11 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 		let layer = new type(this, args, type.settings.getSettings());
 		this._removeHistoryOperation("createLayer");
 
+		if (layer.creationCancelled) {
+			layer.deleteLayer();
+			return;
+		}
+
 		if (layer.writeToHistoryOnInit)
 			this.writeToHistory();
 	},

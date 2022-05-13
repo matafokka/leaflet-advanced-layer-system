@@ -54,7 +54,12 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 * @type {boolean}
 	 * @readonly
 	 */
-	isSelected: false,
+	isSelected: true, // Initially true, so when layer is added, user's code would work
+
+	/**
+	 * Whether creation of this layer has been cancelled at {@link L.ALS.Layer#init} by calling `cancelCreation()`.
+	 */
+	creationCancelled: false,
 
 	_controlsShown: false,
 
@@ -228,18 +233,14 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		// Delete button
 		let deleteButton = document.createElement("i");
 		deleteButton.className = "ri ri-delete-bin-line als-menu-delete";
-		deleteButton.addEventListener("click", () => {
-			this.deleteLayer(true, true);
-		});
+		deleteButton.addEventListener("click", () => this.deleteLayer(true, true));
 
 		// Duplicate button
 		let duplicateButton;
 		if (this.layerSystem._enableDuplicateButton) {
 			duplicateButton = document.createElement("i");
 			duplicateButton.className = "ri ri-file-copy-line";
-			duplicateButton.addEventListener("click", () => {
-				this.layerSystem._duplicateLayer(this);
-			});
+			duplicateButton.addEventListener("click", () => this.layerSystem._duplicateLayer(this));
 		}
 
 		// Drop-down menu button
@@ -290,12 +291,13 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		this.layerSystem._layers[this.id] = this;
 		this._nameLabel = label;
 
-		// Select new layer, so system can work. But onSelect() might fail, so we gotta catch that.
-		try {
-			this.layerSystem._selectLayer(this.id);
-		} catch (e) {}
+		this.init(args, settings, () => this.creationCancelled = true); // Initialize layer and pass all the properties
 
-		this.init(args, settings); // Initialize layer and pass all the properties
+		if (this.creationCancelled)
+			return;
+
+		// Select new layer
+		this.layerSystem._selectLayer(this.id);
 		this._onSelect();
 	},
 
@@ -515,8 +517,12 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	 * Use this method instead of {@link L.ALS.Layer#initialize}
 	 * @param wizardResults {Object} Results compiled from the wizard. It is an object who's keys are IDs of your controls and values are values of your controls.
 	 * @param settings {SettingsObject} Current layer settings and both default and custom general settings.
+	 * @param cancelCreation {function} A function that will safely cancel creation of this layer.
+	 * If your initialization calls other layer methods, consider using {@link L.ALS.Layer#creationCancelled} property
+	 * to detect whether creation has been cancelled and to avoid getting errors.
+	 * You should call this function only in synchronous code, only at {@link L.ALS.Layer#init} and only before adding any widgets!
 	 */
-	init: function (wizardResults, settings) {
+	init: function (wizardResults, settings, cancelCreation) {
 	},
 
 	/**
@@ -530,9 +536,9 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 	},
 
 	_onDelete: function () {
+		this.onDelete();
 		for (let id in this._controls)
 			this.removeControl(this._controls[id]);
-		this.onDelete();
 	},
 
 	/**

@@ -347,11 +347,18 @@ if (!L.ALS.operationsWindow) {
  * 	defaultName: "Polygon and Circles", // Default layer name
  *
  * 	// Note: we're overriding init() instead of initialize(). Do NOT override initialize()!
- * 	init: function (wizardResults, settings) {
+ * 	init: function (wizardResults, settings, cancelCreation) {
  *
  * 		// If you need to copy settings to layer's properties, use copySettingsToThis().
  * 		// It won't change the original settings object, so you can use both.
  * 		this.copySettingsToThis(settings);
+ *
+ * 		// If you need to delete a layer at init(), use cancelCreation() to avoid errors. In our case, we delete layer
+ * 		// if polygon size is 3.
+ * 		if (wizardResults.polygonSize === 3){
+ * 			cancelCreation();
+ * 			return;
+ * 		}
  *
  * 		// Build a menu for the layer.
  * 		// It'll contain polygon colors which default values will be from the settings.
