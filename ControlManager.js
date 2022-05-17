@@ -99,6 +99,11 @@ L.ALS.ControlManager = L.Class.extend(/** @lends L.ALS.ControlManager.prototype 
 	 * @private
 	 */
 	_setControlPosition: function (control, pos = undefined) {
+		if (L.ALS.Helpers.isIElte9 && control._alsPos) {
+			control.setPosition(control._alsPos + "right");
+			return;
+		}
+
 		pos = pos || L.ALS.generalSettings.menuPosition;
 
 		if (!control._alsFollowMenu)
