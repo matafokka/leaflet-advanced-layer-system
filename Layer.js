@@ -720,8 +720,11 @@ L.ALS.Layer = L.ALS.Widgetable.extend( /** @lends L.ALS.Layer.prototype */ {
 		 */
 		deserialize: function (serialized, layerSystem, settings, seenObjects) {
 			serialized.constructorArguments = [layerSystem, serialized.constructorArguments[0], settings];
+			let wasSelected = serialized.isSelected;
+			serialized.isSelected = true; // Initially true, so when layer is added, user's code would work
 			let instance = L.ALS.Widgetable.deserialize(serialized, seenObjects);
 			L.ALS.Layer.deserializeImportantProperties(serialized, instance);
+			serialized.isSelected = wasSelected;
 			return instance;
 		}
 	},

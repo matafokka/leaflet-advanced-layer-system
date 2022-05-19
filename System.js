@@ -822,7 +822,7 @@ L.ALS.System = L.Control.extend( /** @lends L.ALS.System.prototype */ {
 			if (!layer.isShown)
 				L.ALS.Helpers.dispatchEvent(layer._hideButton, "click");
 
-			if (layer.isSelected)
+			if (serialized.isSelected)
 				selectedLayerID = layer.id;
 		}
 		if (selectedLayerID !== undefined)
