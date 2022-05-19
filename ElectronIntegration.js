@@ -56,7 +56,9 @@ module.exports = function (mainWindow, options = {}) {
 	let newOptions = mergeOptions(defaultOptions, options);
 
 	// Import renderer process
-	mainWindow.webContents.executeJavaScript(`
+
+	let importRemote = () => {
+		mainWindow.webContents.executeJavaScript(`
 		let electron;
 		try {electron = require("@electron/remote");}
 		catch (e) {
@@ -66,6 +68,9 @@ module.exports = function (mainWindow, options = {}) {
 		}
 		const {ipcRenderer} = require("electron"), remote = electron.remote || electron;
 	`);
+	}
+
+	importRemote();
 
 	// Show messagebox on exit
 	ipcMain.on("close", (e, locale) => {
@@ -90,8 +95,13 @@ module.exports = function (mainWindow, options = {}) {
 		mainWindow.webContents.executeJavaScript(`ipcRenderer.send("close", L.ALS.locale);`);
 	});
 
-	if (newOptions.useToolbarAsFrame) {
+	let addButtons = () => {
+		if (!newOptions.useToolbarAsFrame)
+			return;
+
 		mainWindow.webContents.executeJavaScript(`
+			(() => {
+			
 			// Just a nice touch
 			if (!remote)
 				throw new Error(\`Add following to your Electron window options: "webPreferences: { enableRemoteModule: true }"\`);
@@ -113,7 +123,20 @@ module.exports = function (mainWindow, options = {}) {
 			});
 			
 			document.addEventListener("als-electron-close-window", () => { remote.getCurrentWindow().close(); });
+			
+			})();
 		`);
 		mainWindow.setMinimumSize(520, 120); // Restrict width, so app will look nice
 	}
+
+	let calledFirstTime = true;
+
+	mainWindow.webContents.on("did-finish-load", () => {
+		if (!calledFirstTime)
+			importRemote();
+		addButtons();
+		calledFirstTime = false;
+	});
+
+	addButtons();
 }
