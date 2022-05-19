@@ -884,6 +884,8 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 .als-divicon-container {
 	border: none;
 	background: none;
+	width: 0;
+	height: 0;
 }
 
 .als-divicon {
