@@ -4,10 +4,9 @@
 	--background: white; /* Base background */
 	--text-color: black; /* Base text color */
 	--border: 1px solid #ccc; /* Borders */
-	--hover-bg: #eaeaea; /* Applied to every action element such as buttons */
+	--hover-bg: #e2e2e2; /* Applied to every action element such as buttons. Also used for selected elements such as items in a sidebar. */
 
-	--fixed-element-bg: #f8f8f8; /* Applies to fixed elements such as sidebar and top bar. Should be different from general background */
-	--fixed-element-selected-bg: #e2e2e2; /* Applied to selected child of a fixed element. Should be darker than the background but lighter than the borders. */
+	--fixed-element-bg: #efefef; /* Applies to fixed elements such as sidebar and top bar. Should be different from general background */
 
 	/* Scrollbars */
 	--scrollbar-hover: #ccc;
@@ -49,7 +48,7 @@ We can consider scrollbars as fixed elements but fixed element's children have s
 }
 
 .not-mobile ::-webkit-scrollbar-thumb {
-	background: var(--fixed-element-selected-bg);
+	background: var(--hover-bg);
 	border-left: var(--border);
 	transition: background 0.2s;
 }
@@ -156,7 +155,7 @@ body.als-no-scroll {
 
 /* Setting background to select:active will cause bugs in older browsers, so we don't use it */
 .als-button-base:active, .ri:active, .jscolor-btn-close:active {
-	background: var(--fixed-element-selected-bg);
+	background: var(--hover-bg);
 	transition: background 0.2s;
 }
 
@@ -605,7 +604,7 @@ select.als-menu-maps-select:hover, .als-dark select.als-menu-maps-select:hover {
 }
 
 .als-sidebar > *[data-is-selected="1"] {
-	background: var(--fixed-element-selected-bg);
+	background: var(--hover-bg);
 	transition: background 0.3s;
 }
 
@@ -673,7 +672,7 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 
 .als-layer-container[data-is-selected = "1"] > .als-items-row,
 .not-mobile .als-layer-container[data-is-selected = "1"] > .als-items-row:hover {
-	background: var(--fixed-element-selected-bg);
+	background: var(--hover-bg);
 	transition: background 0.3s;
 }
 
@@ -924,7 +923,7 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 	flex: 1 1 6rem;
 }
 
-.als-divicon > .als-widget-row > .als-input {
+.als-divicon > .als-widget-row > label + .als-input {
 	width: 40%;
 	flex: 9999 1 4rem;
 }
@@ -1090,7 +1089,7 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 .als-loading {
 	width: 100%;
 	height: 0.7rem;
-	background: var(--fixed-element-selected-bg);
+	background: var(--hover-bg);
 	animation: als-loading 2.5s ease-in-out infinite;
 }
 
@@ -1099,12 +1098,6 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 	50% { transform: translateX(100%); }
 	100% { transform: translateX(-100%); }
 }
-
-/*@keyframes als-loading {
-	0% { left: -6rem; }
-	50% { left: 105%; }
-	100% { left: -6rem; }
-}*/
 
 /* "Project Saved notification. Appears only in Chrome." */
 
@@ -1167,8 +1160,12 @@ div.als-layer-menu.als-only-one-layer { /* Don't add border when there's only on
 	transition: background-color 0.2s;
 }
 
-.mobile .leaflet-draw-actions {
+.mobile .leaflet-left .leaflet-draw-actions {
 	left: 2rem;
+}
+
+.mobile .leaflet-right .leaflet-draw-actions {
+	right: 2rem;
 }
 
 .mobile .leaflet-draw-toolbar a {
