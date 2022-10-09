@@ -541,13 +541,12 @@ let setPane = (layer, pane, mapOrGroup) => {
 }
 
 L.FeatureGroup.prototype.addLayer = function (layer) {
-	L.LayerGroup.prototype.addLayer.call(this, layer);
-
 	// Keep addition order
 	this._layersZIndex = this._layersZIndex || 1;
 	this._layersZIndex++;
 	layer._alsZIndex = this._layersZIndex;
 
 	setPane(layer, this.options.pane, this._map);
+	L.LayerGroup.prototype.addLayer.call(this, layer);
 	return this;
 }

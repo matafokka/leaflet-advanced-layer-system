@@ -35,7 +35,6 @@ L.ALS.LeafletLayers.WidgetLayer =  L.ALS.Widgetable.extend( /** @lends L.ALS.Lea
 			className: "als-divicon-container",
 			html: this.container
 		});
-		L.Marker.prototype.setLatLng.call(this, latLng);
 		L.Marker.prototype.setIcon.call(this, divIcon);
 		this.setOrigin(origin);
 	},
