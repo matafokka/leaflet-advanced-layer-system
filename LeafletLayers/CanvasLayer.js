@@ -7,8 +7,8 @@ also thanks to contributors: heyyeyheman,andern,nikiv3, anyoneelse ?
 enjoy !
 __________________
 
-Modified by matafokka (c) 2021.
-I have no idea how it works, I just removed useless functionality and made API look nice since I just copied the code 'cuz I don't want to install Bower just to get this library.
+Modified by matafokka (c) 2022.
+Removed useless functionality, made API look nice and introduced couple of fixes
 */
 
 // L.DomUtil.setTransform from leaflet 1.0.0 to work on 0.0.7
@@ -101,9 +101,15 @@ L.ALS.LeafletLayers.CanvasLayer = (L.Layer ? L.Layer : L.Class).extend( /** @len
 	 */
 	onAdd: function (map) {
 		this._map = map;
+
+		if (map.options.zoomAnimation && L.Browser.any3d)
+			this._events.zoomanim = this._animateZoom;
+		else
+			delete this._events.zoomanim;
+
 		this._canvas = document.createElement("canvas");
-		this._canvas.className = "leaflet-layer leaflet-zoom-" +
-			(this._map.options.zoomAnimation && L.Browser.any3d) ? "animated" : "hide";
+		this._canvas.className = "als-canvas-layer leaflet-layer leaflet-zoom-" +
+			(this._map.options.zoomAnimation && L.Browser.any3d ? "animated" : "hide");
 
 		// Disable event handling on canvas.
 		// Older browsers (and IE <= 10) doesn't support pointerEvents property. So let's just move the canvas down.
@@ -138,18 +144,6 @@ L.ALS.LeafletLayers.CanvasLayer = (L.Layer ? L.Layer : L.Class).extend( /** @len
 		return map.getPane(this.options.pane || "overlayPane");
 	},
 
-	/**
-	 * Adds this layer to a given map
-	 * @param map Map to add this layer to.
-	 * @return {L.ALS.LeafletLayers.CanvasLayer} this
-	 */
-	addTo: function (map) {
-		map.addLayer(this);
-		if (this._map.options.zoomAnimation && L.Browser.any3d)
-			this._events.zoomanim = this._animateZoom;
-		return this;
-	},
-
 	_drawLayer: function () {
 		if (!this._map)
 			return;
@@ -165,10 +159,12 @@ L.ALS.LeafletLayers.CanvasLayer = (L.Layer ? L.Layer : L.Class).extend( /** @len
 	},
 
 	_animateZoom: function (e) {
-		let scale = this._map.getZoomScale(e.zoom);
-		// Different calc of animation zoom in leaflet 1.0.3 thanks @peterkarabinovic, @jduggan1
-		let offset = L.Layer ? this._map._latLngBoundsToNewLayerBounds(this._map.getBounds(), e.zoom, e.center).min :
-			this._map._getCenterOffset(e.center)._multiplyBy(-scale).subtract(this._map._getMapPanePos());
+		const scale = this._map.getZoomScale(e.zoom);
+		const offset = this._map._latLngBoundsToNewLayerBounds(
+			this._map.getBounds(),
+			e.zoom,
+			e.center
+		).min;
 
 		L.DomUtil.setTransform(this._canvas, offset, scale);
 	},
